@@ -1,4 +1,4 @@
-import { Button, ButtonCategory } from 'ui';
+import { Button, ButtonCategory, ButtonLink } from 'ui';
 
 export default function Web() {
   return (
@@ -6,6 +6,9 @@ export default function Web() {
       <h1 className="text-2xl text-gray-900">Web</h1>
       <Button varaint="secondary">Login</Button>
       <ButtonCategory isActive>Recently</ButtonCategory>
+      <ButtonLink href="https://www.facebook.com/" varaint="secondary">
+        Link
+      </ButtonLink>
     </div>
   );
 }
