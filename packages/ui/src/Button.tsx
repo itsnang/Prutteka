@@ -16,7 +16,7 @@ export const Button: React.FC<ButtonProps> = ({
 }) => {
   return (
     <button
-      className={`rounded-2xl px-8 py-4 font-medium ${varaintClassname[varaint]}`}
+      className={`h-13 rounded-2xl px-8 font-medium ${varaintClassname[varaint]}`}
     >
       {children}
     </button>
