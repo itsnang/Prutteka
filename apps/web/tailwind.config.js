@@ -32,6 +32,9 @@ module.exports = {
       borderRadius: {
         large: '12px',
       },
+      spacing: {
+        13: '3.25rem',
+      },
     },
   },
   plugins: [],

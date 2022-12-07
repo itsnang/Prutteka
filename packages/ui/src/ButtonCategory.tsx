@@ -11,9 +11,9 @@ export const ButtonCategory: React.FC<ButtonCategoryProps> = ({
 }) => {
   return (
     <button
-      className={`rounded-full border-2 py-4 px-6 ${
+      className={`h-13 rounded-full border-2 px-6 ${
         isActive
-          ? 'bg-primary border-primary-dark text-white'
+          ? 'bg-primary border-primary-dark font-medium text-white'
           : 'border-gray-300 bg-gray-100'
       }`}
     >
