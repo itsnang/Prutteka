@@ -15,8 +15,8 @@ export const ButtonInterested: React.FC<ButtonInterestedProps> = ({
 
   return (
     <button
-      className={`h-13 flex items-center justify-between border px-4 font-medium
-    ${hasText ? 'w-full rounded-lg' : 'h-14 w-14 rounded-xl'}
+      className={`flex items-center justify-between border px-4 font-medium
+    ${hasText ? 'h-10 w-full rounded-lg' : 'h-14 w-14 rounded-xl'}
     ${
       active
         ? 'border-tertiary bg-tertiary-ligth text-tertiary'
