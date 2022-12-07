@@ -22,6 +22,7 @@ module.exports = {
       white: '#fff',
       black: '#000',
       gray: colors.zinc,
+      red: colors.red,
     },
     extend: {
       boxShadow: {
