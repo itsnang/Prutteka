@@ -25,6 +25,8 @@ module.exports = {
     extend: {
       boxShadow: {
         inner: 'inset 0 -6px 0 0 rgb(161, 161, 171, 25%)',
+        complete:
+          '0 2px 14px 0 rgb(161, 161, 171, 25%), inset 0 -4px 0 0 rgb(161, 161, 171, 10%)',
       },
       screens: {
         desktop: '906px',
