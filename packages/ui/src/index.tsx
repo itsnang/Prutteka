@@ -5,3 +5,4 @@ export * from './Footer';
 export * from './ButtonInterested';
 export * from './EventCard';
 export * from './InputField';
+export * from './Modal';
