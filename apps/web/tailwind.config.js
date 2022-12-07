@@ -10,6 +10,7 @@ module.exports = {
   theme: {
     colors: {
       primary: {
+        light: '#FFE6F1',
         DEFAULT: '#FF006E',
         dark: '#B3004D',
       },
@@ -21,10 +22,13 @@ module.exports = {
       white: '#fff',
       black: '#000',
       gray: colors.zinc,
+      red: colors.red,
     },
     extend: {
       boxShadow: {
         inner: 'inset 0 -6px 0 0 rgb(161, 161, 171, 25%)',
+        complete:
+          '0 2px 14px 0 rgb(161, 161, 171, 25%), inset 0 -4px 0 0 rgb(161, 161, 171, 10%)',
       },
       screens: {
         desktop: '906px',
@@ -32,7 +36,10 @@ module.exports = {
       borderRadius: {
         large: '12px',
       },
+      spacing: {
+        13: '3.25rem',
+      },
     },
   },
-  plugins: [],
+  plugins: [require('@tailwindcss/line-clamp')],
 };

@@ -20,7 +20,7 @@ export const ButtonLink: React.FC<ButtonProps> = ({
   return (
     <Link
       href={href}
-      className={`rounded-2xl px-8 py-4 font-medium ${varaintClassname[varaint]}`}
+      className={`h-13 flex items-center rounded-2xl px-8 font-medium ${varaintClassname[varaint]}`}
     >
       {children}
     </Link>
