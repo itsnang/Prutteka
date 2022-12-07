@@ -1,6 +1,6 @@
 import React from 'react';
 
-interface ButtonProps {
+interface ButtonProps extends Partial<HTMLButtonElement> {
   children: React.ReactNode | string;
   varaint?: 'primary' | 'secondary';
   className?: string;
@@ -12,15 +12,17 @@ const varaintClassname = {
 };
 
 export const Button: React.FC<ButtonProps> = ({
+  children,
   varaint = 'primary',
   className,
-  children,
+  ...props
 }) => {
   return (
     <button
       className={`h-13 flex min-w-[3.25rem] items-center justify-center rounded-2xl font-medium ${
         varaintClassname[varaint]
       } ${className ? className : ''}`}
+      {...props}
     >
       {children}
     </button>
