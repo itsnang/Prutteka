@@ -3,6 +3,7 @@ import React from 'react';
 interface ButtonProps {
   children: React.ReactNode | string;
   varaint?: 'primary' | 'secondary';
+  className?: string;
 }
 
 const varaintClassname = {
@@ -12,11 +13,14 @@ const varaintClassname = {
 
 export const Button: React.FC<ButtonProps> = ({
   varaint = 'primary',
+  className,
   children,
 }) => {
   return (
     <button
-      className={`h-13 rounded-2xl px-8 font-medium ${varaintClassname[varaint]}`}
+      className={`h-13 flex min-w-[3.25rem] items-center justify-center rounded-2xl font-medium ${
+        varaintClassname[varaint]
+      } ${className ? className : ''}`}
     >
       {children}
     </button>
