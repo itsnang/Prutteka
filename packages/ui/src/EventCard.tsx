@@ -1,5 +1,5 @@
 import React from 'react';
-import Image, { StaticImageData } from 'next/image';
+import Image, { StaticImageData } from 'next/Image';
 import { TrashIcon } from '@heroicons/react/24/outline';
 
 import { ButtonInterested } from './ButtonInterested';
