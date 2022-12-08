@@ -2,7 +2,8 @@ import React, { forwardRef } from 'react';
 
 import { useField } from 'formik';
 
-interface InputFieldProps extends Partial<HTMLInputElement> {
+interface InputFieldProps
+  extends Partial<React.HTMLAttributes<HTMLInputElement>> {
   name: string;
   type?: string;
   label?: string;
