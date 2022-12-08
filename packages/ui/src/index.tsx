@@ -7,4 +7,5 @@ export * from './EventCard';
 export * from './InputField';
 export * from './Modal';
 export * from './Banner';
+export * from './AutoCompleteInput';
 export * from './Search/SearchBar';
