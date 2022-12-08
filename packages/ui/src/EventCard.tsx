@@ -7,7 +7,7 @@ import Link, { LinkProps } from 'next/link';
 import { Button } from './Button';
 
 interface EventCardProps {
-  image: string;
+  image: string | StaticImageData;
   title: string;
   href: LinkProps['href'];
   isLandscape?: boolean;
@@ -48,7 +48,7 @@ export const EventCard: React.FC<EventCardProps> = ({
             <ButtonInterested />
             {onDelete && (
               <Button
-                varaint="secondary"
+                variant="secondary"
                 className="bg-primary-light border-primary text-primary h-14 w-14"
               >
                 <TrashIcon className="h-6 w-6" />
