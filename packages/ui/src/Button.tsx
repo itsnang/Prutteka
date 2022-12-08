@@ -1,6 +1,7 @@
 import React from 'react';
 
-interface ButtonProps extends Partial<HTMLButtonElement> {
+interface ButtonProps
+  extends Partial<React.HtmlHTMLAttributes<HTMLButtonElement>> {
   children: React.ReactNode | string;
   varaint?: 'primary' | 'secondary';
   className?: string;
