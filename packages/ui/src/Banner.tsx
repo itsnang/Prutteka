@@ -1,5 +1,5 @@
 import React from 'react';
-import Image, { StaticImageData } from 'next/Image';
+import Image, { StaticImageData } from 'next/image';
 
 interface BannerProps {
   img: string | StaticImageData;
