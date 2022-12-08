@@ -1,13 +1,13 @@
 import React from 'react';
-import Image, { StaticImageData } from 'next/Image';
 import { TrashIcon } from '@heroicons/react/24/outline';
+import Image, { StaticImageData } from 'next/image';
 
 import { ButtonInterested } from './ButtonInterested';
 import Link, { LinkProps } from 'next/link';
 import { Button } from './Button';
 
 interface EventCardProps {
-  image: string | StaticImageData;
+  image: string;
   title: string;
   href: LinkProps['href'];
   isLandscape?: boolean;
