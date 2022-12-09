@@ -9,3 +9,4 @@ export * from './Modal';
 export * from './Banner';
 export * from './AutoCompleteInput';
 export * from './Search/SearchBar';
+export * from './Typography';
