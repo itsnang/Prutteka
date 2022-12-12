@@ -1,6 +1,7 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Keyboard, Pagination } from 'swiper';
 import { CarouselHeader } from './CarouselHeader';
+import { StaticImageData } from 'next/image';
 
 interface CarouselProps {
   title?: { text: string; className: string };
@@ -12,8 +13,9 @@ interface CarouselProps {
   autoplay?: boolean | { delay: number };
   gap?: number;
   slidesPerView?: number;
+  loop?: boolean;
 
-  items: { [key: string]: string | null }[];
+  items: { [key: string]: string | null | StaticImageData }[];
   component: (props: any) => JSX.Element | null;
 }
 
@@ -24,8 +26,9 @@ export const Carousel: React.FC<CarouselProps> = ({
   paginationSpacing = 0,
   navigation = false,
   autoplay = false,
-  gap = 50,
+  gap = 16,
   slidesPerView = 3,
+  loop = false,
   title,
   ...props
 }) => {
@@ -40,6 +43,8 @@ export const Carousel: React.FC<CarouselProps> = ({
           pauseOnMouseEnter: true,
         }
       }
+      grabCursor
+      loop={loop}
       pagination={pagination && { clickable: true }}
       slidesPerView={slidesPerView}
       keyboard
@@ -48,7 +53,7 @@ export const Carousel: React.FC<CarouselProps> = ({
       <CarouselHeader title={title} navigation={navigation} />
       {items?.map((item, idx) => (
         <SwiperSlide
-          key={item._id || idx}
+          key={idx}
           className={`pb-${paginationSpacing} ${navigation ? 'pt-12' : ''}`}
         >
           <props.component {...item} />
