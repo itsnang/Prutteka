@@ -36,7 +36,7 @@ export const Button: React.FC<RequireChildrenOrIcon> = ({
 }) => {
   const Icon = icon;
   const iconClassName = `h-6 w-6 ${children ? 'mr-[0.625rem]' : ''}`;
-  const componentClassname = `h-13 inline-flex min-w-[3.25rem] items-center justify-center rounded-2xl px-1 font-medium 
+  const componentClassname = `h-14 inline-flex min-w-[3.25rem] items-center justify-center rounded-2xl px-1 font-medium 
     ${variantClassname[variant]} ${className ? className : ''}
     ${hasShadow ? 'shadow-inner' : ''}`;
 
