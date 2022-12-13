@@ -4,7 +4,7 @@ import { SearchBar, ButtonInterested, Button } from 'ui';
 import { StarIcon } from '@heroicons/react/24/solid';
 export const Header: React.FC = () => {
   return (
-    <nav className=" fixed top-0 w-screen border-b bg-white">
+    <nav className=" fixed top-0 w-screen border-b border-gray-100 bg-white">
       <div className="mx-auto flex max-w-5xl justify-between py-2">
         <div className="flex gap-4">
           <Image src="/Logo.png" alt="Logo" height={52} width={132.5} />
@@ -24,7 +24,13 @@ export const Header: React.FC = () => {
             <Button as="link" href="" variant="secondary" className="px-8">
               Log In
             </Button>
-            <Button as="link" href="" variant="primary" className="px-8">
+            <Button
+              as="link"
+              href=""
+              variant="primary"
+              className="px-8"
+              hasShadow
+            >
               Register
             </Button>
           </div>
