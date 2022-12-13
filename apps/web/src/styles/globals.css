@@ -9,3 +9,21 @@
     font-family: 'Inter', sans-serif;
   }
 }
+
+@layer utilities {
+  .custom-scrollbar::-webkit-scrollbar {
+    @apply h-2 w-2;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply rounded-full bg-gray-100;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-gray-300;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-400;
+  }
+}
