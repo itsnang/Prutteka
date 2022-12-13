@@ -11,14 +11,17 @@ interface AutoCompleteInputProps {
   items: ItemType[];
   leftIcon?: (props: React.ComponentProps<'svg'>) => JSX.Element;
   leftIconClassName?: string;
+  selected: ItemType;
+  setSelected: React.Dispatch<React.SetStateAction<ItemType>>;
 }
 
 export const AutoCompleteInput: React.FC<AutoCompleteInputProps> = ({
   items,
   leftIcon,
   leftIconClassName,
+  selected,
+  setSelected,
 }) => {
-  const [selected, setSelected] = useState(items[0]);
   const [query, setQuery] = useState('');
 
   const filteredItems =
@@ -48,7 +51,7 @@ export const AutoCompleteInput: React.FC<AutoCompleteInputProps> = ({
             className={`w-full border-none py-4 pr-10 text-sm leading-5 text-gray-900 outline-none ${
               LeftIcon ? 'pl-2' : 'pl-4'
             }`}
-            displayValue={(person: any) => person.name}
+            displayValue={(item: ItemType) => item.name}
             onChange={(event) => setQuery(event.target.value)}
           />
           <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
@@ -71,15 +74,15 @@ export const AutoCompleteInput: React.FC<AutoCompleteInputProps> = ({
                 Nothing found.
               </div>
             ) : (
-              filteredItems.map((person) => (
+              filteredItems.map((item) => (
                 <Combobox.Option
-                  key={person.id}
+                  key={item.id}
                   className={({ active }) =>
                     `relative cursor-pointer select-none py-2 pl-10 pr-4 ${
                       active ? 'bg-secondary text-white' : 'text-gray-900'
                     }`
                   }
-                  value={person}
+                  value={item}
                 >
                   {({ selected, active }) => (
                     <>
@@ -88,7 +91,7 @@ export const AutoCompleteInput: React.FC<AutoCompleteInputProps> = ({
                           selected ? 'font-medium' : 'font-normal'
                         }`}
                       >
-                        {person.name}
+                        {item.name}
                       </span>
                       {selected ? (
                         <span
