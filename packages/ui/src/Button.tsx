@@ -43,6 +43,7 @@ export const Button: React.FC<RequireChildrenOrIcon> = ({
   if (as === 'link') {
     return (
       <Link href={href ?? ''} className={componentClassname}>
+        {Icon ? <Icon className={iconClassName} /> : null}
         {typeof children === 'string' ? children : null}
       </Link>
     );
