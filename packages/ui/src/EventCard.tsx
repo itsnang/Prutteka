@@ -7,42 +7,44 @@ import Link, { LinkProps } from 'next/link';
 import { Button } from './Button';
 
 interface EventCardProps {
-  image: string | StaticImageData;
+  img: string | StaticImageData;
   title: string;
   href: LinkProps['href'];
+  date: string;
+  time: string;
+  location: string;
   isLandscape?: boolean;
   onDelete?: Function;
 }
 
 export const EventCard: React.FC<EventCardProps> = ({
-  image,
+  img,
   title,
   href,
-  isLandscape = true,
+  date,
+  time,
+  location,
+  isLandscape = false,
   onDelete,
 }) => {
   if (isLandscape) {
     return (
-      <div className="flex w-full gap-4 rounded-2xl p-2">
-        <Image
-          src={image}
-          alt="title"
-          className="aspect-[2/1] w-56 rounded-xl"
-          placeholder="blur"
-        />
+      <div className="shadow-complete flex w-full gap-4 rounded-2xl p-2">
+        <Link className="relative aspect-[2/1] w-56" href={href}>
+          <Image src={img} alt={title} className="rounded-xl" fill />
+        </Link>
         <div className="flex h-full flex-1 justify-between gap-4 p-2">
           <div className="flex-1">
-            <div className="text-primary text-sm">Thu, Nov 14 | 5:00 PM</div>
+            <div className="text-primary text-sm">
+              {date} | {time}
+            </div>
             <Link
-              className="line-clamp-2 text-lg font-medium text-gray-900"
+              className="line-clamp-2 text-xl font-medium text-gray-900"
               href={href}
             >
-              Cambodia Tech Expo 2022 Lorem ipsum dolor sit amet consectetur
-              adipisicing elit. Inventore beatae eaque, temporibus commodi
-              itaque assumenda blanditiis eius hic eum fugiat nam atque sapiente
-              pariatur iusto excepturi repellat ratione rerum mollitia.
+              {title}
             </Link>
-            <div className="text-secondary text-sm">Phnom Penh</div>
+            <div className="text-secondary text-sm">{location}</div>
           </div>
           <div className="flex gap-4">
             <ButtonInterested />
@@ -61,20 +63,21 @@ export const EventCard: React.FC<EventCardProps> = ({
   }
 
   return (
-    <div className="shadow-complete flex h-80 w-72 flex-col rounded-2xl bg-white p-1">
-      <Link href={href}>
-        <Image
-          src={image}
-          alt="title"
-          className="aspect-[2/1] rounded-xl"
-          placeholder="blur"
-        />
+    <div className="shadow-complete flex h-[22rem] w-screen max-w-[20rem] flex-col rounded-2xl bg-white p-1">
+      <Link
+        href={href}
+        className="relative aspect-[2/1] overflow-hidden rounded-xl"
+      >
+        <Image src={img} alt="title" fill className="object-cover" />
       </Link>
-      <div className="flex h-full flex-col gap-4 p-[14px]">
+      <div className="flex flex-1 flex-col gap-4 p-[14px]">
         <div className="flex-1">
           <div className="text-primary text-sm">Thu, Nov 14 | 5:00 PM</div>
-          <Link className="text-lg font-medium text-gray-900" href={href}>
-            Cambodia Tech Expo 2022
+          <Link
+            className="line-clamp-2 text-xl font-medium text-gray-900"
+            href={href}
+          >
+            {title}
           </Link>
           <div className="text-secondary text-sm">Phnom Penh</div>
         </div>
