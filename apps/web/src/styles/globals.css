@@ -27,3 +27,17 @@
     @apply bg-gray-400;
   }
 }
+
+#nprogress .bar {
+  background: #ff006e !important;
+  height: 4px !important;
+}
+
+#nprogress .peg {
+  box-shadow: 0 0 10px #ff006e, 0 0 5px #ff006e !important;
+}
+
+#nprogress .spinner-icon {
+  border-top-color: #ff006e !important;
+  border-left-color: #ff006e !important;
+}
