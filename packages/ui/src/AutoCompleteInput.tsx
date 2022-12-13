@@ -51,7 +51,7 @@ export const AutoCompleteInput: React.FC<AutoCompleteInputProps> = ({
             className={`w-full border-none py-4 pr-10 text-sm leading-5 text-gray-900 outline-none ${
               LeftIcon ? 'pl-2' : 'pl-4'
             }`}
-            displayValue={(item: ItemType) => item.name}
+            displayValue={(item: ItemType) => item?.name}
             onChange={(event) => setQuery(event.target.value)}
           />
           <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
