@@ -4,25 +4,27 @@ import { useState } from 'react';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 
 interface SearchBarProps {
-  placeholder: string;
+  placeholder?: string;
+  className?: string;
   onSearch: (e: React.FormEvent<HTMLFormElement>, input: string) => void;
 }
 
 export const SearchBar: React.FC<SearchBarProps> = ({
   placeholder,
+  className = '',
   onSearch,
 }) => {
   const [input, setInput] = useState('');
 
   return (
     <form
-      className=" flex items-center rounded-2xl border px-4 py-[0.875rem]"
+      className="flex items-center rounded-2xl border px-4 py-[0.875rem]"
       onSubmit={(e) => onSearch(e, input)}
     >
       <input
         type="text"
         placeholder={placeholder}
-        className=" border-gray-200 outline-none"
+        className={'border-gray-200 outline-none ' + className}
         value={input}
         onChange={(e) => setInput(e.target.value)}
       />

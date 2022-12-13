@@ -5,12 +5,13 @@ import { MapPinIcon } from '@heroicons/react/24/solid';
 import { EVENTDATA, LOCATIONS } from '../constants';
 
 export const Search = () => {
-  const [selected, setSelected] = useState({ name: '', id: 0 });
+  const [selected, setSelected] = useState(LOCATIONS[0]);
   return (
     <div>
       <div className="mx-auto max-w-[31.25rem]">
         <SearchBar
           placeholder="Search Events"
+          className="w-full"
           onSearch={(e) => e.preventDefault()}
         />
         <AutoCompleteInput
