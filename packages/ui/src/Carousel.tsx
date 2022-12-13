@@ -1,36 +1,31 @@
-import { Swiper, SwiperSlide } from 'swiper/react';
+import { Swiper, SwiperSlide, SwiperSlideProps } from 'swiper/react';
 import { Autoplay, Keyboard, Pagination } from 'swiper';
-import { CarouselHeader } from './CarouselHeader';
-import { StaticImageData } from 'next/image';
-
+import { CarouselHeader, CarouselHeaderProps } from './CarouselHeader';
+import React from 'react';
 interface CarouselProps {
-  title?: { text: string; className: string };
-  children?: React.ReactNode | string;
-  className?: string;
+  children: (
+    Slide: React.FunctionComponent<SwiperSlideProps>
+  ) => React.ReactNode;
+  titleClassName?: string;
   pagination?: boolean;
-  navigation?: boolean;
-  paginationSpacing?: number;
   autoplay?: boolean | { delay: number };
   gap?: number;
   slidesPerView?: number;
   loop?: boolean;
-
-  items: { [key: string]: string | null | StaticImageData }[];
-  component: (props: any) => JSX.Element | null;
+  title?: string;
+  navigation?: boolean;
 }
 
 export const Carousel: React.FC<CarouselProps> = ({
-  className,
-  items,
+  titleClassName,
   pagination = false,
-  paginationSpacing = 0,
-  navigation = false,
   autoplay = false,
   gap = 16,
   slidesPerView = 3,
   loop = false,
   title,
-  ...props
+  navigation,
+  children,
 }) => {
   return (
     <Swiper
@@ -48,17 +43,17 @@ export const Carousel: React.FC<CarouselProps> = ({
       pagination={pagination && { clickable: true }}
       slidesPerView={slidesPerView}
       keyboard
-      className={'w-full ' + (className || '')}
+      className="relative mt-20 w-full"
     >
-      <CarouselHeader title={title} navigation={navigation} />
-      {items?.map((item, idx) => (
-        <SwiperSlide
-          key={idx}
-          className={`pb-${paginationSpacing} ${navigation ? 'pt-12' : ''}`}
-        >
-          <props.component {...item} />
-        </SwiperSlide>
-      ))}
+      <div slot="container-start" className="mb-6">
+        &nbsp;
+        <CarouselHeader
+          title={title}
+          className={titleClassName}
+          navigation={navigation}
+        />
+      </div>
+      <>{children(SwiperSlide)}</>
     </Swiper>
   );
 };

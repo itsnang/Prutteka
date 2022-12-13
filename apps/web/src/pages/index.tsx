@@ -1,3 +1,2 @@
-export default function Web() {
-  return <div>Hello World</div>;
-}
+import { HomePage } from 'modules';
+export default HomePage;
