@@ -33,7 +33,7 @@ export const EventCard: React.FC<EventCardProps> = ({
         <Link className="relative aspect-[2/1] w-56" href={href}>
           <Image src={img} alt={title} className="rounded-xl" fill />
         </Link>
-        <div className="flex h-full flex-1 justify-between gap-4 p-2">
+        <div className="flex flex-1 justify-between gap-4 p-2">
           <div className="flex-1">
             <div className="text-primary text-sm">
               {date} | {time}
