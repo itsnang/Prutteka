@@ -17,13 +17,14 @@ export const HomePage: NextPage = () => {
         autoplay
         loop
         slidesPerView={1.75}
-        title="Events"
+        title="Spotlight Events"
         navigation
+        pagination
         titleClassName="text-3xl font-bold"
       >
         {(Slide) =>
           CAROUSEL.map((carousel, idx) => (
-            <Slide key={idx}>
+            <Slide key={idx} className="pb-8">
               <Banner img={carousel.img} title={carousel.title} />
             </Slide>
           ))

@@ -41,3 +41,7 @@
   border-top-color: #ff006e !important;
   border-left-color: #ff006e !important;
 }
+
+.swiper-pagination-bullet-active {
+  background-color: #ff006e !important;
+}

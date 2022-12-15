@@ -40,7 +40,7 @@ export const Carousel: React.FC<CarouselProps> = ({
       }
       grabCursor
       loop={loop}
-      pagination={pagination && { clickable: true }}
+      pagination={pagination && { clickable: true, dynamicBullets: true }}
       slidesPerView={slidesPerView}
       keyboard
       className="relative mt-20 w-full"
