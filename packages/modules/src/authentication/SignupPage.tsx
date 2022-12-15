@@ -61,14 +61,24 @@ export const SignupPage: NextPageWithLayout = () => {
               Create new account
             </Button>
             <div className="my-3 mx-2 border-b-2 border-gray-200" />
-            <Button variant="secondary" as="link" href="/login">
+            <Button variant="secondary" as="link" href="/login" type="button">
               Login
             </Button>
             <Typography className="text-center">or</Typography>
-            <Button variant="secondary" icon={GoogleIcon} className="gap-6">
+            <Button
+              variant="secondary"
+              icon={GoogleIcon}
+              className="gap-6"
+              type="button"
+            >
               Continue with Google
             </Button>
-            <Button variant="secondary" icon={FacebookIcon} className="gap-6">
+            <Button
+              variant="secondary"
+              icon={FacebookIcon}
+              className="gap-6"
+              type="button"
+            >
               Continue with Facebook
             </Button>
           </Form>
