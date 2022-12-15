@@ -1,7 +1,7 @@
 import React from 'react';
 import Link, { LinkProps } from 'next/link';
 
-interface ButtonProps extends Partial<React.HTMLAttributes<HTMLButtonElement>> {
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children?: React.ReactNode | string;
   variant?: 'primary' | 'secondary';
   className?: string;
