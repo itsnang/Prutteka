@@ -5,7 +5,49 @@ import { EllipsisHorizontalIcon } from '@heroicons/react/24/outline';
 
 interface ShareModalProps {
   img: string | StaticImageData;
+  show: boolean;
+  onClose: () => void;
 }
+
+export const ShareModal: React.FC<ShareModalProps> = ({
+  img,
+  show,
+  onClose,
+}) => {
+  return (
+    <div>
+      <Modal onClose={onClose} show={show}>
+        <div className="relative flex h-20 justify-center">
+          <div className="absolute bottom-8 mx-auto aspect-[2/1] w-[27rem] rounded-2xl shadow-xl shadow-gray-300">
+            <Image
+              alt="ShareModalImage"
+              src={img}
+              fill
+              className="rounded-2xl object-cover"
+            />
+          </div>
+        </div>
+        <div className="space-y-6 text-center text-2xl font-medium">
+          Share this event with your social community
+          <div className="mt-6 flex justify-center gap-4">
+            <IconStyle color="bg-[#EBEEF5]">
+              <FacebookIcon />
+            </IconStyle>
+            <IconStyle color="bg-[#FCEAF0]">
+              <InstargramIcom />
+            </IconStyle>
+            <IconStyle color="bg-[#E6F3FA]">
+              <TelegramIcon />
+            </IconStyle>
+            <IconStyle>
+              <EllipsisHorizontalIcon />
+            </IconStyle>
+          </div>
+        </div>
+      </Modal>
+    </div>
+  );
+};
 
 const IconStyle = ({
   children,
@@ -92,40 +134,5 @@ const TelegramIcon = () => {
         </clipPath>
       </defs>
     </svg>
-  );
-};
-
-export const ShareModal: React.FC<ShareModalProps> = ({ img }) => {
-  const [show, setShow] = useState(true);
-
-  return (
-    <div>
-      <Modal title="" onClose={() => setShow(false)} show={show}>
-        <div className="relative -mt-4 flex h-20 justify-center">
-          <Image
-            alt="ShareModalImage"
-            src={img}
-            className="absolute bottom-8 mx-auto aspect-[2/1] w-[27rem] rounded-2xl object-cover"
-          />
-        </div>
-        <div className="space-y-6 text-center text-2xl font-medium">
-          Share this event with your social community
-          <div className="mt-6 flex justify-center gap-4">
-            <IconStyle color="bg-[#EBEEF5]">
-              <FacebookIcon />
-            </IconStyle>
-            <IconStyle color="bg-[#FCEAF0]">
-              <InstargramIcom />
-            </IconStyle>
-            <IconStyle color="bg-[#E6F3FA]">
-              <TelegramIcon />
-            </IconStyle>
-            <IconStyle>
-              <EllipsisHorizontalIcon />
-            </IconStyle>
-          </div>
-        </div>
-      </Modal>
-    </div>
   );
 };
