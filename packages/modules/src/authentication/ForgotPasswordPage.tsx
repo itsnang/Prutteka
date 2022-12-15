@@ -42,16 +42,16 @@ export const ForgotPasswordPage: NextPageWithLayout = () => {
       >
         {() => (
           <Form className="flex flex-col gap-4 p-4">
-            <button onClick={router.back}>
+            <Link href="/login">
               <ArrowLongLeftIcon className="h-6 w-6" />
-            </button>
+            </Link>
 
             <Typography>Forgot password?</Typography>
 
             <InputField name="email" placeholder="Email" type="email" />
 
             <Button hasShadow type="submit">
-              Login
+              Submit
             </Button>
           </Form>
         )}
