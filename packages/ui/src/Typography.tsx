@@ -14,7 +14,7 @@ interface TypographyProps extends Partial<React.HTMLAttributes<HTMLElement>> {
   color?: StyleClassName['color'];
   weight?: StyleClassName['weight'];
   className?: string;
-  children: string;
+  children: string | React.ReactNode;
 }
 
 type VariantMapping = { [Property in Variant]: StyleClassName };
