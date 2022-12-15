@@ -14,10 +14,13 @@ module.exports = {
         DEFAULT: '#FF006E',
         dark: '#B3004D',
       },
-      secondary: '#3A86FF',
+      secondary: {
+        light: '#EBF3FF',
+        DEFAULT: '#3A86FF',
+      },
       tertiary: {
+        light: '#FFF9E7',
         DEFAULT: '#FFBE0B',
-        ligth: '#FFF9E7',
       },
       white: '#fff',
       black: '#000',
