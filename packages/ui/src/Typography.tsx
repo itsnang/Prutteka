@@ -2,7 +2,15 @@ import React from 'react';
 
 interface StyleClassName {
   size?: 'sm' | 'base' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl';
-  color?: 'dark' | 'base' | 'light';
+  color?:
+    | 'dark'
+    | 'base'
+    | 'light'
+    | 'primary'
+    | 'secondary'
+    | 'tertiary'
+    | 'white'
+    | 'black';
   weight?: 'light' | 'normal' | 'medium' | 'semibold' | 'bold';
 }
 
@@ -82,6 +90,11 @@ const colorMapping = {
   dark: 'text-gray-900',
   base: 'text-gray-700',
   light: 'text-gray-500',
+  primary: 'text-primary',
+  secondary: 'text-secondary',
+  tertiary: 'text-tertiary',
+  white: 'text-white',
+  black: 'text-black',
 };
 
 const weightMapping = {
