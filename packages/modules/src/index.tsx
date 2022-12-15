@@ -4,3 +4,4 @@ export * from './user';
 export * from './landing-page';
 export * from './search';
 export * from './authentication';
+export * from './event';
