@@ -19,6 +19,7 @@
     "tsconfig": "*",
     "tailwindcss": "^3.2.4",
     "tailwind-config": "*",
-    "ui": "*"
+    "ui": "*",
+    "@headlessui/react": "^1.7.4"
   }
 }
