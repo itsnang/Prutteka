@@ -52,6 +52,7 @@ export const EventCard: React.FC<EventCardProps> = ({
               <Button
                 variant="secondary"
                 className="bg-primary-light border-primary text-primary h-14 w-14"
+                onClick={() => onDelete()}
               >
                 <TrashIcon className="h-6 w-6" />
               </Button>
