@@ -37,12 +37,17 @@ export const Header: React.FC = () => {
           </div>
 
           <div className="flex gap-2 pl-4">
-            <Button as="link" href="" variant="secondary" className="px-8">
+            <Button
+              as="link"
+              href="/login"
+              variant="secondary"
+              className="px-8"
+            >
               Log In
             </Button>
             <Button
               as="link"
-              href=""
+              href="/signup"
               variant="primary"
               className="px-8"
               hasShadow

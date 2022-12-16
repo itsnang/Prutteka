@@ -53,21 +53,34 @@ export const LoginPage: NextPageWithLayout = () => {
               placeholder="Password"
               type="password"
             />
-            <Link href="/forgot-password" className="text-end">
+            <Link
+              href="/forgot-password"
+              className="text-end text-gray-700 hover:underline"
+            >
               Forgot password?
             </Link>
             <Button hasShadow type="submit">
               Login
             </Button>
             <div className="my-3 mx-2 border-b-2 border-gray-200" />
-            <Button variant="secondary" as="link" href="/signup">
+            <Button variant="secondary" as="link" href="/signup" type="button">
               Create new account
             </Button>
             <Typography className="text-center">or</Typography>
-            <Button variant="secondary" icon={GoogleIcon} className="gap-6">
+            <Button
+              variant="secondary"
+              icon={GoogleIcon}
+              className="gap-6"
+              type="button"
+            >
               Continue with Google
             </Button>
-            <Button variant="secondary" icon={FacebookIcon} className="gap-6">
+            <Button
+              variant="secondary"
+              icon={FacebookIcon}
+              className="gap-6"
+              type="button"
+            >
               Continue with Facebook
             </Button>
           </Form>
