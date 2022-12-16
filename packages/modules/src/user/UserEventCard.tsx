@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Image, { StaticImageData } from 'next/image';
 import { Typography, Button } from 'ui';
+import { DeleteModal } from '../shared';
 
 import {
   ChevronDownIcon,
@@ -34,6 +35,8 @@ export const UserEventCard: React.FC<UserEventCardProps> = ({
   location,
   isNested = false,
 }) => {
+  const [show, setShow] = useState(false);
+
   return (
     <Disclosure>
       {({ open }) => (
@@ -88,9 +91,16 @@ export const UserEventCard: React.FC<UserEventCardProps> = ({
                       icon={RectangleStackIcon}
                     ></Button>
                   ) : null}
-                  <Button variant="secondary" icon={PencilIcon}></Button>
 
                   <Button
+                    variant="secondary"
+                    as="link"
+                    href="/"
+                    icon={PencilIcon}
+                  ></Button>
+
+                  <Button
+                    onClick={() => setShow(true)}
                     className="text-primary bg-primary-light border-primary"
                     variant="secondary"
                     icon={TrashIcon}
@@ -99,6 +109,7 @@ export const UserEventCard: React.FC<UserEventCardProps> = ({
               </div>
             </div>
           </Disclosure.Panel>
+          <DeleteModal show={show} onClose={() => setShow(false)} />
         </div>
       )}
     </Disclosure>
