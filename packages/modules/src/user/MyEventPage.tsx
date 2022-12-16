@@ -1,11 +1,12 @@
 import React from 'react';
-import { Typography } from 'ui';
+import { SeoMeta, Typography } from 'ui';
 import { UserEventCard } from './UserEventCard';
 import { EVENTDATA } from '../constants';
 
 export const MyEventPage = () => {
   return (
     <>
+      <SeoMeta title="My Events - Prutteka" description="" />
       <div className="flex flex-col gap-6">
         <Typography weight="bold" className="uppercase" variant="h4">
           My Event

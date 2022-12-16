@@ -11,6 +11,7 @@ import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
 
 const validationSchema = Yup.object({
+  name: Yup.string().required('Required'),
   email: Yup.string().email('Invalid email address').required('Required'),
   password: Yup.string()
     .min(8, 'Must be at least 8 characters')
@@ -19,18 +20,19 @@ const validationSchema = Yup.object({
 });
 
 interface InitialValuesType {
+  name: string;
   email: string;
   password: string;
 }
 
-export const LoginPage: NextPageWithLayout = () => {
-  const handleSubmit = ({ email, password }: InitialValuesType) => {
-    console.log(email, password);
+export const RegisterPage: NextPageWithLayout = () => {
+  const handleSubmit = ({ email, password, name }: InitialValuesType) => {
+    console.log(name, email, password);
   };
 
   return (
     <>
-      <SeoMeta title="Login - Prutteka" description="" />
+      <SeoMeta title="Register - Prutteka" description="" />
       <div className="w-auto">
         <Link href="/">
           <Image
@@ -43,35 +45,26 @@ export const LoginPage: NextPageWithLayout = () => {
         </Link>
 
         <Formik
-          initialValues={{ email: '', password: '' }}
+          initialValues={{ email: '', password: '', name: '' }}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
           {() => (
             <Form className="flex flex-col gap-4 p-4">
+              <InputField name="name" placeholder="Name" type="text" />
               <InputField name="email" placeholder="Email" type="email" />
               <InputField
                 name="password"
                 placeholder="Password"
                 type="password"
               />
-              <Link
-                href="/forgot-password"
-                className="text-end text-gray-700 hover:underline"
-              >
-                Forgot password?
-              </Link>
+
               <Button hasShadow type="submit">
-                Login
+                Create new account
               </Button>
               <div className="my-3 mx-2 border-b-2 border-gray-200" />
-              <Button
-                variant="secondary"
-                as="link"
-                href="/register"
-                type="button"
-              >
-                Create new account
+              <Button variant="secondary" as="link" href="/login" type="button">
+                Login
               </Button>
               <Typography className="text-center">or</Typography>
               <Button
@@ -98,4 +91,4 @@ export const LoginPage: NextPageWithLayout = () => {
   );
 };
 
-LoginPage.getLayout = AuthLayout;
+RegisterPage.getLayout = AuthLayout;

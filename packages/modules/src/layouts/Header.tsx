@@ -47,7 +47,7 @@ export const Header: React.FC = () => {
             </Button>
             <Button
               as="link"
-              href="/signup"
+              href="/register"
               variant="primary"
               className="px-8"
               hasShadow
