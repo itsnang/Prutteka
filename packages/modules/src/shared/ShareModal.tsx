@@ -1,5 +1,5 @@
 import React, { Children, useState } from 'react';
-import { Modal } from './Modal';
+import { Modal } from 'ui';
 import Image, { StaticImageData } from 'next/image';
 import { EllipsisHorizontalIcon } from '@heroicons/react/24/outline';
 

@@ -10,4 +10,3 @@ export * from './Carousel';
 export * from './AutoCompleteInput';
 export * from './Search/SearchBar';
 export * from './Typography';
-export * from './ShareModal';
