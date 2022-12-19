@@ -1,0 +1,12 @@
+{
+  "common": {
+    "search-event": "ស្វែងរកព្រឹត្តិការណ៍",
+    "language": "ខ្មែរ",
+    "login": "ចូល",
+    "register": "ចុះឈ្មោះ",
+    "view-all": "ទា៉ងអស់",
+    "interested": "Interested",
+    "cancel": "Cancel",
+    "delete": "Delete"
+  }
+}

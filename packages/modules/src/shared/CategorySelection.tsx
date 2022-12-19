@@ -28,7 +28,7 @@ export const CategorySelection: React.FC<CategorySelectionProps> = ({
           ))}
         </div>
       </Modal>
-      <div className="custom-scrollbar flex space-x-4 overflow-x-auto pb-1">
+      <div className="custom-scrollbar flex space-x-4 overflow-x-auto">
         {CATEGORIES.map((category, idx) => (
           <ButtonCategory key={idx}>{category}</ButtonCategory>
         ))}

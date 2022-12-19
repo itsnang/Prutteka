@@ -100,7 +100,7 @@ export const EventDetailPage = () => {
               img="/event_poster1.jpg"
             />
           </ItemContainer>
-          <div className="custom-scrollbar flex space-x-4 overflow-x-auto pb-1">
+          <div className="custom-scrollbar flex space-x-4 overflow-x-auto">
             <ButtonCategory>Fri, Nov 11</ButtonCategory>
             <ButtonCategory>Fri, Nov 11</ButtonCategory>
             <ButtonCategory>Fri, Nov 11</ButtonCategory>
