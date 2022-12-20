@@ -28,48 +28,25 @@ import { ItemContainer } from './ItemContainer';
 import { EventInfoCard } from './EventInfoCard';
 import { AttendModal } from './AttendModal';
 import { EVENTDATA } from '../constants';
+import { EventHeader } from './EventHeader';
+import { useRouter } from 'next/router';
 
 export const EventDetailPage = () => {
   const [attendModal, setAttendModal] = useState(false);
   const [shareModal, setShareModal] = useState(false);
+  const { query } = useRouter();
 
   return (
     <>
       <SeoMeta title=" - Prutteka" description="" />
-
-      <div className="space-y-4">
-        <div className="flex justify-center overflow-hidden rounded-2xl bg-gray-100">
-          <div className="relative aspect-[2/1] h-96">
-            <Image
-              src="/event_poster1.jpg"
-              className="rounded-2xl object-cover"
-              fill
-              alt="event-poster"
-            />
-          </div>
-        </div>
+      <div className="space-y-8">
+        <EventHeader
+          isHappening
+          img="/event_poster1.jpg"
+          title="Cambodia Tech Expo 2022"
+          date="Fri, Nov 11 - Sun, Nov 13"
+        />
         <div className="space-y-4">
-          <div className="py-6">
-            <Typography
-              variant="span"
-              size="base"
-              color="white"
-              weight="medium"
-              className="bg-primary rounded-md py-1 px-2 uppercase"
-            >
-              Happening now
-            </Typography>
-            <Typography variant="h1">Cambodia Tech Expo 2022</Typography>
-            <Typography size="base" color="primary">
-              Fri, Nov 11 - Sun, Nov 13
-            </Typography>
-            <Typography variant="span" size="base" color="dark" weight="medium">
-              From
-            </Typography>
-            <Link href="/" className="text-secondary ml-2 underline">
-              Source
-            </Link>
-          </div>
           <ItemContainer className="flex space-x-4">
             <Button
               icon={TicketIcon}
@@ -190,6 +167,39 @@ export const EventDetailPage = () => {
             </EventInfoCard>
           </ItemContainer>
 
+          <div className="space-y-4">
+            <div className="flex justify-center">
+              <div className="my-3 mx-2 w-20 border-b-2 border-gray-200" />
+              <Typography className="uppercase">In this event</Typography>
+              <div className="my-3 mx-2 w-20 border-b-2 border-gray-200" />
+            </div>
+            {EVENTDATA.slice(3).map((event) => (
+              <EventCard
+                isLandscape
+                key={event.id}
+                img={event.img}
+                date={event.date}
+                time={event.time}
+                location={event.location}
+                title={event.title}
+                href="/event"
+              />
+            ))}
+            <div className="flex space-x-4">
+              <Button
+                as="link"
+                href={`/event/${query?.eventId}/nested`}
+                variant="secondary"
+                className="flex-1"
+              >
+                View All
+              </Button>
+              <Button className="flex-1" hasShadow>
+                Add event
+              </Button>
+            </div>
+          </div>
+
           <ItemContainer>
             <div className="flex items-center space-x-4">
               <div className="rounded-xl bg-gray-200 p-2 text-gray-700">
@@ -216,30 +226,30 @@ export const EventDetailPage = () => {
             `}
             </div>
           </ItemContainer>
+          <Carousel
+            loop
+            slidesPerView={3}
+            title="Other events"
+            navigation
+            pagination
+            titleClassName="text-2xl font-bold uppercase"
+          >
+            {(Slide) =>
+              EVENTDATA.map((event, idx) => (
+                <Slide key={idx} className="pb-8">
+                  <EventCard
+                    img={event.img}
+                    date={event.date}
+                    time={event.time}
+                    title={event.title}
+                    location={event.location}
+                    href=""
+                  />
+                </Slide>
+              ))
+            }
+          </Carousel>
         </div>
-        <Carousel
-          loop
-          slidesPerView={3}
-          title="Other events"
-          navigation
-          pagination
-          titleClassName="text-2xl font-bold uppercase"
-        >
-          {(Slide) =>
-            EVENTDATA.map((event, idx) => (
-              <Slide key={idx} className="pb-8">
-                <EventCard
-                  img={event.img}
-                  date={event.date}
-                  time={event.time}
-                  title={event.title}
-                  location={event.location}
-                  href=""
-                />
-              </Slide>
-            ))
-          }
-        </Carousel>
       </div>
     </>
   );
