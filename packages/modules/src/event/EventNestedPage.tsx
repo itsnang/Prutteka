@@ -6,11 +6,14 @@ import { EventHeader } from './EventHeader';
 import { DeleteModal } from '../shared';
 import { ArrowLongLeftIcon } from '@heroicons/react/24/outline';
 import { EVENTDATA } from '../constants';
+import { useTypeSafeTranslation } from '../shared-hooks';
 
 export const EventNestedPage = () => {
   const [deleteModal, setDeleteModal] = useState(false);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const { query } = useRouter();
+
+  const { t } = useTypeSafeTranslation();
 
   return (
     <div className="space-y-8">
@@ -32,19 +35,21 @@ export const EventNestedPage = () => {
           </div>
           <div className="flex">
             <div className="my-3 mx-2 w-20 border-b-2 border-gray-200" />
-            <Typography className="uppercase">In this event</Typography>
+            <Typography className="uppercase">
+              {t('event-detail-page.in-this-event')}
+            </Typography>
             <div className="my-3 mx-2 w-20 border-b-2 border-gray-200" />
           </div>
           <SearchBar
             className="w-full max-w-[12.5rem]"
-            placeholder="Search"
+            placeholder={t('common.search-event')}
             onSearch={(e) => {
               e.preventDefault();
             }}
           />
         </div>
         <Button hasShadow className="w-full">
-          Add Event
+          {t('event-detail-page.add-event')}
         </Button>
         {EVENTDATA.map((event, idx) => (
           <EventCard

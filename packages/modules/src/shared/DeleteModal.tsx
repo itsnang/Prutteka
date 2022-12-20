@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Modal, Typography } from 'ui';
+import { useTypeSafeTranslation } from '../shared-hooks';
 
 interface DeleteModalProps {
   show: boolean;
@@ -12,13 +13,20 @@ export const DeleteModal: React.FC<DeleteModalProps> = ({
   show,
   onDelete,
 }) => {
+  const { t } = useTypeSafeTranslation();
+
   return (
-    <Modal className="text-2xl" onClose={onClose} title="Delete" show={show}>
+    <Modal
+      className="text-2xl"
+      onClose={onClose}
+      title={t('common.delete')}
+      show={show}
+    >
       <div className="mt-6 space-y-6">
-        <Typography>Are you sure you want to deleted this event?</Typography>
+        <Typography>{t('modals.delete-event')}</Typography>
         <div className="flex gap-4 text-base">
           <Button className="flex-1 px-8" variant="secondary" onClick={onClose}>
-            Cancel
+            {t('common.cancel')}
           </Button>
           <Button
             className="flex-1 px-8"
@@ -26,7 +34,7 @@ export const DeleteModal: React.FC<DeleteModalProps> = ({
             onClick={onDelete}
             hasShadow
           >
-            Delete
+            {t('common.delete')}
           </Button>
         </div>
       </div>

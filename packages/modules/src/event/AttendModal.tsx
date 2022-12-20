@@ -2,6 +2,7 @@ import React from 'react';
 
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
 import { Modal } from 'ui';
+import { useTypeSafeTranslation } from '../shared-hooks';
 
 interface AttendModalProp {
   show: boolean;
@@ -9,9 +10,11 @@ interface AttendModalProp {
 }
 
 export const AttendModal: React.FC<AttendModalProp> = ({ show, onClose }) => {
+  const { t } = useTypeSafeTranslation();
+
   return (
     <Modal
-      title="How to attend"
+      title={t('event-detail-page.how-to-attend')}
       show={show}
       onClose={onClose}
       className="min-h-[21.875rem]"
