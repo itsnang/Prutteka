@@ -18,8 +18,7 @@ type TranslationKeys = Paths<typeof translations>;
 
 export const useTypeSafeTranslation = () => {
   const { t } = useTranslation('translation');
-
   return {
-    t: (s: TranslationKeys) => t(s),
+    t: (s: TranslationKeys | string) => t(s),
   };
 };

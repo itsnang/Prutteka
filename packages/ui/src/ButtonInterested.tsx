@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { StarIcon } from '@heroicons/react/24/outline';
 import { StarIcon as StarFillIcon } from '@heroicons/react/24/solid';
+import { useTypeSafeTranslation } from '../../modules';
 
 interface ButtonInterestedProps {
   isDefault?: boolean;
@@ -15,6 +16,8 @@ export const ButtonInterested: React.FC<ButtonInterestedProps> = ({
   isActive,
   className,
 }) => {
+  const { t } = useTypeSafeTranslation();
+
   const [active, setActive] = useState(isActive || false);
 
   const buttonClassName = isDefault
@@ -30,7 +33,7 @@ export const ButtonInterested: React.FC<ButtonInterestedProps> = ({
       } ${buttonClassName} ${className ? className : ''}`}
       onClick={() => setActive((prev) => !prev)}
     >
-      {hasText && 'Interested'}
+      {hasText && t('common.interested')}
       {active ? (
         <StarFillIcon className="h-6 w-6" />
       ) : (
