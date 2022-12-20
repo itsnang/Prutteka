@@ -28,10 +28,13 @@ import { ItemContainer } from './ItemContainer';
 import { EventInfoCard } from './EventInfoCard';
 import { AttendModal } from './AttendModal';
 import { EVENTDATA } from '../constants';
+import { useTypeSafeTranslation } from '../shared-hooks';
 
 export const EventDetailPage = () => {
   const [attendModal, setAttendModal] = useState(false);
   const [shareModal, setShareModal] = useState(false);
+
+  const { t } = useTypeSafeTranslation();
 
   return (
     <>
@@ -57,7 +60,7 @@ export const EventDetailPage = () => {
               weight="medium"
               className="bg-primary rounded-md py-1 px-2 uppercase"
             >
-              Happening now
+              {t('event-detail-page.happening')}
             </Typography>
             <Typography variant="h1">Cambodia Tech Expo 2022</Typography>
             <Typography size="base" color="primary">
@@ -76,7 +79,7 @@ export const EventDetailPage = () => {
               className="flex-[2]"
               onClick={() => setAttendModal(true)}
             >
-              How to attend
+              {t('event-detail-page.how-to-attend')}
             </Button>
             <ButtonInterested
               isDefault={false}
@@ -88,7 +91,7 @@ export const EventDetailPage = () => {
               className="flex-1 justify-between px-4"
               onClick={() => setShareModal(true)}
             >
-              Share <ShareIcon className="h-6 w-6" />
+              {t('event-detail-page.share')} <ShareIcon className="h-6 w-6" />
             </Button>
             <AttendModal
               show={attendModal}
@@ -112,7 +115,7 @@ export const EventDetailPage = () => {
               iconClassName="bg-tertiary-light text-tertiary"
             >
               <Typography color="dark" weight="semibold" size="xl">
-                Time
+                {t('event-detail-page.time')}
               </Typography>
               <Typography>8:30 AM - 6:00 PM</Typography>
             </EventInfoCard>
@@ -123,7 +126,7 @@ export const EventDetailPage = () => {
               iconClassName="bg-primary-light"
             >
               <Typography color="dark" weight="semibold" size="xl">
-                Duration
+                {t('event-detail-page.duration')}
               </Typography>
               <Typography>9h 30mns</Typography>
             </EventInfoCard>
@@ -134,7 +137,7 @@ export const EventDetailPage = () => {
               iconClassName="bg-secondary-light text-secondary"
             >
               <Typography color="dark" weight="semibold" size="xl">
-                Location
+                {t('event-detail-page.location')}
               </Typography>
               <Typography>On-site (Phnom Penh) & Online</Typography>
             </EventInfoCard>
@@ -145,7 +148,7 @@ export const EventDetailPage = () => {
               iconClassName="bg-secondary-light text-secondary"
             >
               <Typography color="dark" weight="semibold" size="2xl">
-                Map
+                {t('event-detail-page.map')}
               </Typography>
               <div className="mt-2 space-y-4">
                 <div className="space-y-2">
@@ -154,7 +157,7 @@ export const EventDetailPage = () => {
                     Exhibition Center
                   </Typography>
                   <button className="flex rounded-lg border border-gray-200 py-2 px-4 font-normal">
-                    View on map
+                    {t('event-detail-page.view-on-map')}
                     <ArrowTopRightOnSquareIcon className="ml-2 h-5 w-5" />
                   </button>
                 </div>
@@ -165,7 +168,7 @@ export const EventDetailPage = () => {
                     Exhibition Center
                   </Typography>
                   <button className="flex rounded-lg border border-gray-200 p-2 px-4 font-normal">
-                    View on map
+                    {t('event-detail-page.view-on-map')}
                     <ArrowTopRightOnSquareIcon className="ml-2 h-5 w-5" />
                   </button>
                 </div>
@@ -179,7 +182,7 @@ export const EventDetailPage = () => {
               iconClassName="bg-primary-light text-primary"
             >
               <Typography color="dark" weight="semibold" size="2xl">
-                Schedule
+                {t('event-detail-page.schedule')}
               </Typography>
               <div className="mt-2 flex w-full flex-col space-y-2">
                 <div className="flex-1 rounded-xl border border-gray-200 p-4 text-gray-700">
@@ -196,7 +199,7 @@ export const EventDetailPage = () => {
                 <InformationCircleIcon className="h-7 w-7" />
               </div>
               <Typography color="dark" weight="semibold" size="2xl">
-                Event Detail
+                {t('event-detail-page.event-detail')}
               </Typography>
             </div>
             <div className="mt-4 text-gray-700">
@@ -220,7 +223,7 @@ export const EventDetailPage = () => {
         <Carousel
           loop
           slidesPerView={3}
-          title="Other events"
+          title={t('event-detail-page.other-events')}
           navigation
           pagination
           titleClassName="text-2xl font-bold uppercase"

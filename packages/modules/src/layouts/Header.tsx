@@ -2,14 +2,14 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useTranslation } from 'next-i18next';
 
 import { SearchBar, Button } from 'ui';
 import { StarIcon } from '@heroicons/react/24/solid';
+import { useTypeSafeTranslation } from '../shared-hooks';
 
 export const Header: React.FC = () => {
   const router = useRouter();
-  const { t } = useTranslation('translation');
+  const { t } = useTypeSafeTranslation();
 
   const changeLocale = (newLocale: string) => {
     const { pathname, asPath, query } = router;
@@ -28,7 +28,7 @@ export const Header: React.FC = () => {
             <Image src="/Logo.png" alt="Logo" height={52} width={132.5} />
           </Link>
           <SearchBar
-            placeholder={t('common.search-event')}
+            placeholder={t('common.search-event') || ''}
             onSearch={(e) => {
               e.preventDefault();
               router.push('/search');
@@ -54,18 +54,18 @@ export const Header: React.FC = () => {
               as="link"
               href="/login"
               variant="secondary"
-              className="px-8"
+              className="min-w-[8rem] px-8"
             >
-              Log In
+              {t('common.login')}
             </Button>
             <Button
               as="link"
               href="/register"
               variant="primary"
-              className="px-8"
+              className="min-w-[8rem] px-8"
               hasShadow
             >
-              Register
+              {t('common.register')}
             </Button>
           </div>
         </div>
