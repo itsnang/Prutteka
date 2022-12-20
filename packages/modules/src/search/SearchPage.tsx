@@ -46,7 +46,7 @@ export const Search = () => {
             leftIconClassName="text-secondary"
           />
         </div>
-        <CategorySelection title="SEARCH RESULTS" />
+        <CategorySelection title={t('search-page.search-results')} />
         <div className="flex flex-col gap-[0.625rem] p-4">
           {EVENTDATA.map((event) => (
             <EventCard {...event} key={event.id} href="" isLandscape />

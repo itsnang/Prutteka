@@ -7,7 +7,8 @@
     "view-all": "View all",
     "interested": "Interested",
     "cancel": "Cancel",
-    "delete": "Delete"
+    "delete": "Delete",
+    "categories": "Categories"
   },
   "categories": {
     "all": "All",
@@ -48,6 +49,10 @@
     "preah-vihear": "Preah Vihear",
     "tbong-khmum": "Tbong Khmum"
   },
+  "modals": {
+    "share-event": "Share this event with your social community",
+    "delete-event": "Are you sure you want to deleted this event?"
+  },
   "event-detail-page": {
     "happening": "HAPPENING NOW",
     "how-to-attend": "How to attend",
@@ -66,6 +71,9 @@
   "home-page": {
     "spotlight-events": "SPOTLIGHT EVENTS",
     "explore": "EXPLORE"
+  },
+  "search-page": {
+    "search-results": "SEARCH RESULTS"
   },
   "register-page": {
     "name": "Name",

@@ -239,15 +239,15 @@ export const EventDetailPage = () => {
           titleClassName="text-2xl font-bold uppercase"
         >
           {(Slide) =>
-            EVENTDATA.map((event, idx) => (
-              <Slide key={idx} className="pb-8">
+            EVENTDATA.map((event) => (
+              <Slide key={event.id} className="pb-8">
                 <EventCard
                   img={event.img}
                   date={event.date}
                   time={event.time}
                   title={event.title}
                   location={event.location}
-                  href=""
+                  href={`/event/${event.id}`}
                 />
               </Slide>
             ))

@@ -13,7 +13,7 @@ export const InterestedEventPage: React.FC = () => {
       <div>
         <div className="space-y-3">
           <Typography variant="h4" weight="bold" className="uppercase">
-            Interested
+            {t('interested-event-page.interested')}
           </Typography>
           <div className="flex justify-between ">
             <div className="rounded-full border border-gray-200 bg-gray-100 py-2 px-4">

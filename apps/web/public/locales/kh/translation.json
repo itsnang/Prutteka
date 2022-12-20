@@ -7,7 +7,8 @@
     "view-all": "ទាំងអស់",
     "interested": "ចាប់អារម្មណ៍",
     "cancel": "បោះបង់",
-    "delete": "លុប"
+    "delete": "លុប",
+    "categories": "ប្រភេទ"
   },
   "categories": {
     "all": "ទាំងអស់",
@@ -48,6 +49,10 @@
     "preah-vihear": "ព្រះវិហារ",
     "tbong-khmum": "ត្បូងឃ្ម៉ំ"
   },
+  "modals": {
+    "share-event": "ចែករំលែកព្រឹត្តិការណ៍នេះជាមួយមិត្តភក្តិក្នុងបណ្ដាញសង្គម",
+    "delete-event": "តើអ្នកចង់លុបព្រឹត្តិការណ៍នេះមែនទេ?"
+  },
   "event-detail-page": {
     "happening": "កំពុងប្រារព្ធ",
     "how-to-attend": "របៀបចូលរួម",
@@ -66,6 +71,9 @@
   "home-page": {
     "spotlight-events": "ព្រឹត្តិការណ៍កំពុងពេញនិយម",
     "explore": "ស្វែងរក"
+  },
+  "search-page": {
+    "search-results": "លទ្ធផលនៃការស្វែករក"
   },
   "register-page": {
     "name": "ឈ្មោះ",

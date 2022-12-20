@@ -26,7 +26,7 @@ export const CategorySelection: React.FC<CategorySelectionProps> = ({
       </div>
       <Modal
         className="text-2xl"
-        title="Categories"
+        title={t('common.categories')}
         show={isOpen}
         onClose={() => setIsOpen(false)}
       >
