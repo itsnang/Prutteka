@@ -12,20 +12,20 @@ export const Search = () => {
     () =>
       LOCATIONS.map((value, idx) => ({
         name: t(value),
-        value: value,
+        value: value as string,
         id: idx,
       })),
     [t]
   );
   const [selected, setSelected] = useState(locations[0]);
 
-  // fix language change translation
-  useEffect(() => {
-    // will set translate-text when language change
-    setSelected(
-      (prev) => locations.find((v) => v.id === prev.id) || locations[0]
-    );
-  }, [locations]);
+  // // fix language change translation
+  // useEffect(() => {
+  //   // will set translate-text when language change
+  //   setSelected(
+  //     (prev) => locations.find((v) => v.id === prev.id) || locations[0]
+  //   );
+  // }, [locations]);
 
   return (
     <>
@@ -34,7 +34,7 @@ export const Search = () => {
       <div>
         <div className="mx-auto max-w-[31.25rem]">
           <SearchBar
-            placeholder="Search Events"
+            placeholder={t('common.search-event')}
             className="w-full"
             onSearch={(e) => e.preventDefault()}
           />

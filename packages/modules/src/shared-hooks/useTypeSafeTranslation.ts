@@ -14,11 +14,11 @@ type Paths<T> = {
     : K;
 }[keyof T];
 
-type TranslationKeys = Paths<typeof translations>;
+export type TranslationKeys = Paths<typeof translations>;
 
 export const useTypeSafeTranslation = () => {
   const { t } = useTranslation('translation');
   return {
-    t: (s: TranslationKeys | string) => t(s),
+    t: (s: TranslationKeys) => t(s),
   };
 };

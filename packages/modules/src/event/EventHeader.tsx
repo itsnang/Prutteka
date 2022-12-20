@@ -2,6 +2,7 @@ import React from 'react';
 import Image, { StaticImageData } from 'next/image';
 import Link, { LinkProps } from 'next/link';
 import { Typography } from 'ui';
+import { useTypeSafeTranslation } from '../shared-hooks';
 
 interface EventHeader {
   img: string | StaticImageData;
@@ -18,6 +19,8 @@ export const EventHeader: React.FC<EventHeader> = ({
   date,
   source = '',
 }) => {
+  const { t } = useTypeSafeTranslation();
+
   return (
     <div className="space-y-4">
       <div className="flex justify-center overflow-hidden rounded-2xl bg-gray-100">
@@ -39,7 +42,7 @@ export const EventHeader: React.FC<EventHeader> = ({
             weight="medium"
             className="bg-primary rounded-md py-1 px-2 uppercase"
           >
-            Happening now
+            {t('event-detail-page.happening')}
           </Typography>
         ) : null}
         <Typography variant="h1">{title}</Typography>

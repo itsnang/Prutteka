@@ -1,7 +1,8 @@
 import translations from '../../../../apps/web/public/locales/en/translation.json';
 import { convertJsonToObjectKey } from '../helpers';
+import { TranslationKeys } from '../shared-hooks';
 
-export const LOCATIONS = convertJsonToObjectKey(
+export const LOCATIONS = convertJsonToObjectKey<TranslationKeys>(
   translations.locations,
-  (v) => 'locations.' + v
+  (v) => ('locations.' + v) as TranslationKeys
 );

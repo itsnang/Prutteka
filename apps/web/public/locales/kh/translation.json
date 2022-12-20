@@ -4,7 +4,7 @@
     "language": "ខ្មែរ",
     "login": "ចូល",
     "register": "ចុះឈ្មោះ",
-    "view-all": "ទា៉ងអស់",
+    "view-all": "ទាំងអស់",
     "interested": "ចាប់អារម្មណ៍",
     "cancel": "បោះបង់",
     "delete": "លុប"
@@ -58,6 +58,8 @@
     "map": "ផែនទី",
     "view-on-map": "មែលផែនទី",
     "schedule": "កាលវិភាគ",
+    "in-this-event": "នៅក្នុងព្រឹត្តិការណ៍នេះ",
+    "add-event": "បង្កើតព្រឹត្តិការណ៍",
     "event-detail": "ព័ត៌មានលម្អិត",
     "other-events": "ព្រឹត្តិការណ៍ផ្សេងៗ"
   }

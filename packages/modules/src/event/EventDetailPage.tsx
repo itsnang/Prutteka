@@ -171,7 +171,9 @@ export const EventDetailPage = () => {
           <div className="space-y-4">
             <div className="flex justify-center">
               <div className="my-3 mx-2 w-20 border-b-2 border-gray-200" />
-              <Typography className="uppercase">In this event</Typography>
+              <Typography className="uppercase">
+                {t('event-detail-page.in-this-event')}
+              </Typography>
               <div className="my-3 mx-2 w-20 border-b-2 border-gray-200" />
             </div>
             {EVENTDATA.slice(3).map((event) => (
@@ -193,10 +195,10 @@ export const EventDetailPage = () => {
                 variant="secondary"
                 className="flex-1"
               >
-                View All
+                {t('common.view-all')}
               </Button>
               <Button className="flex-1" hasShadow>
-                Add event
+                {t('event-detail-page.add-event')}
               </Button>
             </div>
           </div>

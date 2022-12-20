@@ -4,7 +4,7 @@
     "language": "EN",
     "login": "Log In",
     "register": "Register",
-    "view-all": "View All",
+    "view-all": "View all",
     "interested": "Interested",
     "cancel": "Cancel",
     "delete": "Delete"
@@ -58,6 +58,8 @@
     "map": "Map",
     "view-on-map": "View on map",
     "schedule": "Schedule",
+    "in-this-event": "IN THIS EVENT",
+    "add-event": "Add event",
     "event-detail": "Event Detail",
     "other-events": "OTHER EVENTS"
   }

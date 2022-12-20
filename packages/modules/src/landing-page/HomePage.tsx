@@ -42,7 +42,7 @@ export const HomePage: NextPage = () => {
               time={event.time}
               location={event.location}
               title={event.title}
-              href="/event"
+              href={`/event/${event.id}`}
             />
           ))}
         </div>
