@@ -34,7 +34,7 @@ export const Search = () => {
       <div>
         <div className="mx-auto max-w-[31.25rem]">
           <SearchBar
-            placeholder="Search Events"
+            placeholder={t('common.search-event') || ''}
             className="w-full"
             onSearch={(e) => e.preventDefault()}
           />

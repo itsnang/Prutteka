@@ -60,5 +60,35 @@
     "schedule": "កាលវិភាគ",
     "event-detail": "ព័ត៌មានលម្អិត",
     "other-events": "ព្រឹត្តិការណ៍ផ្សេងៗ"
+  },
+  "home-page": {
+    "spotlight-events": "ព្រឹត្តិការណ៍កំពុងពេញនិយម",
+    "explore": "ស្វែងរក"
+  },
+  "register-page": {
+    "name": "ឈ្មោះ",
+    "email": "អុីម៉ែល",
+    "password": "លេខសម្ងាត់",
+    "create-new-account": "បង្គើតគណនីថ្មី",
+    "login": "ចូល",
+    "continue-with-google": "បន្តជាមួយ​ Google",
+    "continue-with-facebook": "បន្តជាមួយ​ Facebook",
+    "forgot-password": "ភ្លេចលេខសម្ងាត់?",
+    "submit": "បញ្ជូន"
+  },
+  "interested-event-page": {
+    "interested": "ព្រឹត្តិការណ៍ដែលចាប់អារម្មណ៍",
+    "item-count": "ព្រឹត្តិការណ៍",
+    "refresh": "ធ្វើបច្ចុប្បន្នភាព"
+  },
+  "my-event-page": {
+    "my-event": "ព្រឹត្តិការណ៍របស់ខ្ញំុ",
+    "viewer": "ចំនួនទស្សនា"
+  },
+  "404": {
+    "not-found": "គ្មានទំព័រ!",
+    "nth-here": "ទីនេះគ្មានព្រឹត្តិការណ៍ទេ",
+    "go-home": "ទៅទំព័រដើមវិញ",
+    "home": "ទៅផ្ទះ"
   }
 }

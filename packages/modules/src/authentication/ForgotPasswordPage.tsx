@@ -7,6 +7,7 @@ import { Formik, Form } from 'formik';
 
 import { ArrowLongLeftIcon } from '@heroicons/react/24/solid';
 import { useRouter } from 'next/router';
+import { useTypeSafeTranslation } from '../shared-hooks';
 
 const validationSchema = Yup.object({
   email: Yup.string().email('Invalid email address').required('Required'),
@@ -17,6 +18,7 @@ interface InitialValuesType {
 }
 
 export const ForgotPasswordPage: NextPageWithLayout = () => {
+  const { t } = useTypeSafeTranslation();
   const router = useRouter();
 
   const handleSubmit = ({ email }: InitialValuesType) => {
@@ -48,12 +50,16 @@ export const ForgotPasswordPage: NextPageWithLayout = () => {
                 <ArrowLongLeftIcon className="h-6 w-6" />
               </Link>
 
-              <Typography>Forgot password?</Typography>
+              <Typography>{t('register-page.forgot-password')}</Typography>
 
-              <InputField name="email" placeholder="Email" type="email" />
+              <InputField
+                name="email"
+                placeholder={t('register-page.email') || ''}
+                type="email"
+              />
 
               <Button hasShadow type="submit">
-                Submit
+                {t('register-page.submit')}
               </Button>
             </Form>
           )}

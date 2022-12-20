@@ -60,5 +60,35 @@
     "schedule": "Schedule",
     "event-detail": "Event Detail",
     "other-events": "OTHER EVENTS"
+  },
+  "home-page": {
+    "spotlight-events": "SPOTLIGHT EVENTS",
+    "explore": "EXPLORE"
+  },
+  "register-page": {
+    "name": "Name",
+    "email": "Email",
+    "password": "Password",
+    "create-new-account": "Create new account",
+    "login": "Login",
+    "continue-with-google": "Continue with Google",
+    "continue-with-facebook": "Continue with Facebook",
+    "forgot-password": "Forgot password?",
+    "submit": "Submit"
+  },
+  "interested-event-page": {
+    "interested": "INTERESTED",
+    "item-count": "Events",
+    "refresh": "Resfresh"
+  },
+  "my-event-page": {
+    "my-event": "MY EVENTS",
+    "viewer": "Views"
+  },
+  "404": {
+    "not-found": "Not Found!",
+    "nth-here": "Nothing here.",
+    "go-home": "Time to go home",
+    "home": "Home"
   }
 }

@@ -9,6 +9,7 @@ import {
 } from './AuthLayout';
 import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
+import { useTypeSafeTranslation } from '../shared-hooks';
 
 const validationSchema = Yup.object({
   name: Yup.string().required('Required'),
@@ -26,6 +27,7 @@ interface InitialValuesType {
 }
 
 export const RegisterPage: NextPageWithLayout = () => {
+  const { t } = useTypeSafeTranslation();
   const handleSubmit = ({ email, password, name }: InitialValuesType) => {
     console.log(name, email, password);
   };
@@ -51,20 +53,28 @@ export const RegisterPage: NextPageWithLayout = () => {
         >
           {() => (
             <Form className="flex flex-col gap-4 p-4">
-              <InputField name="name" placeholder="Name" type="text" />
-              <InputField name="email" placeholder="Email" type="email" />
+              <InputField
+                name="name"
+                placeholder={t('register-page.name') || ''}
+                type="text"
+              />
+              <InputField
+                name="email"
+                placeholder={t('register-page.email') || ''}
+                type="email"
+              />
               <InputField
                 name="password"
-                placeholder="Password"
+                placeholder={t('register-page.password') || ''}
                 type="password"
               />
 
               <Button hasShadow type="submit">
-                Create new account
+                {t('register-page.create-new-account')}
               </Button>
               <div className="my-3 mx-2 border-b-2 border-gray-200" />
               <Button variant="secondary" as="link" href="/login" type="button">
-                Login
+                {t('register-page.login')}
               </Button>
               <Typography className="text-center">or</Typography>
               <Button
@@ -73,7 +83,7 @@ export const RegisterPage: NextPageWithLayout = () => {
                 className="gap-6"
                 type="button"
               >
-                Continue with Google
+                {t('register-page.continue-with-google')}
               </Button>
               <Button
                 variant="secondary"
@@ -81,7 +91,7 @@ export const RegisterPage: NextPageWithLayout = () => {
                 className="gap-6"
                 type="button"
               >
-                Continue with Facebook
+                {t('register-page.continue-with-facebook')}
               </Button>
             </Form>
           )}
