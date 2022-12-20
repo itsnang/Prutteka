@@ -12,7 +12,6 @@ export const CategorySelection: React.FC<CategorySelectionProps> = ({
   title,
 }) => {
   const { t } = useTypeSafeTranslation();
-
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -22,7 +21,7 @@ export const CategorySelection: React.FC<CategorySelectionProps> = ({
           {title}
         </Typography>
         <button className="hover:underline" onClick={() => setIsOpen(true)}>
-          View all
+          {t('common.view-all')}
         </button>
       </div>
       <Modal

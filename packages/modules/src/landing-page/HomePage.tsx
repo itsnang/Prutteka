@@ -10,7 +10,11 @@ const CAROUSEL = [
   { title: 'HSC - Final 2022', img: '/football-cup.jpg' },
 ];
 
+import { useTypeSafeTranslation } from '../shared-hooks';
+
 export const HomePage: NextPage = () => {
+  const { t } = useTypeSafeTranslation();
+
   return (
     <>
       <SeoMeta title="Prutteka" description="" />
@@ -19,7 +23,7 @@ export const HomePage: NextPage = () => {
           autoplay
           loop
           slidesPerView={1.75}
-          title="Spotlight Events"
+          title={t('home-page.spotlight-events') || ''}
           navigation
           pagination
           titleClassName="text-3xl font-bold"
@@ -32,7 +36,7 @@ export const HomePage: NextPage = () => {
             ))
           }
         </Carousel>
-        <CategorySelection title="Explore" />
+        <CategorySelection title={t('home-page.spotlight-events') || ''} />
         <div className="grid grid-cols-3 place-items-center gap-4">
           {EVENTDATA.map((event) => (
             <EventCard
