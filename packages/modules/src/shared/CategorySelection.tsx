@@ -25,8 +25,13 @@ export const CategorySelection: React.FC<CategorySelectionProps> = ({
           View all
         </button>
       </div>
-      <Modal show={isOpen} onClose={() => setIsOpen(false)}>
-        <div className="mt-4 grid grid-cols-3 gap-4">
+      <Modal
+        className="text-2xl"
+        title="Categories"
+        show={isOpen}
+        onClose={() => setIsOpen(false)}
+      >
+        <div className="mt-6 grid grid-cols-3 gap-4 text-base">
           {CATEGORIES.map((category, idx) => (
             <ButtonCategory key={idx}>{t(category)}</ButtonCategory>
           ))}

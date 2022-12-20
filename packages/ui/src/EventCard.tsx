@@ -29,7 +29,7 @@ export const EventCard: React.FC<EventCardProps> = ({
 }) => {
   if (isLandscape) {
     return (
-      <div className="shadow-complete flex w-full gap-4 rounded-2xl p-2">
+      <div className="shadow-complete flex w-full gap-4 rounded-2xl bg-white p-2">
         <Link className="relative aspect-[2/1] w-56" href={href}>
           <Image src={img} alt={title} className="rounded-xl" fill />
         </Link>
@@ -52,6 +52,7 @@ export const EventCard: React.FC<EventCardProps> = ({
               <Button
                 variant="secondary"
                 className="bg-primary-light border-primary text-primary h-14 w-14"
+                onClick={() => onDelete()}
               >
                 <TrashIcon className="h-6 w-6" />
               </Button>
