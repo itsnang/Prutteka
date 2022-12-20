@@ -3,8 +3,10 @@ import { AutoCompleteInput, EventCard, SearchBar, SeoMeta } from 'ui';
 import { CategorySelection } from '../shared';
 import { MapPinIcon } from '@heroicons/react/24/solid';
 import { EVENTDATA, LOCATIONS } from '../constants';
+import { useTypeSafeTranslation } from 'modules';
 
 export const Search = () => {
+  const { t } = useTypeSafeTranslation();
   const [selected, setSelected] = useState(LOCATIONS[0]);
   return (
     <>
@@ -13,7 +15,7 @@ export const Search = () => {
       <div>
         <div className="mx-auto max-w-[31.25rem]">
           <SearchBar
-            placeholder="Search Events"
+            placeholder={t('common.search-event') || ''}
             className="w-full"
             onSearch={(e) => e.preventDefault()}
           />

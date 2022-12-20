@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { ButtonCategory, Modal, Typography } from 'ui';
 import { CATEGORIES } from '../constants';
 
+import { useTypeSafeTranslation } from '../shared-hooks';
+
 interface CategorySelectionProps {
   title: string;
 }
@@ -9,6 +11,7 @@ interface CategorySelectionProps {
 export const CategorySelection: React.FC<CategorySelectionProps> = ({
   title,
 }) => {
+  const { t } = useTypeSafeTranslation();
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -18,7 +21,7 @@ export const CategorySelection: React.FC<CategorySelectionProps> = ({
           {title}
         </Typography>
         <button className="hover:underline" onClick={() => setIsOpen(true)}>
-          View all
+          {t('common.view-all')}
         </button>
       </div>
       <Modal show={isOpen} onClose={() => setIsOpen(false)}>

@@ -9,6 +9,7 @@ import {
 } from './AuthLayout';
 import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
+import { useTypeSafeTranslation } from '../shared-hooks';
 
 const validationSchema = Yup.object({
   email: Yup.string().email('Invalid email address').required('Required'),
@@ -24,6 +25,7 @@ interface InitialValuesType {
 }
 
 export const LoginPage: NextPageWithLayout = () => {
+  const { t } = useTypeSafeTranslation();
   const handleSubmit = ({ email, password }: InitialValuesType) => {
     console.log(email, password);
   };
@@ -49,20 +51,24 @@ export const LoginPage: NextPageWithLayout = () => {
         >
           {() => (
             <Form className="flex flex-col gap-4 p-4">
-              <InputField name="email" placeholder="Email" type="email" />
+              <InputField
+                name="email"
+                placeholder={t('register-page.email') || ''}
+                type="email"
+              />
               <InputField
                 name="password"
-                placeholder="Password"
+                placeholder={t('register-page.password') || ''}
                 type="password"
               />
               <Link
                 href="/forgot-password"
                 className="text-end text-gray-700 hover:underline"
               >
-                Forgot password?
+                {t('register-page.forgot-password')}
               </Link>
               <Button hasShadow type="submit">
-                Login
+                {t('register-page.login')}
               </Button>
               <div className="my-3 mx-2 border-b-2 border-gray-200" />
               <Button
@@ -71,7 +77,7 @@ export const LoginPage: NextPageWithLayout = () => {
                 href="/register"
                 type="button"
               >
-                Create new account
+                {t('register-page.create-new-account')}
               </Button>
               <Typography className="text-center">or</Typography>
               <Button
@@ -80,7 +86,7 @@ export const LoginPage: NextPageWithLayout = () => {
                 className="gap-6"
                 type="button"
               >
-                Continue with Google
+                {t('register-page.continue-with-google')}
               </Button>
               <Button
                 variant="secondary"
@@ -88,7 +94,7 @@ export const LoginPage: NextPageWithLayout = () => {
                 className="gap-6"
                 type="button"
               >
-                Continue with Facebook
+                {t('register-page.continue-with-facebook')}
               </Button>
             </Form>
           )}
