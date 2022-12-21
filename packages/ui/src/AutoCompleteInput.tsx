@@ -5,6 +5,7 @@ import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
 export interface ItemType {
   id: number;
   name: string;
+  value: string;
 }
 
 interface AutoCompleteInputProps {
@@ -48,7 +49,7 @@ export const AutoCompleteInput: React.FC<AutoCompleteInputProps> = ({
             />
           ) : null}
           <Combobox.Input
-            className={`w-full border-none py-4 pr-10 text-sm leading-5 text-gray-900 outline-none ${
+            className={`w-full border-none py-4 pr-10 leading-5 text-gray-900 outline-none ${
               LeftIcon ? 'pl-2' : 'pl-4'
             }`}
             displayValue={(item: ItemType) => item?.name}

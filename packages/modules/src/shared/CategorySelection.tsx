@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { ButtonCategory, Modal, Typography } from 'ui';
 import { CATEGORIES } from '../constants';
 
+import { useTypeSafeTranslation } from '../shared-hooks';
+
 interface CategorySelectionProps {
   title: string;
 }
@@ -9,6 +11,7 @@ interface CategorySelectionProps {
 export const CategorySelection: React.FC<CategorySelectionProps> = ({
   title,
 }) => {
+  const { t } = useTypeSafeTranslation();
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -18,19 +21,24 @@ export const CategorySelection: React.FC<CategorySelectionProps> = ({
           {title}
         </Typography>
         <button className="hover:underline" onClick={() => setIsOpen(true)}>
-          View all
+          {t('common.view-all')}
         </button>
       </div>
-      <Modal show={isOpen} onClose={() => setIsOpen(false)}>
-        <div className="mt-4 grid grid-cols-3 gap-4">
+      <Modal
+        className="text-2xl"
+        title={t('common.categories')}
+        show={isOpen}
+        onClose={() => setIsOpen(false)}
+      >
+        <div className="mt-6 grid grid-cols-3 gap-4 text-base">
           {CATEGORIES.map((category, idx) => (
-            <ButtonCategory key={idx}>{category}</ButtonCategory>
+            <ButtonCategory key={idx}>{t(category)}</ButtonCategory>
           ))}
         </div>
       </Modal>
-      <div className="custom-scrollbar flex space-x-4 overflow-x-auto pb-1">
+      <div className="custom-scrollbar flex space-x-4 overflow-x-auto">
         {CATEGORIES.map((category, idx) => (
-          <ButtonCategory key={idx}>{category}</ButtonCategory>
+          <ButtonCategory key={idx}>{t(category)}</ButtonCategory>
         ))}
       </div>
     </div>

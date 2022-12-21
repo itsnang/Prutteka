@@ -1,3 +1,12 @@
-import { EventDetailPage } from 'modules';
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 
-export default EventDetailPage;
+export default function Redirect() {
+  const router = useRouter();
+
+  useEffect(() => {
+    router.push('/');
+  }, [router]);
+
+  return null;
+}

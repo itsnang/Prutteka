@@ -1,12 +1,8 @@
-export const CATEGORIES = [
-  'All',
-  'Recently Added',
-  'Free',
-  'Online',
-  'Education',
-  'Sport',
-  'Music',
-  'Exhibition',
-  'Techonoly',
-  'Charity',
-];
+import translations from '../../../../apps/web/public/locales/en/translation.json';
+import { convertJsonToObjectKey } from '../helpers';
+import { TranslationKeys } from '../shared-hooks';
+
+export const CATEGORIES = convertJsonToObjectKey<TranslationKeys>(
+  translations.categories,
+  (v) => ('categories.' + v) as TranslationKeys
+);

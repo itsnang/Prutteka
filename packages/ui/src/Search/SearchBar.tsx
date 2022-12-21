@@ -18,7 +18,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
   return (
     <form
-      className="flex items-center rounded-2xl border px-4 py-[0.875rem]"
+      className="flex items-center rounded-2xl border bg-white px-4 py-[0.875rem]"
       onSubmit={(e) => onSearch(e, input)}
     >
       <input

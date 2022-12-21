@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Image, { StaticImageData } from 'next/image';
 import { Typography, Button } from 'ui';
+import { DeleteModal } from '../shared';
 
 import {
   ChevronDownIcon,
@@ -12,6 +13,7 @@ import {
 import Link, { LinkProps } from 'next/link';
 
 import { Disclosure, Transition } from '@headlessui/react';
+import { useTypeSafeTranslation } from '../shared-hooks';
 
 interface UserEventCardProps {
   img: string | StaticImageData;
@@ -34,6 +36,9 @@ export const UserEventCard: React.FC<UserEventCardProps> = ({
   location,
   isNested = false,
 }) => {
+  const { t } = useTypeSafeTranslation();
+  const [show, setShow] = useState(false);
+
   return (
     <Disclosure>
       {({ open }) => (
@@ -73,7 +78,7 @@ export const UserEventCard: React.FC<UserEventCardProps> = ({
 
           <Disclosure.Panel className="-mt-1 rounded-b-2xl bg-gray-100 p-2 text-gray-500">
             <div className="flex items-center justify-between py-4 px-4">
-              <Typography size="2xl">1k views</Typography>
+              <Typography size="2xl">1k {t('my-event-page.viewer')}</Typography>
               <div className="flex items-center gap-8">
                 <div className="flex  gap-4">
                   <Typography size="2xl">EN</Typography>
@@ -88,9 +93,16 @@ export const UserEventCard: React.FC<UserEventCardProps> = ({
                       icon={RectangleStackIcon}
                     ></Button>
                   ) : null}
-                  <Button variant="secondary" icon={PencilIcon}></Button>
 
                   <Button
+                    variant="secondary"
+                    as="link"
+                    href="/"
+                    icon={PencilIcon}
+                  ></Button>
+
+                  <Button
+                    onClick={() => setShow(true)}
                     className="text-primary bg-primary-light border-primary"
                     variant="secondary"
                     icon={TrashIcon}
@@ -99,6 +111,7 @@ export const UserEventCard: React.FC<UserEventCardProps> = ({
               </div>
             </div>
           </Disclosure.Panel>
+          <DeleteModal show={show} onClose={() => setShow(false)} />
         </div>
       )}
     </Disclosure>

@@ -1,12 +1,13 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { Button, InputField, Typography } from 'ui';
+import { Button, InputField, Typography, SeoMeta } from 'ui';
 import { AuthLayout, NextPageWithLayout } from './AuthLayout';
 import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
 
 import { ArrowLongLeftIcon } from '@heroicons/react/24/solid';
 import { useRouter } from 'next/router';
+import { useTypeSafeTranslation } from '../shared-hooks';
 
 const validationSchema = Yup.object({
   email: Yup.string().email('Invalid email address').required('Required'),
@@ -17,6 +18,7 @@ interface InitialValuesType {
 }
 
 export const ForgotPasswordPage: NextPageWithLayout = () => {
+  const { t } = useTypeSafeTranslation();
   const router = useRouter();
 
   const handleSubmit = ({ email }: InitialValuesType) => {
@@ -24,39 +26,46 @@ export const ForgotPasswordPage: NextPageWithLayout = () => {
   };
 
   return (
-    <div className="w-auto">
-      <Link href="/">
-        <Image
-          src="/logo.png"
-          alt="logo"
-          height="72"
-          width="184"
-          className="mx-auto"
-        />
-      </Link>
+    <>
+      <SeoMeta title="Forget Password - Prutteka" description="" />
+      <div className="w-auto">
+        <Link href="/">
+          <Image
+            src="/logo.png"
+            alt="logo"
+            height="72"
+            width="184"
+            className="mx-auto"
+          />
+        </Link>
 
-      <Formik
-        initialValues={{ email: '', password: '' }}
-        validationSchema={validationSchema}
-        onSubmit={handleSubmit}
-      >
-        {() => (
-          <Form className="flex flex-col gap-4 p-4">
-            <Link href="/login">
-              <ArrowLongLeftIcon className="h-6 w-6" />
-            </Link>
+        <Formik
+          initialValues={{ email: '', password: '' }}
+          validationSchema={validationSchema}
+          onSubmit={handleSubmit}
+        >
+          {() => (
+            <Form className="flex flex-col gap-4 p-4">
+              <Link href="/login">
+                <ArrowLongLeftIcon className="h-6 w-6" />
+              </Link>
 
-            <Typography>Forgot password?</Typography>
+              <Typography>{t('register-page.forgot-password')}</Typography>
 
-            <InputField name="email" placeholder="Email" type="email" />
+              <InputField
+                name="email"
+                placeholder={t('register-page.email') || ''}
+                type="email"
+              />
 
-            <Button hasShadow type="submit">
-              Submit
-            </Button>
-          </Form>
-        )}
-      </Formik>
-    </div>
+              <Button hasShadow type="submit">
+                {t('register-page.submit')}
+              </Button>
+            </Form>
+          )}
+        </Formik>
+      </div>
+    </>
   );
 };
 

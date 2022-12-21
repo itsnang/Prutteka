@@ -12,6 +12,7 @@ import { Formik, Form } from 'formik';
 import { useTypeSafeTranslation } from '../shared-hooks';
 
 const validationSchema = Yup.object({
+  name: Yup.string().required('Required'),
   email: Yup.string().email('Invalid email address').required('Required'),
   password: Yup.string()
     .min(8, 'Must be at least 8 characters')
@@ -20,19 +21,20 @@ const validationSchema = Yup.object({
 });
 
 interface InitialValuesType {
+  name: string;
   email: string;
   password: string;
 }
 
-export const LoginPage: NextPageWithLayout = () => {
+export const RegisterPage: NextPageWithLayout = () => {
   const { t } = useTypeSafeTranslation();
-  const handleSubmit = ({ email, password }: InitialValuesType) => {
-    console.log(email, password);
+  const handleSubmit = ({ email, password, name }: InitialValuesType) => {
+    console.log(name, email, password);
   };
 
   return (
     <>
-      <SeoMeta title="Login - Prutteka" description="" />
+      <SeoMeta title="Register - Prutteka" description="" />
       <div className="w-auto">
         <Link href="/">
           <Image
@@ -45,12 +47,17 @@ export const LoginPage: NextPageWithLayout = () => {
         </Link>
 
         <Formik
-          initialValues={{ email: '', password: '' }}
+          initialValues={{ email: '', password: '', name: '' }}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
           {() => (
             <Form className="flex flex-col gap-4 p-4">
+              <InputField
+                name="name"
+                placeholder={t('register-page.name') || ''}
+                type="text"
+              />
               <InputField
                 name="email"
                 placeholder={t('register-page.email') || ''}
@@ -61,23 +68,13 @@ export const LoginPage: NextPageWithLayout = () => {
                 placeholder={t('register-page.password') || ''}
                 type="password"
               />
-              <Link
-                href="/forgot-password"
-                className="text-end text-gray-700 hover:underline"
-              >
-                {t('register-page.forgot-password')}
-              </Link>
+
               <Button hasShadow type="submit">
-                {t('register-page.login')}
+                {t('register-page.create-new-account')}
               </Button>
               <div className="my-3 mx-2 border-b-2 border-gray-200" />
-              <Button
-                variant="secondary"
-                as="link"
-                href="/register"
-                type="button"
-              >
-                {t('register-page.create-new-account')}
+              <Button variant="secondary" as="link" href="/login" type="button">
+                {t('register-page.login')}
               </Button>
               <Typography className="text-center">or</Typography>
               <Button
@@ -104,4 +101,4 @@ export const LoginPage: NextPageWithLayout = () => {
   );
 };
 
-LoginPage.getLayout = AuthLayout;
+RegisterPage.getLayout = AuthLayout;
