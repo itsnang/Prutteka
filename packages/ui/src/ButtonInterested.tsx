@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StarIcon } from '@heroicons/react/24/outline';
 import { StarIcon as StarFillIcon } from '@heroicons/react/24/solid';
 import { useTypeSafeTranslation } from '../../modules';
@@ -8,21 +8,27 @@ interface ButtonInterestedProps {
   hasText?: boolean;
   isActive?: boolean;
   className?: string;
+  onClick?: () => void;
 }
 
 export const ButtonInterested: React.FC<ButtonInterestedProps> = ({
   isDefault = true,
   hasText,
-  isActive,
+  isActive = false,
   className,
+  onClick,
 }) => {
   const { t } = useTypeSafeTranslation();
 
-  const [active, setActive] = useState(isActive || false);
+  const [active, setActive] = useState(false);
 
   const buttonClassName = isDefault
     ? `${hasText ? 'h-10 w-full rounded-lg' : 'h-14 w-14 rounded-xl'}`
     : '';
+
+  useEffect(() => {
+    setActive(isActive);
+  }, [isActive]);
 
   return (
     <button
@@ -31,7 +37,10 @@ export const ButtonInterested: React.FC<ButtonInterestedProps> = ({
           ? 'border-tertiary bg-tertiary-light text-tertiary'
           : 'border-gray-200 bg-white text-gray-800'
       } ${buttonClassName} ${className ? className : ''}`}
-      onClick={() => setActive((prev) => !prev)}
+      onClick={() => {
+        setActive((prev) => !prev);
+        onClick && onClick();
+      }}
     >
       {hasText && t('common.interested')}
       {active ? (
