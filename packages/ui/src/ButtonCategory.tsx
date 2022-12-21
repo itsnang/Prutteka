@@ -3,11 +3,13 @@ import React from 'react';
 interface ButtonCategoryProps {
   children: React.ReactNode | string;
   isActive?: boolean;
+  onClick?: () => void;
 }
 
 export const ButtonCategory: React.FC<ButtonCategoryProps> = ({
   isActive,
   children,
+  onClick,
 }) => {
   return (
     <button
@@ -19,6 +21,7 @@ export const ButtonCategory: React.FC<ButtonCategoryProps> = ({
       style={{
         whiteSpace: 'nowrap',
       }}
+      onClick={onClick}
     >
       {children}
     </button>

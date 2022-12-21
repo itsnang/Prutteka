@@ -19,6 +19,8 @@ export const Header: React.FC = () => {
   };
 
   const changeTo = router.locale === 'en' ? 'kh' : 'en';
+  const isSearchPage = router.pathname === '/search';
+  const isInterestedPage = router.asPath === '/user/interested';
 
   return (
     <nav className=" fixed top-0 z-10 w-screen border-b border-gray-100 bg-white">
@@ -27,26 +29,31 @@ export const Header: React.FC = () => {
           <Link href="/">
             <Image src="/Logo.png" alt="Logo" height={52} width={132.5} />
           </Link>
-          <SearchBar
-            placeholder={t('common.search-event') || ''}
-            onSearch={(e) => {
-              e.preventDefault();
-              router.push('/search');
-            }}
-          />
+          {isSearchPage ? null : (
+            <SearchBar
+              placeholder={t('common.search-event') || ''}
+              onSearch={(e) => {
+                e.preventDefault();
+                router.push('/search');
+              }}
+            />
+          )}
         </div>
         <div className="flex space-x-4 divide-x divide-gray-300">
           <div className="flex gap-2 ">
             <Button variant="secondary" onClick={() => changeLocale(changeTo)}>
               {t('common.language')}
             </Button>
-            <Button
-              as="link"
-              href="/user/interested"
-              variant="secondary"
-              icon={StarIcon}
-              className="text-tertiary"
-            />
+
+            {isInterestedPage ? null : (
+              <Button
+                as="link"
+                href="/user/interested"
+                variant="secondary"
+                icon={StarIcon}
+                className="text-tertiary"
+              />
+            )}
           </div>
 
           <div className="flex gap-2 pl-4">
