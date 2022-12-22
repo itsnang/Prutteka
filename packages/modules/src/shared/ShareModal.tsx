@@ -18,37 +18,35 @@ export const ShareModal: React.FC<ShareModalProps> = ({
   const { t } = useTypeSafeTranslation();
 
   return (
-    <div>
-      <Modal onClose={onClose} show={show}>
-        <div className="relative flex h-20 justify-center">
-          <div className="absolute bottom-8 mx-auto aspect-[2/1] w-[27rem] rounded-2xl shadow-xl shadow-gray-300">
-            <Image
-              alt="ShareModalImage"
-              src={img}
-              fill
-              className="rounded-2xl object-cover"
-            />
-          </div>
+    <Modal onClose={onClose} show={show}>
+      <div className="relative flex h-14 justify-center md:h-20">
+        <div className="absolute bottom-8 mx-auto aspect-[2/1] h-32 rounded-2xl shadow-xl shadow-gray-300 sm:h-48 md:h-auto md:w-[27rem]">
+          <Image
+            alt="ShareModalImage"
+            src={img}
+            fill
+            className="rounded-2xl object-cover"
+          />
         </div>
-        <div className="space-y-6 text-center text-2xl font-medium">
-          {t('modals.share-event')}
-          <div className="mt-6 flex justify-center gap-4">
-            <IconStyle color="bg-[#EBEEF5]">
-              <FacebookIcon />
-            </IconStyle>
-            <IconStyle color="bg-[#FCEAF0]">
-              <InstargramIcom />
-            </IconStyle>
-            <IconStyle color="bg-[#E6F3FA]">
-              <TelegramIcon />
-            </IconStyle>
-            <IconStyle>
-              <EllipsisHorizontalIcon />
-            </IconStyle>
-          </div>
+      </div>
+      <div className="space-y-6 text-center text-2xl font-medium">
+        {t('modals.share-event')}
+        <div className="mt-6 flex justify-center gap-4">
+          <IconStyle color="bg-[#EBEEF5]">
+            <FacebookIcon />
+          </IconStyle>
+          <IconStyle color="bg-[#FCEAF0]">
+            <InstargramIcom />
+          </IconStyle>
+          <IconStyle color="bg-[#E6F3FA]">
+            <TelegramIcon />
+          </IconStyle>
+          <IconStyle>
+            <EllipsisHorizontalIcon />
+          </IconStyle>
         </div>
-      </Modal>
-    </div>
+      </div>
+    </Modal>
   );
 };
 

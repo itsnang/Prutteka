@@ -7,7 +7,7 @@ export const ItemContainer: React.FC<ItemContainerProp> = ({
   children,
 }) => {
   return (
-    <div className={`rounded-2xl bg-white p-6 shadow-sm ${className}`}>
+    <div className={`rounded-2xl bg-white p-4 shadow-sm lg:p-6 ${className}`}>
       {children}
     </div>
   );

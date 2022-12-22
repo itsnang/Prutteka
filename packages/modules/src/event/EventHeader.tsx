@@ -24,7 +24,7 @@ export const EventHeader: React.FC<EventHeader> = ({
   return (
     <div className="space-y-4">
       <div className="flex justify-center overflow-hidden rounded-2xl bg-gray-100">
-        <div className="relative aspect-[2/1] h-96">
+        <div className="relative aspect-[2/1] w-full md:h-96 md:w-auto">
           <Image
             src={img}
             className="rounded-2xl object-cover"
@@ -45,7 +45,9 @@ export const EventHeader: React.FC<EventHeader> = ({
             {t('event-detail-page.happening')}
           </Typography>
         ) : null}
-        <Typography variant="h1">{title}</Typography>
+        <Typography variant="h1" size="4xl" className="md:text-5xl lg:text-6xl">
+          {title}
+        </Typography>
         <Typography size="base" color="primary">
           {date}
         </Typography>
