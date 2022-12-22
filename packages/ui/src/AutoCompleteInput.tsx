@@ -69,7 +69,7 @@ export const AutoCompleteInput: React.FC<AutoCompleteInputProps> = ({
           leaveTo="opacity-0"
           afterLeave={() => setQuery('')}
         >
-          <Combobox.Options className="custom-scrollbar absolute mt-1 max-h-72 w-full overflow-y-auto rounded-xl border bg-white py-2 text-base focus:outline-none">
+          <Combobox.Options className="custom-scrollbar absolute z-10 mt-1 max-h-72 w-full overflow-y-auto rounded-xl border bg-white py-2 text-base focus:outline-none">
             {filteredItems.length === 0 && query !== '' ? (
               <div className="relative cursor-default select-none py-2 px-4 text-gray-700">
                 Nothing found.
