@@ -34,7 +34,7 @@ export const Search = () => {
     <>
       <SeoMeta title="Search - Prutteka" description="" />
 
-      <div>
+      <div className="space-y-4">
         <div className="mx-auto max-w-[31.25rem]">
           <SearchBar
             placeholder={t('common.search-event')}
@@ -50,7 +50,7 @@ export const Search = () => {
           />
         </div>
         <CategorySelection title={t('search-page.search-results')} />
-        <div className="flex flex-col gap-[0.625rem] p-4">
+        <div className="flex flex-col gap-[0.625rem]">
           {EVENTDATA.map((event) => {
             const isActive = !!interestedEvents.find(
               (_event) => _event.id === event.id

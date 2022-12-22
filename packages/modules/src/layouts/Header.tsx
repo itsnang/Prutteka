@@ -5,11 +5,7 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 
 import { SearchBar, Button } from 'ui';
-import {
-  StarIcon,
-  Bars3BottomRightIcon,
-  MagnifyingGlassIcon,
-} from '@heroicons/react/24/solid';
+import { StarIcon, Bars3Icon } from '@heroicons/react/24/solid';
 import { useTypeSafeTranslation } from '../shared-hooks';
 import { Sidebar } from './Sidebar';
 import { useEffect } from 'react';
@@ -29,7 +25,7 @@ export const Header: React.FC = () => {
     return () => {
       router.events.off('routeChangeStart', handleRouteChange);
     };
-  }, []);
+  }, [router.events]);
 
   const changeLocale = (newLocale: string) => {
     const { pathname, asPath, query } = router;
@@ -88,19 +84,14 @@ export const Header: React.FC = () => {
               alt="Logo"
               height={52}
               width={132.5}
-              className="h-[30px] w-auto sm:h-auto sm:max-h-[3.25rem]"
+              className="h-10 w-auto sm:h-auto sm:max-h-[3.25rem]"
             />
           </Link>
+
           {searchComponent}
         </div>
         <div className="flex divide-gray-300 md:space-x-4 md:divide-x">
           <div className="flex items-center gap-2">
-            {isSearchPage ? null : (
-              <Link href="/search" className="mr-1 lg:hidden">
-                <MagnifyingGlassIcon className="h-6 w-6 text-gray-600 sm:h-9 sm:w-9" />
-              </Link>
-            )}
-
             <Button variant="secondary" onClick={() => changeLocale(changeTo)}>
               {t('common.language')}
             </Button>
@@ -115,23 +106,31 @@ export const Header: React.FC = () => {
               />
             )}
 
-            <button
-              className="ml-1 md:hidden"
+            <Button
+              variant="secondary"
+              className="md:hidden"
               onClick={() => setIsSidebarOpen(true)}
             >
-              <Bars3BottomRightIcon className="h-6 w-6 sm:h-9 sm:w-9" />
-            </button>
+              <Bars3Icon className="h-6 w-6" />
+            </Button>
           </div>
 
           <div className="hidden gap-2 pl-4 md:flex">{authButton}</div>
         </div>
       </div>
 
-      <Sidebar
-        isOpen={isSidebarOpen}
-        onClose={() => setIsSidebarOpen(false)}
-        authButton={authButton}
-      />
+      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)}>
+        <SearchBar
+          className="w-full"
+          placeholder={t('common.search-event') || ''}
+          onSearch={(e) => {
+            e.preventDefault();
+            router.push('/search');
+          }}
+        />
+        <div className="my-3 mx-2 w-full border-b-2 border-gray-100" />
+        {authButton}
+      </Sidebar>
     </nav>
   );
 };

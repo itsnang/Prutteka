@@ -1,17 +1,15 @@
-import Image from 'next/image';
-import Link from 'next/link';
 import { useEffect, useRef } from 'react';
-
+import { XMarkIcon } from '@heroicons/react/24/outline';
 interface SidebarProps {
   isOpen: boolean;
   onClose: () => void;
-  authButton: JSX.Element;
+  children: React.ReactNode;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
   isOpen,
   onClose,
-  authButton,
+  children,
 }) => {
   const sidebarRef = useRef<HTMLDivElement>(null);
 
@@ -40,18 +38,19 @@ export const Sidebar: React.FC<SidebarProps> = ({
     >
       <div
         ref={sidebarRef}
-        className={`fixed right-0 flex h-screen flex-col items-center gap-8 bg-white py-12 transition-all ${
+        className={`fixed right-0 flex max-h-96 flex-col items-center gap-8 bg-white py-8 transition-all duration-500 ${
           isOpen
-            ? 'pointer-events-auto translate-x-0'
-            : 'pointer-events-none translate-x-full'
+            ? 'pointer-events-auto translate-y-0'
+            : 'pointer-events-none -translate-y-full'
         }`}
       >
-        <Link href="/">
-          <Image src="/Logo.png" alt="Logo" height={50} width={110} />
-        </Link>
-
-        <div className="flex w-[50vw] max-w-xs flex-col items-center gap-4 px-4">
-          {authButton}
+        <div className="flex w-full justify-end px-4">
+          <button onClick={handleClose}>
+            <XMarkIcon width={24} />
+          </button>
+        </div>
+        <div className="flex max-h-56 w-screen flex-col items-center gap-4 px-4">
+          {children}
         </div>
       </div>
     </div>
