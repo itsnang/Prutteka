@@ -1,5 +1,5 @@
 import { Swiper, SwiperSlide, SwiperSlideProps } from 'swiper/react';
-import { Autoplay, Keyboard, Pagination } from 'swiper';
+import { Autoplay, Keyboard, Pagination, SwiperOptions } from 'swiper';
 import { CarouselHeader, CarouselHeaderProps } from './CarouselHeader';
 import React from 'react';
 interface CarouselProps {
@@ -14,6 +14,7 @@ interface CarouselProps {
   loop?: boolean;
   title?: string;
   navigation?: boolean;
+  breakpoints?: SwiperOptions['breakpoints'];
 }
 
 export const Carousel: React.FC<CarouselProps> = ({
@@ -25,6 +26,7 @@ export const Carousel: React.FC<CarouselProps> = ({
   loop = false,
   title,
   navigation,
+  breakpoints,
   children,
 }) => {
   return (
@@ -41,11 +43,12 @@ export const Carousel: React.FC<CarouselProps> = ({
       grabCursor
       loop={loop}
       pagination={pagination && { clickable: true, dynamicBullets: true }}
+      breakpoints={breakpoints}
       slidesPerView={slidesPerView}
       keyboard
       className="relative mt-20 w-full"
     >
-      <div slot="container-start" className="mb-6">
+      <div slot="container-start" className="mb-4 lg:mb-6">
         &nbsp;
         <CarouselHeader
           title={title}

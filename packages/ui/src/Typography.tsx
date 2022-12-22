@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface StyleClassName {
-  size?: 'sm' | 'base' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl';
+  size?: 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl';
   color?:
     | 'dark'
     | 'base'
@@ -78,6 +78,7 @@ const variantMapping: VariantMapping = {
 const sizesMapping = {
   sm: 'text-sm',
   base: 'text-base',
+  lg: 'text-lg',
   xl: 'text-xl',
   '2xl': 'text-2xl',
   '3xl': 'text-3xl',

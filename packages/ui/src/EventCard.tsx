@@ -33,17 +33,22 @@ export const EventCard: React.FC<EventCardProps> = ({
 }) => {
   if (isLandscape) {
     return (
-      <div className="shadow-complete flex w-full gap-4 rounded-2xl bg-white p-2">
-        <Link className="relative aspect-[2/1] w-56" href={href}>
-          <Image src={img} alt={title} className="rounded-xl" fill />
+      <div className="shadow-complete flex min-h-[7rem] w-full gap-2 rounded-2xl bg-white p-1 sm:p-2 md:gap-4">
+        <Link className="relative aspect-[2/1] w-28 sm:w-56" href={href}>
+          <Image
+            src={img}
+            alt={title}
+            className="rounded-xl object-cover"
+            fill
+          />
         </Link>
-        <div className="flex flex-1 justify-between gap-4 p-2">
+        <div className="flex flex-1 justify-between gap-2 p-1 sm:p-2 md:gap-4">
           <div className="flex-1">
             <div className="text-primary text-sm">
               {date} | {time}
             </div>
             <Link
-              className="line-clamp-2 text-xl font-medium text-gray-900"
+              className="line-clamp-2 text-sm font-medium text-gray-900 lg:text-xl"
               href={href}
             >
               {title}
