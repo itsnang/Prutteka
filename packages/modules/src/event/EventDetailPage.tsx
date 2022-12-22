@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Link from 'next/link';
+import { NextPage } from 'next';
 
 import {
   ClockIcon,
@@ -30,12 +30,20 @@ import { EVENTDATA } from '../constants';
 import { EventHeader } from './EventHeader';
 import { useRouter } from 'next/router';
 import { useTypeSafeTranslation } from '../shared-hooks';
+import { EventType, useLocalInterestedEvent } from './useLocalInterestedEvent';
 
-export const EventDetailPage = () => {
+interface EventDetailPageProps {
+  event: EventType;
+}
+
+export const EventDetailPage: NextPage<EventDetailPageProps> = ({ event }) => {
   const [attendModal, setAttendModal] = useState(false);
   const [shareModal, setShareModal] = useState(false);
   const { query } = useRouter();
   const { t } = useTypeSafeTranslation();
+  const [interestedEvents, setInterestedEvents] = useLocalInterestedEvent();
+
+  const isActive = !!interestedEvents.find((_event) => _event.id === event.id);
 
   return (
     <>
@@ -43,31 +51,48 @@ export const EventDetailPage = () => {
       <div className="space-y-8">
         <EventHeader
           isHappening
-          img="/event_poster1.jpg"
-          title="Cambodia Tech Expo 2022"
-          date="Fri, Nov 11 - Sun, Nov 13"
+          img={event.img}
+          title={event.title}
+          date={event.date}
         />
         <div className="space-y-4">
-          <ItemContainer className="flex space-x-4">
+          <ItemContainer className="flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-x-4">
             <Button
               icon={TicketIcon}
-              className="flex-[2]"
+              className="h-14 md:flex-1"
               onClick={() => setAttendModal(true)}
             >
               {t('event-detail-page.how-to-attend')}
             </Button>
-            <ButtonInterested
-              isDefault={false}
-              className="flex-1 rounded-2xl"
-              hasText
-            />
-            <Button
-              variant="secondary"
-              className="flex-1 justify-between px-4"
-              onClick={() => setShareModal(true)}
-            >
-              {t('event-detail-page.share')} <ShareIcon className="h-6 w-6" />
-            </Button>
+            <div className="flex flex-1 space-x-4">
+              <ButtonInterested
+                isDefault={false}
+                className="flex flex-1 justify-between rounded-2xl px-4"
+                hasText
+                isActive={isActive}
+                onClick={() => {
+                  try {
+                    const newInterestedEvents = isActive
+                      ? interestedEvents.filter(
+                          (_event) => _event.id !== event.id
+                        )
+                      : [...interestedEvents, event];
+
+                    setInterestedEvents(newInterestedEvents);
+                  } catch (error) {
+                    window.localStorage.removeItem('interested-event');
+                    setInterestedEvents([event]);
+                  }
+                }}
+              />
+              <Button
+                variant="secondary"
+                className="flex-1 justify-between px-4"
+                onClick={() => setShareModal(true)}
+              >
+                {t('event-detail-page.share')} <ShareIcon className="h-6 w-6" />
+              </Button>
+            </div>
             <AttendModal
               show={attendModal}
               onClose={() => setAttendModal(false)}
@@ -75,7 +100,7 @@ export const EventDetailPage = () => {
             <ShareModal
               show={shareModal}
               onClose={() => setShareModal(false)}
-              img="/event_poster1.jpg"
+              img={event.img}
             />
           </ItemContainer>
           <div className="custom-scrollbar flex space-x-4 overflow-x-auto">
@@ -83,9 +108,9 @@ export const EventDetailPage = () => {
             <ButtonCategory>Fri, Nov 11</ButtonCategory>
             <ButtonCategory>Fri, Nov 11</ButtonCategory>
           </div>
-          <ItemContainer className="flex justify-between space-x-4">
+          <ItemContainer className="flex flex-col justify-between space-y-2 md:flex-row md:space-y-0 md:space-x-2">
             <EventInfoCard
-              className="flex-1"
+              className="sm:flex-[3] lg:flex-1"
               icon={ClockIcon}
               iconClassName="bg-tertiary-light text-tertiary"
             >
@@ -96,7 +121,7 @@ export const EventDetailPage = () => {
             </EventInfoCard>
 
             <EventInfoCard
-              className="flex-1"
+              className="sm:flex-[2] lg:flex-1"
               icon={TimeIcon}
               iconClassName="bg-primary-light"
             >
@@ -107,7 +132,7 @@ export const EventDetailPage = () => {
             </EventInfoCard>
 
             <EventInfoCard
-              className="flex-[2]"
+              className="sm:flex-[4] lg:flex-[2]"
               icon={MapPinIcon}
               iconClassName="bg-secondary-light text-secondary"
             >
@@ -118,54 +143,54 @@ export const EventDetailPage = () => {
             </EventInfoCard>
           </ItemContainer>
           <ItemContainer>
-            <EventInfoCard
-              icon={MapIcon}
-              iconClassName="bg-secondary-light text-secondary"
-            >
+            <div className="flex items-center space-x-4">
+              <div className="bg-secondary-light text-secondary rounded-xl p-2">
+                <MapIcon className="h-7 w-7" />
+              </div>
               <Typography color="dark" weight="semibold" size="2xl">
                 {t('event-detail-page.map')}
               </Typography>
-              <div className="mt-2 space-y-4">
-                <div className="space-y-2">
-                  <Typography>
-                    Venue1: (Building A-F) Diamond Island Convention and
-                    Exhibition Center
-                  </Typography>
-                  <button className="flex rounded-lg border border-gray-200 py-2 px-4 font-normal">
-                    {t('event-detail-page.view-on-map')}
-                    <ArrowTopRightOnSquareIcon className="ml-2 h-5 w-5" />
-                  </button>
-                </div>
-
-                <div className="space-y-2">
-                  <Typography>
-                    Venue1: (Building A-F) Diamond Island Convention and
-                    Exhibition Center
-                  </Typography>
-                  <button className="flex rounded-lg border border-gray-200 p-2 px-4 font-normal">
-                    {t('event-detail-page.view-on-map')}
-                    <ArrowTopRightOnSquareIcon className="ml-2 h-5 w-5" />
-                  </button>
-                </div>
+            </div>
+            <div className="mt-4 space-y-4">
+              <div className="space-y-2">
+                <Typography>
+                  Venue1: (Building A-F) Diamond Island Convention and
+                  Exhibition Center
+                </Typography>
+                <button className="flex rounded-lg border border-gray-200 py-2 px-4 font-normal">
+                  {t('event-detail-page.view-on-map')}
+                  <ArrowTopRightOnSquareIcon className="ml-2 h-5 w-5" />
+                </button>
               </div>
-            </EventInfoCard>
+
+              <div className="space-y-2">
+                <Typography>
+                  Venue1: (Building A-F) Diamond Island Convention and
+                  Exhibition Center
+                </Typography>
+                <button className="flex rounded-lg border border-gray-200 p-2 px-4 font-normal">
+                  {t('event-detail-page.view-on-map')}
+                  <ArrowTopRightOnSquareIcon className="ml-2 h-5 w-5" />
+                </button>
+              </div>
+            </div>
           </ItemContainer>
 
           <ItemContainer>
-            <EventInfoCard
-              icon={CalendarDaysIcon}
-              iconClassName="bg-primary-light text-primary"
-            >
+            <div className="flex items-center space-x-4">
+              <div className="bg-primary-light text-primary rounded-xl p-2">
+                <CalendarDaysIcon className="h-7 w-7" />
+              </div>
               <Typography color="dark" weight="semibold" size="2xl">
                 {t('event-detail-page.schedule')}
               </Typography>
-              <div className="mt-2 flex w-full flex-col space-y-2">
-                <div className="flex-1 rounded-xl border border-gray-200 p-4 text-gray-700">
-                  <span>8:30 AM - 6:00 PM</span>&nbsp;|&nbsp;
-                  <span>Exhibition</span>
-                </div>
+            </div>
+            <div className="mt-4 flex w-full flex-col items-stretch space-y-2">
+              <div className="flex-1 rounded-xl border border-gray-200 p-4 text-gray-700">
+                <span>8:30 AM - 6:00 PM</span>&nbsp;|&nbsp;
+                <span>Exhibition</span>
               </div>
-            </EventInfoCard>
+            </div>
           </ItemContainer>
 
           <div className="space-y-4">
@@ -212,7 +237,7 @@ export const EventDetailPage = () => {
                 {t('event-detail-page.event-detail')}
               </Typography>
             </div>
-            <div className="mt-4 text-gray-700">
+            <div className="mt-4 break-words text-gray-700">
               {`
             "Cambodia Tech Expo 2022" is the first, largest technology expo in Cambodia, held as an official sideline event of the ASEAN Summit 2022, and the first annual program hosted in the Kingdom of Cambodia by the Ministry of Industry, Science, Technology and Innovation (MISTI).
             The event is organized under the theme "Addressing Challenges Together through Tech Talents" which will take place at Diamond Island Convention and Exhibition Center, Koh Pich (Venue 1) and The Factory Phnom Penh (Venue 2) from 11th to 13th November 2022.
@@ -231,26 +256,60 @@ export const EventDetailPage = () => {
           </ItemContainer>
         </div>
         <Carousel
-          loop
-          slidesPerView={3}
+          autoplay
+          breakpoints={{
+            460: {
+              slidesPerView: 1.75,
+            },
+            640: {
+              slidesPerView: 2.5,
+            },
+            768: {
+              slidesPerView: 2.75,
+            },
+            1024: {
+              slidesPerView: 3,
+            },
+          }}
+          slidesPerView={1.125}
           title={t('event-detail-page.other-events')}
           navigation
           pagination
-          titleClassName="text-2xl font-bold uppercase"
+          titleClassName="text-lg md:text-xl lg:text-3xl font-bold"
         >
           {(Slide) =>
-            EVENTDATA.map((event) => (
-              <Slide key={event.id} className="pb-8">
-                <EventCard
-                  img={event.img}
-                  date={event.date}
-                  time={event.time}
-                  title={event.title}
-                  location={event.location}
-                  href={`/event/${event.id}`}
-                />
-              </Slide>
-            ))
+            EVENTDATA.map((event) => {
+              const isActive = !!interestedEvents.find(
+                (_event) => _event.id === event.id
+              );
+              return (
+                <Slide key={event.id} className="flex justify-center pb-8">
+                  <EventCard
+                    img={event.img}
+                    date={event.date}
+                    time={event.time}
+                    title={event.title}
+                    location={event.location}
+                    href={`/event/${event.id}`}
+                    isActive={isActive}
+                    onInterested={() => {
+                      try {
+                        const newInterestedEvents = isActive
+                          ? interestedEvents.filter(
+                              (_event) => _event.id !== event.id
+                            )
+                          : [...interestedEvents, event];
+
+                        setInterestedEvents(newInterestedEvents);
+                      } catch (error) {
+                        window.localStorage.removeItem('interested-event');
+                        setInterestedEvents([event]);
+                      }
+                    }}
+                  />
+                </Slide>
+              );
+            })
           }
         </Carousel>
       </div>

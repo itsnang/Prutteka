@@ -18,13 +18,13 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
   return (
     <form
-      className="flex items-center rounded-2xl border bg-white px-4 py-[0.875rem]"
+      className={`flex items-center justify-between rounded-2xl border bg-white px-4 py-[0.875rem] ${className}`}
       onSubmit={(e) => onSearch(e, input)}
     >
       <input
         type="text"
         placeholder={placeholder}
-        className={'border-gray-200 outline-none ' + className}
+        className="w-full border-gray-200 outline-none"
         value={input}
         onChange={(e) => setInput(e.target.value)}
       />
