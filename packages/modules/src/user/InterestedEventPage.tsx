@@ -15,7 +15,12 @@ export const InterestedEventPage: React.FC = () => {
 
       <div>
         <div className="space-y-3">
-          <Typography variant="h4" weight="bold" className="uppercase">
+          <Typography
+            variant="h1"
+            size="lg"
+            weight="bold"
+            className="md:text-xl lg:text-3xl"
+          >
             {t('interested-event-page.interested')}
           </Typography>
           <div className="flex justify-between ">
@@ -31,33 +36,35 @@ export const InterestedEventPage: React.FC = () => {
             </Button>
           </div>
         </div>
-        <div className="mt-4 grid grid-cols-3 gap-4">
-          {interestedEvents.map((event) => {
-            return (
-              <EventCard
-                time={event.time}
-                date={event.date}
-                img={event.img}
-                href=""
-                location={event.location}
-                title={event.title}
-                key={event.id}
-                isActive
-                onInterested={() => {
-                  try {
-                    setInterestedEvents(
-                      interestedEvents.filter(
-                        (_event) => _event.id !== event.id
-                      )
-                    );
-                  } catch (error) {
-                    window.localStorage.removeItem('interested-event');
-                    setInterestedEvents([event]);
-                  }
-                }}
-              />
-            );
-          })}
+        <div className="flex justify-center">
+          <div className="mt-4 grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+            {interestedEvents.map((event) => {
+              return (
+                <EventCard
+                  time={event.time}
+                  date={event.date}
+                  img={event.img}
+                  href=""
+                  location={event.location}
+                  title={event.title}
+                  key={event.id}
+                  isActive
+                  onInterested={() => {
+                    try {
+                      setInterestedEvents(
+                        interestedEvents.filter(
+                          (_event) => _event.id !== event.id
+                        )
+                      );
+                    } catch (error) {
+                      window.localStorage.removeItem('interested-event');
+                      setInterestedEvents([event]);
+                    }
+                  }}
+                />
+              );
+            })}
+          </div>
         </div>
       </div>
     </>
