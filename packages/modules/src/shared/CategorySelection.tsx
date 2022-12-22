@@ -19,7 +19,7 @@ export const CategorySelection: React.FC<CategorySelectionProps> = ({
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
-        <Typography variant="h1" size="3xl">
+        <Typography variant="h1" size="lg" className="md:text-xl lg:text-3xl">
           {title}
         </Typography>
         <button
@@ -35,7 +35,7 @@ export const CategorySelection: React.FC<CategorySelectionProps> = ({
         show={isOpen}
         onClose={() => setIsOpen(false)}
       >
-        <div className="mt-6 grid grid-cols-3 gap-4 text-base">
+        <div className="mt-6 grid grid-cols-2 gap-4 text-base md:grid-cols-3">
           {CATEGORIES.map((category, idx) => {
             const categoryValue = category.split('.')[1];
             const isActive =

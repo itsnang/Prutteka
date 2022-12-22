@@ -13,7 +13,7 @@ export const ButtonCategory: React.FC<ButtonCategoryProps> = ({
 }) => {
   return (
     <button
-      className={`inline-flex h-14 items-center justify-center rounded-full border-2 px-6 ${
+      className={`inline-flex h-12 items-center justify-center rounded-full border-2 px-6 lg:h-14 ${
         isActive
           ? 'bg-primary border-primary-dark font-medium text-white'
           : 'border-gray-300 bg-gray-100'

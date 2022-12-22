@@ -1,6 +1,6 @@
 export const EVENTDATA = [
   {
-    date: 'Fri, Nov 11 - Sun, Nov 13',
+    date: 'Fri, Nov 11',
     time: '5:00 PM',
     title: 'Cambodia Tech Expo 2022',
     location: 'Phnom Penh',
@@ -40,7 +40,7 @@ export const EVENTDATA = [
     id: 4,
   },
   {
-    date: 'Sun, Dec 11 - Mon, Dec 12',
+    date: 'Sun, Dec 11',
     time: '9:00 AM',
     title: 'Nadri Korean Festival',
     location: 'Phnom Penh',
