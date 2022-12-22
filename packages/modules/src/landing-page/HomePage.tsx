@@ -1,5 +1,6 @@
 import { NextPage } from 'next';
 import { CategorySelection } from '../shared';
+import { useEffect, useState } from 'react';
 import { Banner, Carousel, EventCard, SeoMeta } from 'ui';
 
 // mock data
@@ -11,9 +12,11 @@ const CAROUSEL = [
 ];
 
 import { useTypeSafeTranslation } from '../shared-hooks';
+import { useLocalInterestedEvent } from '../event';
 
 export const HomePage: NextPage = () => {
   const { t } = useTypeSafeTranslation();
+  const [interestedEvents, setInterestedEvents] = useLocalInterestedEvent();
 
   return (
     <>
@@ -38,17 +41,37 @@ export const HomePage: NextPage = () => {
         </Carousel>
         <CategorySelection title={t('home-page.spotlight-events') || ''} />
         <div className="grid grid-cols-3 place-items-center gap-4">
-          {EVENTDATA.map((event) => (
-            <EventCard
-              key={event.id}
-              img={event.img}
-              date={event.date}
-              time={event.time}
-              location={event.location}
-              title={event.title}
-              href={`/event/${event.id}`}
-            />
-          ))}
+          {EVENTDATA.map((event) => {
+            const isActive = !!interestedEvents.find(
+              (_event) => _event.id === event.id
+            );
+            return (
+              <EventCard
+                key={event.id}
+                img={event.img}
+                date={event.date}
+                time={event.time}
+                location={event.location}
+                title={event.title}
+                href={`/event/${event.id}`}
+                isActive={isActive}
+                onInterested={() => {
+                  try {
+                    const newInterestedEvents = isActive
+                      ? interestedEvents.filter(
+                          (_event) => _event.id !== event.id
+                        )
+                      : [...interestedEvents, event];
+
+                    setInterestedEvents(newInterestedEvents);
+                  } catch (error) {
+                    window.localStorage.removeItem('interested-event');
+                    setInterestedEvents([event]);
+                  }
+                }}
+              />
+            );
+          })}
         </div>
       </div>
     </>
