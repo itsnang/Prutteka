@@ -6,6 +6,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary';
   className?: string;
   hasShadow?: boolean;
+  fullWidth?: boolean;
   icon?: (props: React.ComponentProps<'svg'>) => JSX.Element;
 }
 
@@ -32,13 +33,16 @@ export const Button: React.FC<RequireChildrenOrIcon> = ({
   hasShadow = false,
   icon,
   href,
+  fullWidth,
   ...props
 }) => {
   const Icon = icon;
   const iconClassName = `h-6 w-6 ${children ? 'mr-[0.625rem]' : ''}`;
   const componentClassname = `h-14 inline-flex min-w-[3.5rem] items-center justify-center rounded-2xl font-medium ${
     variantClassname[variant]
-  } ${className ? className : ''} ${hasShadow ? 'shadow-inner' : ''}`;
+  } ${fullWidth ? 'w-full' : ''} ${className ? className : ''} ${
+    hasShadow ? 'shadow-inner' : ''
+  }`;
 
   if (as === 'link') {
     return (
