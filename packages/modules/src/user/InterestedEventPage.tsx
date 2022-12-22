@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Typography, Button, EventCard, AutoCompleteInput, SeoMeta } from 'ui';
 import { ArrowPathIcon } from '@heroicons/react/24/solid';
-import { EVENTDATA } from '../constants';
-import { useTypeSafeTranslation } from 'modules';
+import { useLocalStorage, useTypeSafeTranslation } from '../shared-hooks';
+import { EventType, useLocalInterestedEvent } from '../event';
+
 export const InterestedEventPage: React.FC = () => {
   const { t } = useTypeSafeTranslation();
+  const [interestedEvents, setInterestedEvents] = useLocalInterestedEvent();
+
   return (
     <>
       <SeoMeta title="Interested - Prutteka" description="" />
@@ -29,7 +32,7 @@ export const InterestedEventPage: React.FC = () => {
           </div>
         </div>
         <div className="mt-4 grid grid-cols-3 gap-4">
-          {EVENTDATA.map((event) => {
+          {interestedEvents.map((event) => {
             return (
               <EventCard
                 time={event.time}
@@ -39,6 +42,19 @@ export const InterestedEventPage: React.FC = () => {
                 location={event.location}
                 title={event.title}
                 key={event.id}
+                isActive
+                onInterested={() => {
+                  try {
+                    setInterestedEvents(
+                      interestedEvents.filter(
+                        (_event) => _event.id !== event.id
+                      )
+                    );
+                  } catch (error) {
+                    window.localStorage.removeItem('interested-event');
+                    setInterestedEvents([event]);
+                  }
+                }}
               />
             );
           })}

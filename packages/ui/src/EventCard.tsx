@@ -14,7 +14,9 @@ interface EventCardProps {
   time: string;
   location: string;
   isLandscape?: boolean;
-  onDelete?: Function;
+  isActive?: boolean;
+  onDelete?: () => void;
+  onInterested?: () => void;
 }
 
 export const EventCard: React.FC<EventCardProps> = ({
@@ -25,7 +27,9 @@ export const EventCard: React.FC<EventCardProps> = ({
   time,
   location,
   isLandscape = false,
+  isActive = false,
   onDelete,
+  onInterested,
 }) => {
   if (isLandscape) {
     return (
@@ -47,7 +51,7 @@ export const EventCard: React.FC<EventCardProps> = ({
             <div className="text-secondary text-sm">{location}</div>
           </div>
           <div className="flex gap-4">
-            <ButtonInterested />
+            <ButtonInterested isActive={isActive} onClick={onInterested} />
             {onDelete && (
               <Button
                 variant="secondary"
@@ -82,9 +86,7 @@ export const EventCard: React.FC<EventCardProps> = ({
           </Link>
           <div className="text-secondary text-sm">Phnom Penh</div>
         </div>
-        <div className="">
-          <ButtonInterested hasText />
-        </div>
+        <ButtonInterested hasText isActive={isActive} onClick={onInterested} />
       </div>
     </div>
   );
