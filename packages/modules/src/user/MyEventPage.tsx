@@ -10,7 +10,7 @@ export const MyEventPage = () => {
     <>
       <SeoMeta title="My Events - Prutteka" description="" />
       <div className="flex flex-col gap-6">
-        <Typography weight="bold" className="uppercase" variant="h4">
+        <Typography className="md:text-xl lg:text-3xl" variant="h1" size="lg">
           {t('my-event-page.my-event')}
         </Typography>
         <div className="space-y-4">
