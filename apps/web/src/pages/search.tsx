@@ -1,13 +1,25 @@
-import { Search } from 'modules';
+import { EVENTDATA, Search } from 'modules';
 
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { GetStaticProps } from 'next';
+import { GetServerSideProps } from 'next';
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
+export const getServerSideProps: GetServerSideProps = async ({
+  locale,
+  query,
+}) => {
+  const { search } = query;
+
+  const events = !search
+    ? EVENTDATA
+    : EVENTDATA.filter((event) =>
+        event.title
+          .toLowerCase()
+          .replace(/\s+/g, '')
+          .includes((search as string).toLowerCase().replace(/\s+/g, ''))
+      );
+
   return {
-    props: {
-      ...(await serverSideTranslations(locale ?? 'en')),
-    },
+    props: { events, ...(await serverSideTranslations(locale ?? 'en')) },
   };
 };
 

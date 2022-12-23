@@ -1,12 +1,17 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { AutoCompleteInput, EventCard, SearchBar, SeoMeta } from 'ui';
 import { CategorySelection } from '../shared';
 import { MapPinIcon } from '@heroicons/react/24/solid';
-import { EVENTDATA, LOCATIONS } from '../constants';
-import { useLocalStorage, useTypeSafeTranslation } from '../shared-hooks';
+import { LOCATIONS } from '../constants';
+import { useTypeSafeTranslation } from '../shared-hooks';
 import { EventType, useLocalInterestedEvent } from '../event';
+import { useRouter } from 'next/router';
 
-export const Search = () => {
+interface SearchPageProps {
+  events: EventType[];
+}
+
+export const Search = ({ events }: SearchPageProps) => {
   const { t } = useTypeSafeTranslation();
 
   const locations = useMemo(
@@ -21,6 +26,10 @@ export const Search = () => {
   const [selected, setSelected] = useState(locations[0]);
 
   const [interestedEvents, setInterestedEvents] = useLocalInterestedEvent();
+  const {
+    query: { search },
+    push,
+  } = useRouter();
 
   // // fix language change translation
   // useEffect(() => {
@@ -39,7 +48,14 @@ export const Search = () => {
           <SearchBar
             placeholder={t('common.search-event')}
             className="w-full"
-            onSearch={(e) => e.preventDefault()}
+            onSearch={(e, input) => {
+              e.preventDefault();
+              push({
+                pathname: '/search',
+                query: { search: input },
+              });
+            }}
+            value={search as string}
           />
           <AutoCompleteInput
             items={locations}
@@ -51,7 +67,7 @@ export const Search = () => {
         </div>
         <CategorySelection title={t('search-page.search-results')} />
         <div className="flex flex-col gap-[0.625rem]">
-          {EVENTDATA.map((event) => {
+          {events.map((event) => {
             const isActive = !!interestedEvents.find(
               (_event) => _event.id === event.id
             );

@@ -34,6 +34,14 @@ export const Header: React.FC = () => {
     });
   };
 
+  const handleSearch = (e: React.FormEvent<HTMLFormElement>, input: string) => {
+    e.preventDefault();
+    router.push({
+      pathname: '/search',
+      query: { search: input },
+    });
+  };
+
   const changeTo = router.locale === 'en' ? 'kh' : 'en';
   const isSearchPage = router.pathname === '/search';
   const isInterestedPage = router.asPath === '/user/interested';
@@ -42,10 +50,7 @@ export const Header: React.FC = () => {
     <div className="hidden lg:block">
       <SearchBar
         placeholder={t('common.search-event') || ''}
-        onSearch={(e) => {
-          e.preventDefault();
-          router.push('/search');
-        }}
+        onSearch={handleSearch}
       />
     </div>
   );
@@ -123,10 +128,7 @@ export const Header: React.FC = () => {
         <SearchBar
           className="w-full"
           placeholder={t('common.search-event') || ''}
-          onSearch={(e) => {
-            e.preventDefault();
-            router.push('/search');
-          }}
+          onSearch={handleSearch}
         />
         <div className="my-3 mx-2 w-full border-b-2 border-gray-100" />
         {authButton}
