@@ -18,7 +18,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
   return (
     <form
-      className={`flex items-center justify-between rounded-2xl border bg-white px-4 py-[0.875rem] ${className}`}
+      className={`flex items-center justify-between rounded-2xl border bg-white p-3 sm:px-4 sm:py-[0.875rem] ${className}`}
       onSubmit={(e) => onSearch(e, input)}
     >
       <input
@@ -29,7 +29,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         onChange={(e) => setInput(e.target.value)}
       />
       <button type="submit">
-        <MagnifyingGlassIcon className="h-6 w-6 text-gray-600" />
+        <MagnifyingGlassIcon className="h-5 w-5 text-gray-600 sm:h-6 sm:w-6" />
       </button>
     </form>
   );

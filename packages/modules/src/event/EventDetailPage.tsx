@@ -59,7 +59,7 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({ event }) => {
           <ItemContainer className="flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-x-4">
             <Button
               icon={TicketIcon}
-              className="h-14 md:flex-1"
+              className="h-12 sm:h-14 md:flex-1"
               onClick={() => setAttendModal(true)}
             >
               {t('event-detail-page.how-to-attend')}

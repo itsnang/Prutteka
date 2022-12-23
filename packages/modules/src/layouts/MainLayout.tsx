@@ -17,9 +17,9 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
     <>
       {top}
       <div
-        className={`mx-auto min-h-screen max-w-5xl px-4 ${top ? 'mt-24' : ''} ${
-          className ? className : ''
-        }`}
+        className={`mx-auto mb-8 min-h-screen max-w-5xl px-4 ${
+          top ? 'mt-24' : ''
+        } ${className ? className : ''}`}
       >
         {children}
       </div>
