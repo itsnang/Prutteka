@@ -116,7 +116,6 @@ export const UserEventCard: React.FC<UserEventCardProps> = ({
                   ) : null}
 
                   <Button
-                    className="h-10 w-10"
                     variant="secondary"
                     as="link"
                     href="/"

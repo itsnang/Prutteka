@@ -48,19 +48,19 @@ export const EventCard: React.FC<EventCardProps> = ({
               {date} | {time}
             </div>
             <Link
-              className="line-clamp-2 text-sm font-medium text-gray-900 lg:text-xl"
+              className="line-clamp-2 text-base font-medium text-gray-900 sm:text-xl"
               href={href}
             >
               {title}
             </Link>
             <div className="text-secondary text-sm">{location}</div>
           </div>
-          <div className="flex gap-4">
+          <div className="flex flex-col gap-2 sm:flex-row sm:gap-4">
             <ButtonInterested isActive={isActive} onClick={onInterested} />
             {onDelete && (
               <Button
                 variant="secondary"
-                className="bg-primary-light border-primary text-primary h-14 w-14"
+                className="bg-primary-light border-primary text-primary"
                 onClick={() => onDelete()}
               >
                 <TrashIcon className="h-6 w-6" />

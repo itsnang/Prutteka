@@ -26,7 +26,7 @@ export const ButtonInterested: React.FC<ButtonInterestedProps> = ({
     ? `${
         hasText
           ? 'h-10 w-full rounded-lg justify-between px-4'
-          : 'h-10 w-10 sm:h-14 sm:w-14 rounded-xl justify-center'
+          : 'h-12 w-12 sm:h-14 sm:w-14 rounded-xl justify-center'
       }`
     : '';
 
