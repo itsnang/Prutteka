@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/router';
 
 import { Button, EventCard, SearchBar, Typography } from 'ui';
@@ -6,67 +6,115 @@ import { EventHeader } from './EventHeader';
 import { DeleteModal } from '../shared';
 import { ArrowLongLeftIcon } from '@heroicons/react/24/outline';
 import { EVENTDATA } from '../constants';
-import { useTypeSafeTranslation } from '../shared-hooks';
+import { useDebounce, useTypeSafeTranslation } from '../shared-hooks';
+import { EventType, useLocalInterestedEvent } from './useLocalInterestedEvent';
+import { NextPage } from 'next';
 
-export const EventNestedPage = () => {
+interface EventNestedPageProps {
+  event: EventType;
+}
+
+export const EventNestedPage: NextPage<EventNestedPageProps> = ({ event }) => {
   const [deleteModal, setDeleteModal] = useState(false);
   const [selectedId, setSelectedId] = useState<number | null>(null);
-  const { query } = useRouter();
+  const { query, push } = useRouter();
 
   const { t } = useTypeSafeTranslation();
+  const [interestedEvents, setInterestedEvents] = useLocalInterestedEvent();
+
+  const [searchQuery, setSearchQuery] = useState('');
+  const debounceSearch = useDebounce(searchQuery, 500);
+  const queryEvents =
+    debounceSearch === ''
+      ? EVENTDATA
+      : EVENTDATA.filter((event) =>
+          event.title
+            .toLowerCase()
+            .replace(/\s+/g, '')
+            .includes(debounceSearch.toLowerCase().replace(/\s+/g, ''))
+        );
 
   return (
     <div className="space-y-8">
       <EventHeader
         isHappening
-        img="/event_poster1.jpg"
-        title="Cambodia Tech Expo 2022"
-        date="Fri, Nov 11 - Sun, Nov 13"
+        img={event.img}
+        title={event.title}
+        date={event.date}
       />
       <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <div className="w-full max-w-[12.5rem]">
+        <div className="flex w-full flex-col space-y-4 md:flex-row md:space-y-0">
+          <div className="flex flex-[2] items-center space-x-4 md:justify-between">
             <Button
               as="link"
               href={`/event/${query?.eventId}`}
               variant="secondary"
               icon={ArrowLongLeftIcon}
             />
+            <div className="flex">
+              <div className="my-3 mx-2 hidden w-20 border-b-2 border-gray-200 md:block" />
+              <Typography className="uppercase">
+                {t('event-detail-page.in-this-event')}
+              </Typography>
+              <div className="my-3 mx-2 hidden w-20 border-b-2 border-gray-200 md:block" />
+            </div>
           </div>
-          <div className="flex">
-            <div className="my-3 mx-2 w-20 border-b-2 border-gray-200" />
-            <Typography className="uppercase">
-              {t('event-detail-page.in-this-event')}
-            </Typography>
-            <div className="my-3 mx-2 w-20 border-b-2 border-gray-200" />
+          <div className="flex flex-1 md:justify-end">
+            <SearchBar
+              className="w-full md:max-w-[12.5rem]"
+              placeholder={t('common.search-event')}
+              value={query.search as string}
+              onChange={setSearchQuery}
+              onSearch={(e, input) => {
+                e.preventDefault();
+                push({
+                  pathname: '/event/[eventId]/nested',
+                  query: { eventId: event.id, search: input },
+                });
+              }}
+            />
           </div>
-          <SearchBar
-            className="w-full max-w-[12.5rem]"
-            placeholder={t('common.search-event')}
-            onSearch={(e) => {
-              e.preventDefault();
-            }}
-          />
         </div>
         <Button hasShadow className="w-full">
           {t('event-detail-page.add-event')}
         </Button>
-        {EVENTDATA.map((event, idx) => (
-          <EventCard
-            isLandscape
-            key={event.id}
-            img={event.img}
-            date={event.date}
-            time={event.time}
-            location={event.location}
-            title={event.title}
-            href="/event"
-            onDelete={() => {
-              setSelectedId(event.id);
-              setDeleteModal(true);
-            }}
-          />
-        ))}
+        {queryEvents.map((event) => {
+          const isActive = !!interestedEvents.find(
+            (_event) => _event.id === event.id
+          );
+
+          return (
+            <EventCard
+              isLandscape
+              key={event.id}
+              img={event.img}
+              date={event.date}
+              time={event.time}
+              location={event.location}
+              title={event.title}
+              href="/event"
+              isActive={isActive}
+              onInterested={() => {
+                try {
+                  const newInterestedEvents = isActive
+                    ? interestedEvents.filter(
+                        (_event) => _event.id !== event.id
+                      )
+                    : [...interestedEvents, event];
+
+                  setInterestedEvents(newInterestedEvents);
+                } catch (error) {
+                  window.localStorage.removeItem('interested-event');
+                  setInterestedEvents([event]);
+                }
+              }}
+              onDelete={() => {
+                setSelectedId(event.id);
+                setDeleteModal(true);
+              }}
+            />
+          );
+        })}
         <DeleteModal
           show={deleteModal}
           onClose={() => setDeleteModal(false)}
