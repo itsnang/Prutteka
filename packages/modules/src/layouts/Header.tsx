@@ -56,7 +56,7 @@ export const Header: React.FC = () => {
         as="link"
         href="/login"
         variant="secondary"
-        className="min-w-[8rem] px-8"
+        className="px-8 md:w-32"
         fullWidth
       >
         {t('common.login')}
@@ -65,7 +65,7 @@ export const Header: React.FC = () => {
         as="link"
         href="/register"
         variant="primary"
-        className="min-w-[8rem] px-8"
+        className="px-8 md:w-32"
         hasShadow
         fullWidth
       >

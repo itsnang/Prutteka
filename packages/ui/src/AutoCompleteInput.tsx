@@ -43,13 +43,13 @@ export const AutoCompleteInput: React.FC<AutoCompleteInputProps> = ({
         <div className="relative flex w-full cursor-default items-center overflow-hidden rounded-2xl border bg-white text-left">
           {LeftIcon ? (
             <LeftIcon
-              className={`ml-3 h-6 w-6 ${
+              className={`ml-3 h-5 w-5 sm:h-6 sm:w-6 ${
                 leftIconClassName ? leftIconClassName : ''
               }`}
             />
           ) : null}
           <Combobox.Input
-            className={`w-full border-none py-4 pr-10 leading-5 text-gray-900 outline-none ${
+            className={`w-full border-none py-3 pr-10 text-gray-900 outline-none sm:py-4 ${
               LeftIcon ? 'pl-2' : 'pl-4'
             }`}
             displayValue={(item: ItemType) => item?.name}

@@ -19,7 +19,7 @@ export const CategorySelection: React.FC<CategorySelectionProps> = ({
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
-        <Typography variant="h1" size="lg" className="md:text-xl lg:text-3xl">
+        <Typography variant="h1" size="xl" className="md:text-2xl lg:text-3xl">
           {title}
         </Typography>
         <button

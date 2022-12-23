@@ -39,7 +39,7 @@ export const HomePage: NextPage = () => {
           title={t('home-page.spotlight-events') || ''}
           navigation
           pagination
-          titleClassName="text-lg md:text-xl lg:text-3xl font-bold"
+          titleClassName="text-xl md:text-2xl lg:text-3xl font-bold"
         >
           {(Slide) =>
             CAROUSEL.map((carousel, idx) => (
@@ -49,7 +49,7 @@ export const HomePage: NextPage = () => {
             ))
           }
         </Carousel>
-        <CategorySelection title={t('home-page.spotlight-events') || ''} />
+        <CategorySelection title={t('home-page.explore') || ''} />
         <div className="flex justify-center">
           <div className="grid grid-cols-1 place-items-center gap-4 md:grid-cols-2 lg:grid-cols-3">
             {EVENTDATA.map((event) => {
