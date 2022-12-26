@@ -29,7 +29,7 @@ import { AttendModal } from './AttendModal';
 import { EVENTDATA } from '../constants';
 import { EventHeader } from './EventHeader';
 import { useRouter } from 'next/router';
-import { useTypeSafeTranslation } from '../shared-hooks';
+import { useTypeSafeTranslation } from 'shared-utils/hooks';
 import { EventType, useLocalInterestedEvent } from './useLocalInterestedEvent';
 
 interface EventDetailPageProps {
@@ -71,18 +71,7 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({ event }) => {
                 hasText
                 isActive={isActive}
                 onClick={() => {
-                  try {
-                    const newInterestedEvents = isActive
-                      ? interestedEvents.filter(
-                          (_event) => _event.id !== event.id
-                        )
-                      : [...interestedEvents, event];
-
-                    setInterestedEvents(newInterestedEvents);
-                  } catch (error) {
-                    window.localStorage.removeItem('interested-event');
-                    setInterestedEvents([event]);
-                  }
+                  setInterestedEvents(event);
                 }}
               />
               <Button
@@ -293,18 +282,7 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({ event }) => {
                     href={`/event/${event.id}`}
                     isActive={isActive}
                     onInterested={() => {
-                      try {
-                        const newInterestedEvents = isActive
-                          ? interestedEvents.filter(
-                              (_event) => _event.id !== event.id
-                            )
-                          : [...interestedEvents, event];
-
-                        setInterestedEvents(newInterestedEvents);
-                      } catch (error) {
-                        window.localStorage.removeItem('interested-event');
-                        setInterestedEvents([event]);
-                      }
+                      setInterestedEvents(event);
                     }}
                   />
                 </Slide>

@@ -2,7 +2,7 @@ import React from 'react';
 import Image, { StaticImageData } from 'next/image';
 import Link, { LinkProps } from 'next/link';
 import { Typography } from 'ui';
-import { useTypeSafeTranslation } from '../shared-hooks';
+import { useTypeSafeTranslation } from 'shared-utils/hooks';
 
 interface EventHeader {
   img: string | StaticImageData;

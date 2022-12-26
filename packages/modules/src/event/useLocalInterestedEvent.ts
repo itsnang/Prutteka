@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useLocalStorage } from '../shared-hooks';
+import { useLocalStorage } from 'shared-utils/hooks';
 
 export interface EventType {
   date: string;
@@ -21,5 +21,21 @@ export function useLocalInterestedEvent() {
     setInterestedEvents(localEvents);
   }, [localEvents]);
 
-  return [interestedEvents, setLocalEvents] as const;
+  const handleSetInterestedEvents = (event: EventType) => {
+    const isActive = !!interestedEvents.find(
+      (_event) => _event.id === event.id
+    );
+    try {
+      const newInterestedEvents = isActive
+        ? interestedEvents.filter((_event) => _event.id !== event.id)
+        : [...interestedEvents, event];
+
+      setLocalEvents(newInterestedEvents);
+    } catch (error) {
+      window.localStorage.removeItem('interested-event');
+      setLocalEvents([event]);
+    }
+  };
+
+  return [interestedEvents, handleSetInterestedEvents] as const;
 }

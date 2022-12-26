@@ -1,8 +1,6 @@
 {
-  "name": "modules",
+  "name": "shared-utils",
   "version": "0.0.0",
-  "main": "./src/index.tsx",
-  "types": "./src/index.tsx",
   "license": "MIT",
   "scripts": {
     "lint": "eslint \"**/*.ts*\""
@@ -20,9 +18,7 @@
     "tailwindcss": "^3.2.4",
     "tailwind-config": "*",
     "yup": "^0.32.11",
-    "ui": "*",
     "@headlessui/react": "^1.7.4",
-    "next-i18next": "^13.0.2",
-    "shared-utils": "*"
+    "next-i18next": "^13.0.2"
   }
 }

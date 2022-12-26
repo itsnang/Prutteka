@@ -31,7 +31,14 @@ const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
   const getLayout =
     Component.getLayout ?? ((page) => <DesktopLayout>{page}</DesktopLayout>);
 
-  return getLayout(<Component {...pageProps} />);
+  return (
+    <>
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </Head>
+      {getLayout(<Component {...pageProps} />)}
+    </>
+  );
 };
 
 export default appWithTranslation(MyApp);

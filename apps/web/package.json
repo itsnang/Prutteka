@@ -22,7 +22,8 @@
     "react-i18next": "^12.1.1",
     "swiper": "^8.4.5",
     "ui": "*",
-    "yup": "^0.32.11"
+    "yup": "^0.32.11",
+    "shared-utils": "*"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",

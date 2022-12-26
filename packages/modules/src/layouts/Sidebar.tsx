@@ -13,11 +13,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const sidebarRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (isOpen) document.body.classList.add('overflow-hidden');
-    else document.body.classList.remove('overflow-hidden');
-  }, [isOpen]);
-
   const handleClose = () => {
     onClose();
     document.body.classList.remove('overflow-hidden');
@@ -27,9 +22,21 @@ export const Sidebar: React.FC<SidebarProps> = ({
     if (!sidebarRef?.current?.contains(e.target as Node)) handleClose();
   };
 
+  useEffect(() => {
+    if (isOpen) document.body.classList.add('overflow-hidden');
+    else document.body.classList.remove('overflow-hidden');
+  }, [isOpen]);
+
+  useEffect(() => {
+    window.addEventListener('resize', handleClose);
+    return () => {
+      window.removeEventListener('resize', handleClose);
+    };
+  }, []);
+
   return (
     <div
-      className={`fixed left-0 top-0 h-screen w-screen bg-black transition-all md:hidden ${
+      className={`fixed left-0 top-0 h-screen w-screen bg-black transition-all lg:hidden ${
         isOpen
           ? 'pointer-events-auto bg-opacity-50'
           : 'pointer-events-none bg-opacity-0'

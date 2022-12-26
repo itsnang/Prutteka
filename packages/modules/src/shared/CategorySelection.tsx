@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { ButtonCategory, Modal, Typography } from 'ui';
 import { CATEGORIES } from '../constants';
 
-import { useTypeSafeTranslation } from '../shared-hooks';
+import { useTypeSafeTranslation } from 'shared-utils/hooks';
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
 interface CategorySelectionProps {
   title: string;
