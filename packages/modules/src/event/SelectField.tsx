@@ -3,7 +3,7 @@ import React, { forwardRef } from 'react';
 import { useField } from 'formik';
 
 interface SelectFieldProps
-  extends Partial<React.HTMLAttributes<HTMLInputElement>> {
+  extends Partial<React.HTMLAttributes<HTMLSelectElement>> {
   name: string;
   label: string;
   className?: string;
@@ -11,7 +11,7 @@ interface SelectFieldProps
   options: string[];
 }
 
-export const SelectField = forwardRef<HTMLInputElement, SelectFieldProps>(
+export const SelectField = forwardRef<HTMLSelectElement, SelectFieldProps>(
   (
     {
       name,
@@ -35,8 +35,8 @@ export const SelectField = forwardRef<HTMLInputElement, SelectFieldProps>(
             className={`form-select h-13 focus:ring-primary rounded-2xl border border-gray-200 px-4 text-gray-900 focus:border-gray-200 focus:outline-none focus:ring 
             ${className} ${label ? 'mt-2' : ''}`}
             ref={ref}
-            {...field}
             {...props}
+            {...field}
           >
             <option value="" disabled>
               {placeholder}

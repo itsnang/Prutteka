@@ -1,5 +1,8 @@
+import { ReactNode } from 'react';
+
 interface ItemContainerProp {
   className?: string;
+  children: ReactNode;
 }
 
 export const ItemContainer: React.FC<ItemContainerProp> = ({
