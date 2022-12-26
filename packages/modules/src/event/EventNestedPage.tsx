@@ -6,7 +6,7 @@ import { EventHeader } from './EventHeader';
 import { DeleteModal } from '../shared';
 import { ArrowLongLeftIcon } from '@heroicons/react/24/outline';
 import { EVENTDATA } from '../constants';
-import { useDebounce, useTypeSafeTranslation } from '../shared-hooks';
+import { useDebounce, useTypeSafeTranslation } from 'shared-utils/hooks';
 import { EventType, useLocalInterestedEvent } from './useLocalInterestedEvent';
 import { NextPage } from 'next';
 
@@ -95,18 +95,7 @@ export const EventNestedPage: NextPage<EventNestedPageProps> = ({ event }) => {
               href="/event"
               isActive={isActive}
               onInterested={() => {
-                try {
-                  const newInterestedEvents = isActive
-                    ? interestedEvents.filter(
-                        (_event) => _event.id !== event.id
-                      )
-                    : [...interestedEvents, event];
-
-                  setInterestedEvents(newInterestedEvents);
-                } catch (error) {
-                  window.localStorage.removeItem('interested-event');
-                  setInterestedEvents([event]);
-                }
+                setInterestedEvents(event);
               }}
               onDelete={() => {
                 setSelectedId(event.id);

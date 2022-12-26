@@ -2,7 +2,7 @@ import React from 'react';
 import { SeoMeta, Typography } from 'ui';
 import { UserEventCard } from './UserEventCard';
 import { EVENTDATA } from '../constants';
-import { useTypeSafeTranslation } from '../shared-hooks';
+import { useTypeSafeTranslation } from 'shared-utils/hooks';
 
 export const MyEventPage = () => {
   const { t } = useTypeSafeTranslation();

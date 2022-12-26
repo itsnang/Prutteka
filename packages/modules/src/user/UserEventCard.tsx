@@ -13,7 +13,7 @@ import {
 import Link, { LinkProps } from 'next/link';
 
 import { Disclosure, Transition } from '@headlessui/react';
-import { useTypeSafeTranslation } from '../shared-hooks';
+import { useTypeSafeTranslation } from 'shared-utils/hooks';
 
 interface UserEventCardProps {
   img: string | StaticImageData;

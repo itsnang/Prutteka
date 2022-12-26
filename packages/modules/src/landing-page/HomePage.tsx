@@ -1,6 +1,5 @@
 import { NextPage } from 'next';
 import { CategorySelection } from '../shared';
-import { useEffect, useState } from 'react';
 import { Banner, Carousel, EventCard, SeoMeta } from 'ui';
 
 // mock data
@@ -11,7 +10,7 @@ const CAROUSEL = [
   { title: 'HSC - Final 2022', img: '/football-cup.jpg' },
 ];
 
-import { useTypeSafeTranslation } from '../shared-hooks';
+import { useTypeSafeTranslation } from 'shared-utils/hooks';
 import { useLocalInterestedEvent } from '../event';
 
 export const HomePage: NextPage = () => {
@@ -67,18 +66,7 @@ export const HomePage: NextPage = () => {
                   href={`/event/${event.id}`}
                   isActive={isActive}
                   onInterested={() => {
-                    try {
-                      const newInterestedEvents = isActive
-                        ? interestedEvents.filter(
-                            (_event) => _event.id !== event.id
-                          )
-                        : [...interestedEvents, event];
-
-                      setInterestedEvents(newInterestedEvents);
-                    } catch (error) {
-                      window.localStorage.removeItem('interested-event');
-                      setInterestedEvents([event]);
-                    }
+                    setInterestedEvents(event);
                   }}
                 />
               );

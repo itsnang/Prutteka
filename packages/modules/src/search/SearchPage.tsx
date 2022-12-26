@@ -3,7 +3,7 @@ import { AutoCompleteInput, EventCard, SearchBar, SeoMeta } from 'ui';
 import { CategorySelection } from '../shared';
 import { MapPinIcon } from '@heroicons/react/24/solid';
 import { LOCATIONS } from '../constants';
-import { useTypeSafeTranslation } from '../shared-hooks';
+import { useTypeSafeTranslation } from 'shared-utils/hooks';
 import { EventType, useLocalInterestedEvent } from '../event';
 import { useRouter } from 'next/router';
 
@@ -84,18 +84,7 @@ export const Search = ({ events }: SearchPageProps) => {
                 href={`/event/${event.id}`}
                 isActive={isActive}
                 onInterested={() => {
-                  try {
-                    const newInterestedEvents = isActive
-                      ? interestedEvents.filter(
-                          (_event) => _event.id !== event.id
-                        )
-                      : [...interestedEvents, event];
-
-                    setInterestedEvents(newInterestedEvents);
-                  } catch (error) {
-                    window.localStorage.removeItem('interested-event');
-                    setInterestedEvents([event]);
-                  }
+                  setInterestedEvents(event);
                 }}
               />
             );

@@ -1,6 +1,6 @@
 import { useTranslation } from 'next-i18next';
 
-import translations from '../../../../apps/web/public/locales/en/translation.json';
+import translations from '../../../apps/web/public/locales/en/translation.json';
 
 type Join<S1, S2> = S1 extends string
   ? S2 extends string

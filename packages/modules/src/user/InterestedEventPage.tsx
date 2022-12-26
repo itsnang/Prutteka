@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 import { Typography, Button, EventCard, AutoCompleteInput, SeoMeta } from 'ui';
 import { ArrowPathIcon } from '@heroicons/react/24/solid';
-import { useLocalStorage, useTypeSafeTranslation } from '../shared-hooks';
-import { EventType, useLocalInterestedEvent } from '../event';
+import { useTypeSafeTranslation } from 'shared-utils/hooks';
+import { useLocalInterestedEvent } from '../event';
 
 export const InterestedEventPage: React.FC = () => {
   const { t } = useTypeSafeTranslation();
@@ -50,16 +50,7 @@ export const InterestedEventPage: React.FC = () => {
                   key={event.id}
                   isActive
                   onInterested={() => {
-                    try {
-                      setInterestedEvents(
-                        interestedEvents.filter(
-                          (_event) => _event.id !== event.id
-                        )
-                      );
-                    } catch (error) {
-                      window.localStorage.removeItem('interested-event');
-                      setInterestedEvents([event]);
-                    }
+                    setInterestedEvents(event);
                   }}
                 />
               );

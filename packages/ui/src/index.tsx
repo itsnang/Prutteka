@@ -11,3 +11,4 @@ export * from './AutoCompleteInput';
 export * from './Search/SearchBar';
 export * from './Typography';
 export * from './SeoMeta';
+export * from './ProfileMenu';

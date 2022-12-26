@@ -2,7 +2,7 @@ import React from 'react';
 
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
 import { Modal } from 'ui';
-import { useTypeSafeTranslation } from '../shared-hooks';
+import { useTypeSafeTranslation } from 'shared-utils/hooks';
 
 interface AttendModalProp {
   show: boolean;

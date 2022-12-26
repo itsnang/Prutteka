@@ -2,7 +2,7 @@ import React, { Children, useState } from 'react';
 import { Modal } from 'ui';
 import Image, { StaticImageData } from 'next/image';
 import { EllipsisHorizontalIcon } from '@heroicons/react/24/outline';
-import { useTypeSafeTranslation } from '../shared-hooks';
+import { useTypeSafeTranslation } from 'shared-utils/hooks';
 
 interface ShareModalProps {
   img: string | StaticImageData;

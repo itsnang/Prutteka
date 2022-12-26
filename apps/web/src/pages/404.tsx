@@ -7,7 +7,7 @@ import { ArrowLongDownIcon } from '@heroicons/react/24/outline';
 
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { GetStaticProps } from 'next';
-import { useTypeSafeTranslation } from 'modules';
+import { useTypeSafeTranslation } from 'shared-utils/hooks';
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
   return {

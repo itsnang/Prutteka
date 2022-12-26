@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StarIcon } from '@heroicons/react/24/outline';
 import { StarIcon as StarFillIcon } from '@heroicons/react/24/solid';
-import { useTypeSafeTranslation } from '../../modules';
+import { useTypeSafeTranslation } from 'shared-utils/hooks';
 
 interface ButtonInterestedProps {
   isDefault?: boolean;

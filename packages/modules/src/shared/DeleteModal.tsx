@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Modal, Typography } from 'ui';
-import { useTypeSafeTranslation } from '../shared-hooks';
+import { useTypeSafeTranslation } from 'shared-utils/hooks';
 
 interface DeleteModalProps {
   show: boolean;

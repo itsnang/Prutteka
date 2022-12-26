@@ -7,7 +7,7 @@ import { Formik, Form } from 'formik';
 
 import { ArrowLongLeftIcon } from '@heroicons/react/24/solid';
 import { useRouter } from 'next/router';
-import { useTypeSafeTranslation } from '../shared-hooks';
+import { useTypeSafeTranslation } from 'shared-utils/hooks';
 
 const validationSchema = Yup.object({
   email: Yup.string().email('Invalid email address').required('Required'),

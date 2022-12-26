@@ -9,7 +9,7 @@ import {
 } from './AuthLayout';
 import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
-import { useTypeSafeTranslation } from '../shared-hooks';
+import { useTypeSafeTranslation } from 'shared-utils/hooks';
 
 const validationSchema = Yup.object({
   email: Yup.string().email('Invalid email address').required('Required'),

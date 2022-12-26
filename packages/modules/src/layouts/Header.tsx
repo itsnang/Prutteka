@@ -4,9 +4,9 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 
-import { SearchBar, Button } from 'ui';
+import { SearchBar, Button, ProfileMenu } from 'ui';
 import { StarIcon, Bars3Icon } from '@heroicons/react/24/solid';
-import { useTypeSafeTranslation } from '../shared-hooks';
+import { useTypeSafeTranslation } from 'shared-utils/hooks';
 import { Sidebar } from './Sidebar';
 import { useEffect } from 'react';
 
@@ -97,9 +97,14 @@ export const Header: React.FC = () => {
         </div>
         <div className="flex divide-gray-300 md:space-x-4 md:divide-x">
           <div className="flex items-center gap-2">
-            <Button variant="secondary" onClick={() => changeLocale(changeTo)}>
-              {t('common.language')}
-            </Button>
+            <div className="xs:block hidden">
+              <Button
+                variant="secondary"
+                onClick={() => changeLocale(changeTo)}
+              >
+                {t('common.language')}
+              </Button>
+            </div>
 
             {isInterestedPage ? null : (
               <Button
@@ -113,25 +118,37 @@ export const Header: React.FC = () => {
 
             <Button
               variant="secondary"
-              className="md:hidden"
+              className="lg:hidden"
               onClick={() => setIsSidebarOpen(true)}
             >
               <Bars3Icon className="h-6 w-6" />
             </Button>
           </div>
 
-          <div className="hidden gap-2 pl-4 md:flex">{authButton}</div>
+          <div className="hidden gap-2 pl-2 md:flex md:pl-4">
+            {authButton}
+            {/* <ProfileMenu /> */}
+          </div>
         </div>
       </div>
 
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)}>
-        <SearchBar
-          className="w-full"
-          placeholder={t('common.search-event') || ''}
-          onSearch={handleSearch}
-        />
-        <div className="my-3 mx-2 w-full border-b-2 border-gray-100" />
-        {authButton}
+        <div className="xs:space-x-0 flex w-full space-x-2">
+          <div className="xs:hidden block">
+            <Button variant="secondary" onClick={() => changeLocale(changeTo)}>
+              {t('common.language')}
+            </Button>
+          </div>
+          <SearchBar
+            className="w-full"
+            placeholder={t('common.search-event') || ''}
+            onSearch={handleSearch}
+          />
+        </div>
+        <div className="my-3 mx-2 w-full border-b-2 border-gray-100 md:hidden" />
+        <div className="flex w-full flex-col space-y-2 md:hidden">
+          {authButton}
+        </div>
       </Sidebar>
     </nav>
   );
