@@ -31,15 +31,7 @@ const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
   const getLayout =
     Component.getLayout ?? ((page) => <DesktopLayout>{page}</DesktopLayout>);
 
-  return getLayout(
-    <>
-      <Head>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
-      </Head>
-      <Component {...pageProps} />
-    </>
-  );
+  return getLayout(<Component {...pageProps} />);
 };
 
 export default appWithTranslation(MyApp);
