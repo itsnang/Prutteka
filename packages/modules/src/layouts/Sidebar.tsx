@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 interface SidebarProps {
   isOpen: boolean;
@@ -13,10 +13,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const sidebarRef = useRef<HTMLDivElement>(null);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     onClose();
     document.body.classList.remove('overflow-hidden');
-  };
+  }, [onClose]);
 
   const handleClickOutside = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!sidebarRef?.current?.contains(e.target as Node)) handleClose();
@@ -28,11 +28,22 @@ export const Sidebar: React.FC<SidebarProps> = ({
   }, [isOpen]);
 
   useEffect(() => {
-    window.addEventListener('resize', handleClose);
+    console.log('render');
+
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 1024) {
+        handleClose();
+      }
+      console.log('called');
+    });
     return () => {
-      window.removeEventListener('resize', handleClose);
+      window.removeEventListener('resize', () => {
+        if (window.innerWidth > 1024) {
+          handleClose();
+        }
+      });
     };
-  }, []);
+  }, [handleClose]);
 
   return (
     <div
