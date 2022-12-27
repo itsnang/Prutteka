@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { AutoCompleteInput, EventCard, SearchBar, SeoMeta } from 'ui';
 import { CategorySelection } from '../shared';
 import { MapPinIcon } from '@heroicons/react/24/solid';
@@ -14,30 +14,15 @@ interface SearchPageProps {
 export const Search = ({ events }: SearchPageProps) => {
   const { t } = useTypeSafeTranslation();
 
-  const locations = useMemo(
-    () =>
-      LOCATIONS.map((value, idx) => ({
-        name: t(value),
-        value: value as string,
-        id: idx,
-      })),
-    [t]
-  );
+  const locations = LOCATIONS.map((value, idx) => ({
+    name: t(value),
+    value: value as string,
+    id: idx,
+  }));
   const [selected, setSelected] = useState(locations[0]);
 
   const [interestedEvents, setInterestedEvents] = useLocalInterestedEvent();
-  const {
-    query: { search },
-    push,
-  } = useRouter();
-
-  // // fix language change translation
-  // useEffect(() => {
-  //   // will set translate-text when language change
-  //   setSelected(
-  //     (prev) => locations.find((v) => v.id === prev.id) || locations[0]
-  //   );
-  // }, [locations]);
+  const { query, push } = useRouter();
 
   return (
     <>
@@ -52,15 +37,24 @@ export const Search = ({ events }: SearchPageProps) => {
               e.preventDefault();
               push({
                 pathname: '/search',
-                query: { search: input },
+                query: { ...query, search: input },
               });
             }}
-            value={search as string}
+            value={(query?.search as string) ?? ''}
           />
           <AutoCompleteInput
             items={locations}
-            selected={selected}
-            setSelected={setSelected}
+            selected={
+              locations.find((v) => v.id === selected.id) || locations[0]
+            }
+            setSelected={(event) => {
+              setSelected(event);
+              push({
+                pathname: '/search',
+                query: { ...query, location: event.value.split('.')[1] },
+              });
+              return event;
+            }}
             leftIcon={MapPinIcon}
             leftIconClassName="text-secondary"
           />

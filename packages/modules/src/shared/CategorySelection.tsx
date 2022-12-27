@@ -14,7 +14,7 @@ export const CategorySelection: React.FC<CategorySelectionProps> = ({
 }) => {
   const { t } = useTypeSafeTranslation();
   const [isOpen, setIsOpen] = useState(false);
-  const router = useRouter();
+  const { push, query } = useRouter();
 
   return (
     <div className="space-y-2">
@@ -39,14 +39,15 @@ export const CategorySelection: React.FC<CategorySelectionProps> = ({
           {CATEGORIES.map((category, idx) => {
             const categoryValue = category.split('.')[1];
             const isActive =
-              router.query?.category === categoryValue ||
-              (!router.query?.category && categoryValue === 'all');
+              query?.category === categoryValue ||
+              (!query?.category && categoryValue === 'all');
 
             return (
               <ButtonCategory
                 key={idx}
                 onClick={() => {
-                  router.push({ query: `category=${categoryValue}` });
+                  setIsOpen(false);
+                  push({ query: { ...query, category: categoryValue } });
                 }}
                 isActive={isActive}
               >
@@ -60,14 +61,14 @@ export const CategorySelection: React.FC<CategorySelectionProps> = ({
         {CATEGORIES.map((category, idx) => {
           const categoryValue = category.split('.')[1];
           const isActive =
-            router.query?.category === categoryValue ||
-            (!router.query?.category && categoryValue === 'all');
+            query?.category === categoryValue ||
+            (!query?.category && categoryValue === 'all');
 
           return (
             <ButtonCategory
               key={idx}
               onClick={() => {
-                router.push({ query: `category=${categoryValue}` });
+                push({ query: { ...query, category: categoryValue } });
               }}
               isActive={isActive}
             >

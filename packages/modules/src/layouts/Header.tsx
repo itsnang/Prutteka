@@ -85,11 +85,12 @@ export const Header: React.FC = () => {
         <div className="flex items-center gap-4">
           <Link href="/">
             <Image
-              src="/Logo.png"
+              src="/logo.png"
               alt="Logo"
               height={52}
               width={132.5}
               className="h-10 w-auto sm:h-auto sm:max-h-[3.25rem]"
+              priority
             />
           </Link>
 
