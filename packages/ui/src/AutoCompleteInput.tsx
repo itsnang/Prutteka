@@ -13,7 +13,7 @@ interface AutoCompleteInputProps {
   leftIcon?: (props: React.ComponentProps<'svg'>) => JSX.Element;
   leftIconClassName?: string;
   selected: ItemType;
-  setSelected: React.Dispatch<React.SetStateAction<ItemType>>;
+  setSelected: (item: ItemType) => ItemType;
 }
 
 export const AutoCompleteInput: React.FC<AutoCompleteInputProps> = ({
