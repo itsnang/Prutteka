@@ -1,55 +1,67 @@
 import React from 'react';
-import Image, { StaticImageData } from 'next/image';
 import { TrashIcon } from '@heroicons/react/24/outline';
+import Image, { StaticImageData } from 'next/image';
 
 import { ButtonInterested } from './ButtonInterested';
 import Link, { LinkProps } from 'next/link';
 import { Button } from './Button';
 
 interface EventCardProps {
-  image: string | StaticImageData;
+  img: string | StaticImageData;
   title: string;
   href: LinkProps['href'];
+  date: string;
+  time: string;
+  location: string;
   isLandscape?: boolean;
-  onDelete?: Function;
+  isActive?: boolean;
+  onDelete?: () => void;
+  onInterested?: () => void;
 }
 
 export const EventCard: React.FC<EventCardProps> = ({
-  image,
+  img,
   title,
   href,
-  isLandscape = true,
+  date,
+  time,
+  location,
+  isLandscape = false,
+  isActive = false,
   onDelete,
+  onInterested,
 }) => {
   if (isLandscape) {
     return (
-      <div className="flex w-full gap-4 rounded-2xl p-2">
-        <Image
-          src={image}
-          alt="title"
-          className="aspect-[2/1] w-56 rounded-xl"
-          placeholder="blur"
-        />
-        <div className="flex h-full flex-1 justify-between gap-4 p-2">
+      <div className="shadow-complete flex min-h-[7rem] w-full gap-2 rounded-2xl bg-white p-1 sm:p-2 md:gap-4">
+        <Link className="relative aspect-[2/1] w-28 sm:w-56" href={href}>
+          <Image
+            src={img}
+            alt={title}
+            className="rounded-xl object-cover"
+            fill
+          />
+        </Link>
+        <div className="flex flex-1 justify-between gap-2 p-1 sm:p-2 md:gap-4">
           <div className="flex-1">
-            <div className="text-primary text-sm">Thu, Nov 14 | 5:00 PM</div>
+            <div className="text-primary text-sm">
+              {date} | {time}
+            </div>
             <Link
-              className="line-clamp-2 text-lg font-medium text-gray-900"
+              className="line-clamp-2 text-base font-medium text-gray-900 sm:text-xl"
               href={href}
             >
-              Cambodia Tech Expo 2022 Lorem ipsum dolor sit amet consectetur
-              adipisicing elit. Inventore beatae eaque, temporibus commodi
-              itaque assumenda blanditiis eius hic eum fugiat nam atque sapiente
-              pariatur iusto excepturi repellat ratione rerum mollitia.
+              {title}
             </Link>
-            <div className="text-secondary text-sm">Phnom Penh</div>
+            <div className="text-secondary text-sm">{location}</div>
           </div>
-          <div className="flex gap-4">
-            <ButtonInterested />
+          <div className="flex flex-col gap-2 sm:flex-row sm:gap-4">
+            <ButtonInterested isActive={isActive} onClick={onInterested} />
             {onDelete && (
               <Button
-                varaint="secondary"
-                className="bg-primary-light border-primary text-primary h-14 w-14"
+                variant="secondary"
+                className="bg-primary-light border-primary text-primary"
+                onClick={() => onDelete()}
               >
                 <TrashIcon className="h-6 w-6" />
               </Button>
@@ -61,26 +73,25 @@ export const EventCard: React.FC<EventCardProps> = ({
   }
 
   return (
-    <div className="shadow-complete flex h-80 w-72 flex-col rounded-2xl bg-white p-1">
-      <Link href={href}>
-        <Image
-          src={image}
-          alt="title"
-          className="aspect-[2/1] rounded-xl"
-          placeholder="blur"
-        />
+    <div className="shadow-complete flex h-[22rem] w-screen max-w-[20rem] flex-col rounded-2xl bg-white p-1">
+      <Link
+        href={href}
+        className="relative aspect-[2/1] overflow-hidden rounded-xl"
+      >
+        <Image src={img} alt="title" fill className="object-cover" />
       </Link>
-      <div className="flex h-full flex-col gap-4 p-[14px]">
+      <div className="flex flex-1 flex-col gap-4 p-[14px]">
         <div className="flex-1">
           <div className="text-primary text-sm">Thu, Nov 14 | 5:00 PM</div>
-          <Link className="text-lg font-medium text-gray-900" href={href}>
-            Cambodia Tech Expo 2022
+          <Link
+            className="line-clamp-2 text-xl font-medium text-gray-900"
+            href={href}
+          >
+            {title}
           </Link>
           <div className="text-secondary text-sm">Phnom Penh</div>
         </div>
-        <div className="">
-          <ButtonInterested hasText />
-        </div>
+        <ButtonInterested hasText isActive={isActive} onClick={onInterested} />
       </div>
     </div>
   );

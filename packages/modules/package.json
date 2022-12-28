@@ -8,12 +8,21 @@
     "lint": "eslint \"**/*.ts*\""
   },
   "devDependencies": {
-    "@types/react": "^17.0.37",
-    "@types/react-dom": "^17.0.11",
+    "@heroicons/react": "^2.0.13",
+    "@types/react": "^18.0.22",
+    "@types/react-dom": "^18.0.7",
     "eslint": "^7.32.0",
     "eslint-config-custom": "*",
+    "next": "13.0.0",
     "react": "^18.2.0",
     "typescript": "^4.5.2",
-    "tsconfig": "*"
+    "tsconfig": "*",
+    "tailwindcss": "^3.2.4",
+    "tailwind-config": "*",
+    "yup": "^0.32.11",
+    "ui": "*",
+    "@headlessui/react": "^1.7.4",
+    "next-i18next": "^13.0.2",
+    "shared-utils": "*"
   }
 }

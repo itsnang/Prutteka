@@ -1,0 +1,104 @@
+{
+  "common": {
+    "search-event": "Search Events",
+    "language": "EN",
+    "login": "Log In",
+    "register": "Register",
+    "view-all": "View all",
+    "interested": "Interested",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "categories": "Categories"
+  },
+  "categories": {
+    "all": "All",
+    "recently-added": "Recently Added",
+    "free": "Free",
+    "online": "Online",
+    "education": "Education",
+    "sport": "Sport",
+    "music": "Music",
+    "exhibition": "Exhibition",
+    "technology": "Technology",
+    "charity": "Charity"
+  },
+  "locations": {
+    "phnom-penh": "Phnom Penh",
+    "banteay-meanchey": "Banteay Meanchey",
+    "battambang": "Battambang",
+    "kampong-cham": "Kampong Cham",
+    "kampong-chhnang": "Kampong Chhnang",
+    "kampong-speu": "Kampong Speu",
+    "kampo": "Kampot",
+    "kandal": "Kandal",
+    "kep": "Kep",
+    "koh-kong": "Koh Kong",
+    "kratie": "Kratie",
+    "mondulkiri": "Mondulkiri",
+    "oddor-meanchey": "Oddor Meanchey",
+    "pailin": "Pailin",
+    "prev-veng": "Prey Veng",
+    "pursat": "Pursat",
+    "rattanakiri": "Rattanakiri",
+    "siem-reap": "Siem Reap",
+    "sihanouk-ville": "Sihanouk Ville",
+    "stung-treng": "Stung Treng",
+    "svay-rieng": "Svay Rieng",
+    "takeo": "Takeo",
+    "kampong-thom": "Kampong Thom",
+    "preah-vihear": "Preah Vihear",
+    "tbong-khmum": "Tbong Khmum"
+  },
+  "modals": {
+    "share-event": "Share this event with your social community",
+    "delete-event": "Are you sure you want to deleted this event?"
+  },
+  "event-detail-page": {
+    "happening": "HAPPENING NOW",
+    "how-to-attend": "How to attend",
+    "share": "Share",
+    "time": "Time",
+    "duration": "Duration",
+    "location": "Location",
+    "map": "Map",
+    "view-on-map": "View on map",
+    "schedule": "Schedule",
+    "in-this-event": "IN THIS EVENT",
+    "add-event": "Add event",
+    "event-detail": "Event Detail",
+    "other-events": "OTHER EVENTS"
+  },
+  "home-page": {
+    "spotlight-events": "SPOTLIGHT EVENTS",
+    "explore": "EXPLORE"
+  },
+  "search-page": {
+    "search-results": "SEARCH RESULTS"
+  },
+  "register-page": {
+    "name": "Name",
+    "email": "Email",
+    "password": "Password",
+    "create-new-account": "Create new account",
+    "login": "Login",
+    "continue-with-google": "Continue with Google",
+    "continue-with-facebook": "Continue with Facebook",
+    "forgot-password": "Forgot password?",
+    "submit": "Submit"
+  },
+  "interested-event-page": {
+    "interested": "INTERESTED",
+    "item-count": "Events",
+    "refresh": "Resfresh"
+  },
+  "my-event-page": {
+    "my-event": "MY EVENTS",
+    "viewer": "Views"
+  },
+  "404": {
+    "not-found": "Not Found!",
+    "nth-here": "Nothing here.",
+    "go-home": "Time to go home",
+    "home": "Home"
+  }
+}
