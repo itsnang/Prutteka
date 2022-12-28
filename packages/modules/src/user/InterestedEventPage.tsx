@@ -23,14 +23,15 @@ export const InterestedEventPage: React.FC = () => {
           >
             {t('interested-event-page.interested')}
           </Typography>
-          <div className="flex justify-between ">
-            <div className="rounded-full border border-gray-200 bg-gray-100 py-2 px-4">
+          <div className="flex items-center justify-between ">
+            <div className="flex h-10 items-center rounded-full border border-gray-200 bg-gray-100 py-2 px-4 font-medium md:h-14 lg:h-14">
               3 {t('interested-event-page.item-count')}
             </div>
             <Button
+              roundedFull
               variant="secondary"
               icon={ArrowPathIcon}
-              className="h-10  rounded-full px-4 py-2"
+              className="h-10 px-4 py-2"
             >
               {t('interested-event-page.refresh')}
             </Button>
