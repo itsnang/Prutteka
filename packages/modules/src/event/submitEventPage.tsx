@@ -18,14 +18,14 @@ import {
 } from './helper';
 import { useEffect, useState } from 'react';
 import { SelectField } from './SelectField';
-import { CATEGORIES } from '../constants';
+import { EventDetail } from '../type/EventDetailType';
 
 const initialValues = {
   details: {
-    name: '',
-    type: '',
-    category: '',
-    detail: '',
+    name: { en: '', kh: '' },
+    type: 0,
+    category: 0,
+    detail: { en: '', kh: '' },
     img: '',
     nestedEvents: false,
   },
@@ -39,12 +39,16 @@ const initialValues = {
     customTimes: [{ startTime: getCurrentTime(), endTime: getCurrentTime() }],
   },
 
-  locations: [{ name: '', link: '' }],
+  locations: [{ name: { en: '', kh: '' }, link: '' }],
 
   schedule: {
     hasCustomSchedule: false,
     sharedSchedules: [
-      { startTime: getCurrentTime(), endTime: getCurrentTime(), activity: '' },
+      {
+        startTime: getCurrentTime(),
+        endTime: getCurrentTime(),
+        activity: { en: '', kh: '' },
+      },
     ],
     customSchedules: [
       {
@@ -53,14 +57,91 @@ const initialValues = {
           {
             startTime: getCurrentTime(),
             endTime: getCurrentTime(),
-            activity: '',
+            activity: { en: '', kh: '' },
           },
         ],
       },
     ],
   },
 
-  joinMethods: [{ method: '', link: '' }],
+  joinMethods: [{ method: { en: '', kh: '' }, link: '' }],
+};
+
+export const t = {
+  eventDetails: { en: 'Event Details', kh: 'ព័ត៌មានលម្អិត' },
+  dragAndDrop: { en: 'Drag and drop or', kh: 'ទម្លាក់រូបភាពលើទីនេះ ឬ' },
+  uploadImage: { en: 'Upload Image', kh: 'បង្ហោះរូបភាព' },
+  upTo10mb: { en: 'up to 10mb', kh: 'ធំបំផុត ១០mb' },
+  eventName: { en: 'Event name', kh: 'ឈ្មោះព្រឹត្តិការណ៍' },
+  type: { en: 'Type', kh: 'ព្រឹត្តិការណ៍ផ្ទាល់ឬអនឡាញ' },
+  category: { en: 'Category', kh: 'ប្រភេទនៃព្រឹត្តិការណ៍' },
+  details: { en: 'Details', kh: 'ពិពណ៌នាពីព្រឹត្តិការណ៍' },
+  nestedEvents: { en: 'Nested Event', kh: 'Nested Event' },
+  thisEventContainsOtherEvent: {
+    en: 'This event contains other events within it',
+    kh: 'This event contains other events within it',
+  },
+  dateAndTime: { en: 'Date and Time', kh: 'កាលបរិច្ឆេទ និង ពេលវេលា' },
+  startDate: { en: 'Start Date', kh: 'ថ្ងៃចាប់ផ្តើម' },
+  endDate: { en: 'End Date', kh: 'ថ្ងៃបញ្ចប់' },
+  startTime: { en: 'Start Time', kh: 'ម៉ោងចាប់ផ្តើម' },
+  endTime: { en: 'End Time', kh: 'ម៉ោងបញ្ចប់' },
+  customDateAndTime: {
+    en: 'Custom date and time (Different start and end time for each date)',
+    kh: 'ពេលវេលាខុសគ្នាសម្រាប់ថ្ងៃនីមួយៗ',
+  },
+  invalidDateTime: {
+    en: 'Please provide valid start date and end date for your event above',
+    kh: 'សូមបំពេញថ្ងៃចាប់ផ្តើមនិងថ្ងៃបញ្ចប់ឲ្យបានត្រឹមត្រូវ',
+  },
+  locationInfo: { en: 'Location Info', kh: 'ទីតាំងនៃព្រឹត្តិការណ៍' },
+  locationName: { en: 'Location name', kh: 'ឈ្មោះទីតាំង' },
+  locationLink: {
+    en: 'Location link (e.g Google maps)',
+    kh: 'តំណភ្ជាប់ (ឧ. Google maps)',
+  },
+  locationLinkPlaceholder: { en: 'Location link', kh: 'តំណភ្ជាប់' },
+  addMoreLocation: { en: 'Add more location', kh: 'បន្ថែមទីតាំងផ្សេងទៀត' },
+  schedule: { en: 'Schedule', kh: 'កាលវិភាគ' },
+  activity: { en: 'Activity', kh: 'សកម្មភាព' },
+  addMoreSchedule: { en: 'Add more schedule', kh: 'បន្ថែមកាលវិភាគ' },
+  customSchedule: {
+    en: 'Custom schedule (Different schedule for each date)',
+    kh: 'កាលវិភាគផ្សេងៗគ្នាសម្រាប់ថ្ងៃនីមួយៗ',
+  },
+  howToJoin: { en: 'How to join', kh: 'វិធីចូលរួមព្រឹត្តិការណ៍' },
+  method: { en: 'Method', kh: 'មធ្យោបាយចូលរួម' },
+  link: { en: 'Link', kh: 'តំណភ្ជាប់ (បើមាន)' },
+  addMoreMethod: { en: 'Add more method', kh: 'បន្ថែមមធ្យោបាយផ្សេងទៀត' },
+  submitEvent: { en: 'Submit Event', kh: 'បង្ហោះព្រឹត្តិការណ៍' },
+};
+
+const types = {
+  en: ['Physical', 'Online'],
+  kh: ['ព្រឹត្តិការណ៍ផ្ទាល់', 'ព្រឹត្តិការណ៍អនឡាញ'],
+};
+
+const categories = {
+  en: [
+    'Free',
+    'Online',
+    'Education',
+    'Sport',
+    'Music',
+    'Exhibition',
+    'Technology',
+    'Charity',
+  ],
+  kh: [
+    'ឥតគិតថ្លៃ',
+    'អនឡាញ',
+    'អប់រំ',
+    'កីឡា',
+    'តន្ត្រី',
+    'ពិព័រណ៍',
+    'បច្ចេកវិទ្យា',
+    'សប្បុរធម៌',
+  ],
 };
 
 export const SubmitEventPage: NextPage = () => (
@@ -69,231 +150,245 @@ export const SubmitEventPage: NextPage = () => (
     validationSchema={validationSchema}
     onSubmit={(values) => console.log(values)}
   >
-    {({ values }) => {
-      const [eventState, setEventState] = useState<{
-        eventDays: Date[];
-        isInvalidInput: boolean;
-      }>({ eventDays: [], isInvalidInput: true });
-
-      useEffect(() => {
-        const { startDate, endDate } = values.datetime;
-        const eventLength = getEventLength(startDate, endDate);
-        if (eventLength <= 0 || !startDate || !endDate)
-          return setEventState((prev) => ({ ...prev, isInvalidInput: true }));
-        else
-          setEventState({
-            eventDays: getEventDays(startDate, eventLength),
-            isInvalidInput: false,
-          });
-      }, [values.datetime.startDate, values.datetime.endDate]);
-      return (
-        <Form className="space-y-8 p-4">
-          <div className="flex flex-col gap-6">
-            <div className="flex justify-center">
-              <button
-                type="button"
-                className="bg-primary rounded-xl rounded-r-none border-2 border-r-0 border-gray-200 px-16 py-2.5 text-white"
-              >
-                EN
-              </button>
-              <button
-                type="button"
-                className="rounded-xl rounded-l-none border-2 border-l-0 border-gray-200 bg-gray-100 px-16 py-2.5"
-              >
-                ខ្មែរ
-              </button>
-            </div>
-
-            <Typography size="3xl" weight="bold">
-              Event Details
-            </Typography>
-
-            <div className="p-2.5">
-              <div className="relative mx-auto flex w-full max-w-[45rem] flex-col items-center justify-center gap-2.5 rounded-2xl border-2 bg-gray-100 py-20">
-                <PhotoIcon className="h-20 w-20" />
-                <Typography>Drag and drop or</Typography>
-                <Button icon={PhotoIcon} variant="secondary" className="px-6">
-                  Upload Image
-                </Button>
-                <Typography className="absolute bottom-2">
-                  up to 10mb
-                </Typography>
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-4">
-              <InputField
-                name="details.name"
-                label="Event Name"
-                placeholder="Event Name"
-              />
-              <div className="flex gap-4">
-                <SelectField
-                  name="details.type"
-                  label="Type"
-                  placeholder="Type"
-                  containerClassName="flex-1"
-                  options={['online', 'physical']}
-                />
-
-                <SelectField
-                  name="details.category"
-                  label="Category"
-                  placeholder="Category"
-                  containerClassName="flex-1"
-                  options={CATEGORIES.slice(2)}
-                />
-              </div>
-
-              <InputField
-                name="details.detail"
-                label="Details"
-                placeholder="Details"
-              />
-
-              <label className="flex items-center gap-2">
-                <Field
-                  type="checkbox"
-                  name="details.nestedEvents"
-                  className="form-checkbox text-primary h-6 w-6 cursor-pointer overflow-hidden rounded-md border border-gray-300 outline-none focus:ring-0"
-                />
-                <Typography className="cursor-pointer">Nested Event</Typography>
-                <div className="group relative flex justify-center">
-                  <QuestionMarkCircleIcon className="h-6 w-6 cursor-pointer" />
-                  <Typography
-                    size="sm"
-                    style={{ whiteSpace: 'nowrap' }}
-                    className="pointer-events-none absolute -top-8 rounded-md bg-gray-600 py-1 px-2 text-center text-white opacity-0 transition-all group-hover:opacity-100"
-                  >
-                    This event contains other events within it
-                  </Typography>
-                </div>
-              </label>
-            </div>
-
-            <Typography size="3xl" weight="bold">
-              Date and Time
-            </Typography>
-
-            <DatetimeForm dateTimeState={values.datetime} {...eventState} />
-
-            <Typography size="3xl" weight="bold">
-              Location Info
-            </Typography>
-
-            <FieldArray name="locations">
-              {(arrayHelpers) => (
-                <div className="flex flex-col gap-4">
-                  {values?.locations?.map((_location, idx) => (
-                    <div className="flex gap-4" key={idx}>
-                      {idx > 0 ? (
-                        <button
-                          type="button"
-                          className="text-primary flex gap-1.5 self-center"
-                          onClick={() => arrayHelpers.remove(idx)}
-                        >
-                          <MinusIcon className="h-6 w-6" />
-                        </button>
-                      ) : null}
-                      <InputField
-                        name={`locations.${idx}.name`}
-                        label="Location name"
-                        placeholder="Location name"
-                        containerClassName="flex-1"
-                      />
-
-                      <InputField
-                        name={`locations.${idx}.link`}
-                        label="Location link (e.g Google maps)"
-                        placeholder="Location link"
-                        containerClassName="flex-1"
-                      />
-                    </div>
-                  ))}
-
-                  <button
-                    type="button"
-                    className="text-primary flex gap-1.5"
-                    onClick={() =>
-                      arrayHelpers.push(initialValues.locations[0])
-                    }
-                  >
-                    <PlusIcon className="h-6 w-6" />
-                    <Typography className="text-primary">
-                      Add more location
-                    </Typography>
-                  </button>
-                </div>
-              )}
-            </FieldArray>
-
-            <Typography size="3xl" weight="bold">
-              Schedule
-            </Typography>
-
-            <ScheduleForm
-              scheduleState={values.schedule}
-              {...eventState}
-              startDate={values.datetime.startDate}
-              endDate={values.datetime.endDate}
-            />
-
-            <Typography size="3xl" weight="bold">
-              How to join
-            </Typography>
-
-            <FieldArray name="joinMethods">
-              {(arrayHelpers) => (
-                <div className="flex flex-col gap-4">
-                  {values?.joinMethods?.map((_joinMethod, idx) => (
-                    <div className="flex gap-4" key={idx}>
-                      {idx > 0 ? (
-                        <button
-                          type="button"
-                          className="text-primary flex gap-1.5 self-center"
-                          onClick={() => arrayHelpers.remove(idx)}
-                        >
-                          <MinusIcon className="h-6 w-6" />
-                        </button>
-                      ) : null}
-                      <InputField
-                        name={`joinMethods.${idx}.method`}
-                        label="Method"
-                        placeholder="Method"
-                        containerClassName="flex-1"
-                      />
-
-                      <InputField
-                        name={`joinMethods.${idx}.link`}
-                        label="Link"
-                        placeholder="Link"
-                        containerClassName="flex-1"
-                      />
-                    </div>
-                  ))}
-
-                  <button
-                    type="button"
-                    className="text-primary flex gap-1.5"
-                    onClick={() =>
-                      arrayHelpers.push(initialValues.joinMethods[0])
-                    }
-                  >
-                    <PlusIcon className="h-6 w-6" />
-                    <Typography className="text-primary">
-                      Add more method
-                    </Typography>
-                  </button>
-                </div>
-              )}
-            </FieldArray>
-          </div>
-
-          <Button className="w-full" type="submit">
-            Submit Event
-          </Button>
-        </Form>
-      );
-    }}
+    {({ values }) => <InnerForm values={values} />}
   </Formik>
 );
+
+const InnerForm = ({ values }: { values: EventDetail }) => {
+  const [eventState, setEventState] = useState<{
+    eventDays: Date[];
+    isInvalidInput: boolean;
+  }>({ eventDays: [], isInvalidInput: true });
+
+  const [lang, setLang] = useState<'en' | 'kh'>('en');
+
+  useEffect(() => {
+    const startDate = values.datetime.startDate;
+    const endDate = values.datetime.endDate;
+    const eventLength = getEventLength(startDate, endDate);
+    if (eventLength <= 0 || !startDate || !endDate)
+      return setEventState((prev) => ({ ...prev, isInvalidInput: true }));
+    else
+      setEventState({
+        eventDays: getEventDays(startDate, eventLength),
+        isInvalidInput: false,
+      });
+  }, [values.datetime.startDate, values.datetime.endDate]);
+  return (
+    <Form className="space-y-8 p-4">
+      <div className="flex flex-col gap-6">
+        <div className="flex justify-center">
+          <button
+            type="button"
+            className={`rounded-xl rounded-r-none border-2 border-r-0 border-gray-200 px-16 py-2.5 ${
+              lang === 'en' ? 'bg-primary text-white' : 'bg-gray-100'
+            }`}
+            onClick={() => setLang('en')}
+          >
+            EN
+          </button>
+          <button
+            onClick={() => setLang('kh')}
+            type="button"
+            className={`rounded-xl rounded-l-none border-2 border-l-0 border-gray-200 px-16 py-2.5 ${
+              lang === 'kh' ? 'bg-primary text-white' : 'bg-gray-100'
+            }`}
+          >
+            ខ្មែរ
+          </button>
+        </div>
+
+        <Typography size="3xl" weight="bold">
+          {t.eventDetails[lang]}
+        </Typography>
+
+        <div className="p-2.5">
+          <div className="relative mx-auto flex w-full max-w-[45rem] flex-col items-center justify-center gap-2.5 rounded-2xl border-2 bg-gray-100 py-20">
+            <PhotoIcon className="h-20 w-20" />
+            <Typography>{t.dragAndDrop[lang]}</Typography>
+            <Button icon={PhotoIcon} variant="secondary" className="px-6">
+              {t.uploadImage[lang]}
+            </Button>
+            <Typography className="absolute bottom-2">
+              {t.upTo10mb[lang]}
+            </Typography>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-4">
+          <InputField
+            name={`details.name.${lang}`}
+            label={t.eventName[lang]}
+            placeholder={t.eventName[lang]}
+          />
+          <div className="flex gap-4">
+            <SelectField
+              name="details.type"
+              label={t.type[lang]}
+              placeholder={t.type[lang]}
+              containerClassName="flex-1"
+              options={types[lang]}
+              values={types.en}
+            />
+
+            <SelectField
+              name="details.category"
+              label={t.category[lang]}
+              placeholder={t.category[lang]}
+              containerClassName="flex-1"
+              options={categories[lang]}
+              values={categories.en}
+            />
+          </div>
+
+          <InputField
+            name={`details.detail.${lang}`}
+            label={t.details[lang]}
+            placeholder={t.details[lang]}
+          />
+
+          <label className="flex items-center gap-2">
+            <Field
+              type="checkbox"
+              name="details.nestedEvents"
+              className="form-checkbox text-primary h-6 w-6 cursor-pointer overflow-hidden rounded-md border border-gray-300 outline-none focus:ring-0"
+            />
+            <Typography className="cursor-pointer">
+              {t.nestedEvents[lang]}
+            </Typography>
+            <div className="group relative flex justify-center">
+              <QuestionMarkCircleIcon className="h-6 w-6 cursor-pointer" />
+              <Typography
+                size="sm"
+                style={{ whiteSpace: 'nowrap' }}
+                className="pointer-events-none absolute -top-8 rounded-md bg-gray-600 py-1 px-2 text-center text-white opacity-0 transition-all group-hover:opacity-100"
+              >
+                {t.thisEventContainsOtherEvent[lang]}
+              </Typography>
+            </div>
+          </label>
+        </div>
+
+        <Typography size="3xl" weight="bold">
+          {t.dateAndTime[lang]}
+        </Typography>
+
+        <DatetimeForm
+          dateTimeState={values.datetime}
+          {...eventState}
+          lang={lang}
+        />
+
+        <Typography size="3xl" weight="bold">
+          {t.locationInfo[lang]}
+        </Typography>
+
+        <FieldArray name="locations">
+          {(arrayHelpers) => (
+            <div className="flex flex-col gap-4">
+              {values?.locations?.map((_location, idx) => (
+                <div className="flex gap-4" key={idx}>
+                  {idx > 0 ? (
+                    <button
+                      type="button"
+                      className="text-primary flex gap-1.5 self-center"
+                      onClick={() => arrayHelpers.remove(idx)}
+                    >
+                      <MinusIcon className="h-6 w-6" />
+                    </button>
+                  ) : null}
+                  <InputField
+                    name={`locations.${idx}.name.${lang}`}
+                    label={t.locationName[lang]}
+                    placeholder={t.locationName[lang]}
+                    containerClassName="flex-1"
+                  />
+
+                  <InputField
+                    name={`locations.${idx}.link`}
+                    label={t.locationLink[lang]}
+                    placeholder={t.locationLinkPlaceholder[lang]}
+                    containerClassName="flex-1"
+                  />
+                </div>
+              ))}
+
+              <button
+                type="button"
+                className="text-primary flex gap-1.5"
+                onClick={() => arrayHelpers.push(initialValues.locations[0])}
+              >
+                <PlusIcon className="h-6 w-6" />
+                <Typography className="text-primary">
+                  {t.addMoreLocation[lang]}
+                </Typography>
+              </button>
+            </div>
+          )}
+        </FieldArray>
+
+        <Typography size="3xl" weight="bold">
+          {t.schedule[lang]}
+        </Typography>
+
+        <ScheduleForm
+          scheduleState={values.schedule}
+          {...eventState}
+          lang={lang}
+        />
+
+        <Typography size="3xl" weight="bold">
+          {t.howToJoin[lang]}
+        </Typography>
+
+        <FieldArray name="joinMethods">
+          {(arrayHelpers) => (
+            <div className="flex flex-col gap-4">
+              {values?.joinMethods?.map((_joinMethod, idx) => (
+                <div className="flex gap-4" key={idx}>
+                  {idx > 0 ? (
+                    <button
+                      type="button"
+                      className="text-primary flex gap-1.5 self-center"
+                      onClick={() => arrayHelpers.remove(idx)}
+                    >
+                      <MinusIcon className="h-6 w-6" />
+                    </button>
+                  ) : null}
+                  <InputField
+                    name={`joinMethods.${idx}.method.${lang}`}
+                    label={t.method[lang]}
+                    placeholder={t.method[lang]}
+                    containerClassName="flex-1"
+                  />
+
+                  <InputField
+                    name={`joinMethods.${idx}.link`}
+                    label={t.link[lang]}
+                    placeholder={t.link[lang]}
+                    containerClassName="flex-1"
+                  />
+                </div>
+              ))}
+
+              <button
+                type="button"
+                className="text-primary flex gap-1.5"
+                onClick={() => arrayHelpers.push(initialValues.joinMethods[0])}
+              >
+                <PlusIcon className="h-6 w-6" />
+                <Typography className="text-primary">
+                  {t.addMoreMethod[lang]}
+                </Typography>
+              </button>
+            </div>
+          )}
+        </FieldArray>
+      </div>
+
+      <Button className="w-full" type="submit">
+        {t.submitEvent[lang]}
+      </Button>
+    </Form>
+  );
+};

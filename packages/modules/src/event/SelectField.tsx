@@ -9,6 +9,7 @@ interface SelectFieldProps
   className?: string;
   containerClassName?: string;
   options: string[];
+  values: string[];
 }
 
 export const SelectField = forwardRef<HTMLSelectElement, SelectFieldProps>(
@@ -20,6 +21,7 @@ export const SelectField = forwardRef<HTMLSelectElement, SelectFieldProps>(
       containerClassName,
       options,
       placeholder,
+      values,
       ...props
     },
     ref
@@ -42,7 +44,7 @@ export const SelectField = forwardRef<HTMLSelectElement, SelectFieldProps>(
               {placeholder}
             </option>
             {options.map((option, idx) => (
-              <option key={idx} value={option}>
+              <option key={idx} value={values[idx]}>
                 {option}
               </option>
             ))}

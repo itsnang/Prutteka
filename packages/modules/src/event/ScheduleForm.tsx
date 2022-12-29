@@ -4,21 +4,20 @@ import { useEffect } from 'react';
 import { PlusIcon, MinusIcon } from '@heroicons/react/24/outline';
 import { EventDetail } from '../type/EventDetailType';
 import { getCurrentTime } from './helper';
+import { t } from './submitEventPage';
 
 interface ScheduleFormProps {
   scheduleState: EventDetail['schedule'];
   isInvalidInput: boolean;
   eventDays: Date[];
-  startDate: Date | string;
-  endDate: Date | string;
+  lang: 'en' | 'kh';
 }
 
 export const ScheduleForm: React.FC<ScheduleFormProps> = ({
   scheduleState,
   eventDays,
   isInvalidInput,
-  startDate,
-  endDate,
+  lang,
 }) => {
   const { hasCustomSchedule, customSchedules, sharedSchedules } = scheduleState;
 
@@ -32,7 +31,7 @@ export const ScheduleForm: React.FC<ScheduleFormProps> = ({
         {
           startTime: getCurrentTime(),
           endTime: getCurrentTime(),
-          activity: '',
+          activity: { en: '', kh: '' },
         },
       ],
     }));
@@ -41,7 +40,7 @@ export const ScheduleForm: React.FC<ScheduleFormProps> = ({
       ...scheduleState,
       customSchedules: newCustomSchedules,
     });
-  }, [isInvalidInput, startDate, endDate]);
+  }, [isInvalidInput, eventDays]);
   return (
     <div className="flex flex-col gap-4">
       {hasCustomSchedule ? (
@@ -71,31 +70,32 @@ export const ScheduleForm: React.FC<ScheduleFormProps> = ({
                             ) : null}
                             <InputField
                               name={`schedule.customSchedules.${idx}.schedules.${index}.startTime`}
-                              label="Start Time"
-                              placeholder="Start Time"
+                              label={t.startTime[lang]}
+                              placeholder={t.startTime[lang]}
                               type="time"
                             />
                             <InputField
                               name={`schedule.customSchedules.${idx}.schedules.${index}.endTime`}
-                              label="End Time"
-                              placeholder="End Time"
+                              label={t.endTime[lang]}
+                              placeholder={t.endTime[lang]}
                               type="time"
                             />
                             <InputField
-                              name={`schedule.customSchedules.${idx}.schedules.${index}.activity`}
-                              label="Activity"
-                              placeholder="Activity"
+                              name={`schedule.customSchedules.${idx}.schedules.${index}.activity.${lang}`}
+                              label={t.activity[lang]}
+                              placeholder={t.activity[lang]}
                               containerClassName="flex-1"
                             />
                           </div>
                         ))}
 
                         <AddMoreScheduleBtn
+                          lang={lang}
                           onClick={() =>
                             arrayHelpers.push({
                               startTime: getCurrentTime(),
                               endTime: getCurrentTime(),
-                              activity: '',
+                              activity: { en: '', kh: '' },
                             })
                           }
                         />
@@ -124,26 +124,27 @@ export const ScheduleForm: React.FC<ScheduleFormProps> = ({
                   ) : null}
                   <InputField
                     name={`schedule.sharedSchedules.${idx}.startTime`}
-                    label="Start Time"
-                    placeholder="Start Time"
+                    label={t.startTime[lang]}
+                    placeholder={t.startTime[lang]}
                     type="time"
                   />
                   <InputField
                     name={`schedule.sharedSchedules.${idx}.endTime`}
-                    label="End Time"
-                    placeholder="End Time"
+                    label={t.endTime[lang]}
+                    placeholder={t.endTime[lang]}
                     type="time"
                   />
                   <InputField
-                    name={`schedule.sharedSchedules.${idx}.activity`}
-                    label="Activity"
-                    placeholder="Activity"
+                    name={`schedule.sharedSchedules.${idx}.activity.${lang}`}
+                    label={t.activity[lang]}
+                    placeholder={t.activity[lang]}
                     containerClassName="flex-1"
                   />
                 </div>
               ))}
 
               <AddMoreScheduleBtn
+                lang={lang}
                 onClick={() =>
                   arrayHelpers.push({
                     startTime: getCurrentTime(),
@@ -157,25 +158,43 @@ export const ScheduleForm: React.FC<ScheduleFormProps> = ({
         </FieldArray>
       )}
 
-      <div className="flex">
-        <label className="flex cursor-pointer items-center gap-2">
-          <Field
-            type="checkbox"
-            name="schedule.hasCustomSchedule"
-            className="form-checkbox text-primary h-6 w-6 cursor-pointer overflow-hidden rounded-md border border-gray-300 outline-none focus:ring-0"
-          />
-          <Typography>
-            Custom schedule (Different schedule for each date)
+      <label
+        className={`group relative flex items-center gap-2 ${
+          isInvalidInput ? 'cursor-not-allowed' : 'cursor-pointer'
+        }`}
+      >
+        <Field
+          disabled={isInvalidInput}
+          type="checkbox"
+          name="schedule.hasCustomSchedule"
+          className={`form-checkbox text-primary h-6 w-6 cursor-pointer overflow-hidden rounded-md border border-gray-300 outline-none focus:ring-0 ${
+            isInvalidInput ? 'cursor-not-allowed' : ''
+          }`}
+        />
+        <Typography color="base">{t.customSchedule[lang]}</Typography>
+        {isInvalidInput ? (
+          <Typography
+            size="sm"
+            style={{ whiteSpace: 'nowrap' }}
+            className="pointer-events-none absolute -top-8 rounded-md bg-red-600 py-1 px-2 text-center text-white opacity-0 transition-all group-hover:opacity-100"
+          >
+            {t.invalidDateTime[lang]}
           </Typography>
-        </label>
-      </div>
+        ) : null}
+      </label>
     </div>
   );
 };
 
-const AddMoreScheduleBtn = ({ onClick }: { onClick: () => void }) => (
+const AddMoreScheduleBtn = ({
+  onClick,
+  lang,
+}: {
+  onClick: () => void;
+  lang: 'en' | 'kh';
+}) => (
   <button type="button" className="text-primary flex gap-1.5" onClick={onClick}>
     <PlusIcon className="h-6 w-6" />
-    <Typography className="text-primary">Add more schedule</Typography>
+    <Typography className="text-primary">{t.addMoreSchedule[lang]}</Typography>
   </button>
 );
