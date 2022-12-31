@@ -8,6 +8,7 @@ import { GetServerSideProps } from 'next';
 export const getServerSideProps: GetServerSideProps = async ({
   locale,
   query,
+  req,
 }) => {
   const existingEvent = EVENTDATA.find(
     (event) => event.id === Number(query.eventId)
@@ -22,6 +23,7 @@ export const getServerSideProps: GetServerSideProps = async ({
   return {
     props: {
       event: existingEvent,
+      host: req.headers.host,
       ...(await serverSideTranslations(locale ?? 'en')),
     },
   };
