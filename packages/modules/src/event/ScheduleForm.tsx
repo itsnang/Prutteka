@@ -40,6 +40,7 @@ export const ScheduleForm: React.FC<ScheduleFormProps> = ({
       ...scheduleState,
       customSchedules: newCustomSchedules,
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isInvalidInput, eventDays]);
   return (
     <div className="flex flex-col gap-4">
@@ -58,28 +59,35 @@ export const ScheduleForm: React.FC<ScheduleFormProps> = ({
                     {(arrayHelpers) => (
                       <div className="flex flex-col gap-2">
                         {customSchedule?.schedules?.map((_schedule, index) => (
-                          <div className="flex gap-4" key={index}>
+                          <div
+                            className="flex flex-col gap-2 rounded-2xl border border-gray-100 bg-white p-2 md:flex-row md:gap-4 md:border-0 md:bg-gray-50 md:p-0"
+                            key={index}
+                          >
                             {index > 0 ? (
                               <button
                                 type="button"
-                                className="text-primary flex gap-1.5"
+                                className="text-primary md:self-center"
                                 onClick={() => arrayHelpers.remove(index)}
                               >
                                 <MinusIcon className="h-6 w-6" />
                               </button>
                             ) : null}
-                            <InputField
-                              name={`schedule.customSchedules.${idx}.schedules.${index}.startTime`}
-                              label={t.startTime[lang]}
-                              placeholder={t.startTime[lang]}
-                              type="time"
-                            />
-                            <InputField
-                              name={`schedule.customSchedules.${idx}.schedules.${index}.endTime`}
-                              label={t.endTime[lang]}
-                              placeholder={t.endTime[lang]}
-                              type="time"
-                            />
+                            <div className="flex flex-col gap-2 sm:flex-row md:gap-4">
+                              <InputField
+                                name={`schedule.customSchedules.${idx}.schedules.${index}.startTime`}
+                                label={t.startTime[lang]}
+                                placeholder={t.startTime[lang]}
+                                type="time"
+                                containerClassName="flex-1"
+                              />
+                              <InputField
+                                name={`schedule.customSchedules.${idx}.schedules.${index}.endTime`}
+                                label={t.endTime[lang]}
+                                placeholder={t.endTime[lang]}
+                                type="time"
+                                containerClassName="flex-1"
+                              />
+                            </div>
                             <InputField
                               name={`schedule.customSchedules.${idx}.schedules.${index}.activity.${lang}`}
                               label={t.activity[lang]}
@@ -111,29 +119,36 @@ export const ScheduleForm: React.FC<ScheduleFormProps> = ({
         <FieldArray name="schedule.sharedSchedules">
           {(arrayHelpers) => (
             <div className="flex flex-col gap-4">
-              {sharedSchedules?.map((schedule, idx) => (
-                <div className="flex gap-4" key={idx}>
+              {sharedSchedules?.map((_schedule, idx) => (
+                <div
+                  className="flex flex-col gap-2 rounded-2xl border border-gray-100 bg-white p-2 md:flex-row md:gap-4 md:border-0 md:bg-gray-50 md:p-0"
+                  key={idx}
+                >
                   {idx > 0 ? (
                     <button
                       type="button"
-                      className="text-primary flex gap-1.5"
+                      className="text-primary md:self-center"
                       onClick={() => arrayHelpers.remove(idx)}
                     >
                       <MinusIcon className="h-6 w-6" />
                     </button>
                   ) : null}
-                  <InputField
-                    name={`schedule.sharedSchedules.${idx}.startTime`}
-                    label={t.startTime[lang]}
-                    placeholder={t.startTime[lang]}
-                    type="time"
-                  />
-                  <InputField
-                    name={`schedule.sharedSchedules.${idx}.endTime`}
-                    label={t.endTime[lang]}
-                    placeholder={t.endTime[lang]}
-                    type="time"
-                  />
+                  <div className="flex flex-col gap-2 sm:flex-row md:gap-4">
+                    <InputField
+                      name={`schedule.sharedSchedules.${idx}.startTime`}
+                      label={t.startTime[lang]}
+                      placeholder={t.startTime[lang]}
+                      type="time"
+                      containerClassName="flex-1"
+                    />
+                    <InputField
+                      name={`schedule.sharedSchedules.${idx}.endTime`}
+                      label={t.endTime[lang]}
+                      placeholder={t.endTime[lang]}
+                      type="time"
+                      containerClassName="flex-1"
+                    />
+                  </div>
                   <InputField
                     name={`schedule.sharedSchedules.${idx}.activity.${lang}`}
                     label={t.activity[lang]}

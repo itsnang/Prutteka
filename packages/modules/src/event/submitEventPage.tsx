@@ -175,13 +175,13 @@ const InnerForm = ({ values }: { values: EventDetail }) => {
       });
   }, [values.datetime.startDate, values.datetime.endDate]);
   return (
-    <Form className="space-y-8 p-4">
+    <Form className="space-y-8 py-4 md:px-4">
       <div className="flex flex-col gap-6">
         <div className="flex justify-center">
           <button
             type="button"
             className={`rounded-xl rounded-r-none border-2 border-r-0 border-gray-200 px-16 py-2.5 ${
-              lang === 'en' ? 'bg-primary text-white' : 'bg-gray-100'
+              lang === 'en' ? 'bg-primary text-white' : 'bg-white'
             }`}
             onClick={() => setLang('en')}
           >
@@ -191,7 +191,7 @@ const InnerForm = ({ values }: { values: EventDetail }) => {
             onClick={() => setLang('kh')}
             type="button"
             className={`rounded-xl rounded-l-none border-2 border-l-0 border-gray-200 px-16 py-2.5 ${
-              lang === 'kh' ? 'bg-primary text-white' : 'bg-gray-100'
+              lang === 'kh' ? 'bg-primary text-white' : 'bg-white'
             }`}
           >
             ខ្មែរ
@@ -221,7 +221,7 @@ const InnerForm = ({ values }: { values: EventDetail }) => {
             label={t.eventName[lang]}
             placeholder={t.eventName[lang]}
           />
-          <div className="flex gap-4">
+          <div className="flex flex-col gap-4 sm:flex-row">
             <SelectField
               name="details.type"
               label={t.type[lang]}
@@ -275,8 +275,8 @@ const InnerForm = ({ values }: { values: EventDetail }) => {
 
         <DatetimeForm
           dateTimeState={values.datetime}
-          {...eventState}
           lang={lang}
+          {...eventState}
         />
 
         <Typography size="3xl" weight="bold">
@@ -287,29 +287,34 @@ const InnerForm = ({ values }: { values: EventDetail }) => {
           {(arrayHelpers) => (
             <div className="flex flex-col gap-4">
               {values?.locations?.map((_location, idx) => (
-                <div className="flex gap-4" key={idx}>
+                <div
+                  className="flex items-start gap-2 rounded-2xl border border-gray-100 bg-white p-2 md:gap-4 md:border-0 md:bg-gray-50 md:p-0"
+                  key={idx}
+                >
                   {idx > 0 ? (
                     <button
                       type="button"
-                      className="text-primary flex gap-1.5 self-center"
+                      className="text-primary mt-8 md:mt-0 md:self-center"
                       onClick={() => arrayHelpers.remove(idx)}
                     >
                       <MinusIcon className="h-6 w-6" />
                     </button>
                   ) : null}
-                  <InputField
-                    name={`locations.${idx}.name.${lang}`}
-                    label={t.locationName[lang]}
-                    placeholder={t.locationName[lang]}
-                    containerClassName="flex-1"
-                  />
+                  <div className="flex flex-1 flex-col gap-4 md:flex-row">
+                    <InputField
+                      name={`locations.${idx}.name.${lang}`}
+                      label={t.locationName[lang]}
+                      placeholder={t.locationName[lang]}
+                      containerClassName="flex-1"
+                    />
 
-                  <InputField
-                    name={`locations.${idx}.link`}
-                    label={t.locationLink[lang]}
-                    placeholder={t.locationLinkPlaceholder[lang]}
-                    containerClassName="flex-1"
-                  />
+                    <InputField
+                      name={`locations.${idx}.link`}
+                      label={t.locationLink[lang]}
+                      placeholder={t.locationLinkPlaceholder[lang]}
+                      containerClassName="flex-1"
+                    />
+                  </div>
                 </div>
               ))}
 
@@ -345,29 +350,34 @@ const InnerForm = ({ values }: { values: EventDetail }) => {
           {(arrayHelpers) => (
             <div className="flex flex-col gap-4">
               {values?.joinMethods?.map((_joinMethod, idx) => (
-                <div className="flex gap-4" key={idx}>
+                <div
+                  className="flex items-start gap-2 rounded-2xl border border-gray-100 bg-white p-2 md:gap-4 md:border-0 md:bg-gray-50 md:p-0"
+                  key={idx}
+                >
                   {idx > 0 ? (
                     <button
                       type="button"
-                      className="text-primary flex gap-1.5 self-center"
+                      className="text-primary mt-8 md:mt-0 md:self-center"
                       onClick={() => arrayHelpers.remove(idx)}
                     >
                       <MinusIcon className="h-6 w-6" />
                     </button>
                   ) : null}
-                  <InputField
-                    name={`joinMethods.${idx}.method.${lang}`}
-                    label={t.method[lang]}
-                    placeholder={t.method[lang]}
-                    containerClassName="flex-1"
-                  />
+                  <div className="flex flex-1 flex-col gap-4 md:flex-row">
+                    <InputField
+                      name={`joinMethods.${idx}.method.${lang}`}
+                      label={t.method[lang]}
+                      placeholder={t.method[lang]}
+                      containerClassName="flex-1"
+                    />
 
-                  <InputField
-                    name={`joinMethods.${idx}.link`}
-                    label={t.link[lang]}
-                    placeholder={t.link[lang]}
-                    containerClassName="flex-1"
-                  />
+                    <InputField
+                      name={`joinMethods.${idx}.link`}
+                      label={t.link[lang]}
+                      placeholder={t.link[lang]}
+                      containerClassName="flex-1"
+                    />
+                  </div>
                 </div>
               ))}
 
