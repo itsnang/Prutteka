@@ -3,10 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },
@@ -25,6 +21,10 @@
     "storybook-addon-next": "^1.7.1"
   },
   "dependencies": {
-    "@heroicons/react": "^2.0.13"
+    "@heroicons/react": "^2.0.13",
+    "ui": "*",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "next": "13.0.0"
   }
 }
