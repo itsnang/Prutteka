@@ -4,18 +4,32 @@ import Image, { StaticImageData } from 'next/image';
 import { EllipsisHorizontalIcon } from '@heroicons/react/24/outline';
 import { useTypeSafeTranslation } from 'shared-utils/hooks';
 
+interface ShareDataType {
+  title: string;
+  text: string;
+  url: string;
+}
+
 interface ShareModalProps {
   img: string | StaticImageData;
   show: boolean;
   onClose: () => void;
+  shareData: ShareDataType;
 }
 
 export const ShareModal: React.FC<ShareModalProps> = ({
   img,
   show,
   onClose,
+  shareData,
 }) => {
   const { t } = useTypeSafeTranslation();
+
+  const handleShare = () => {
+    if (navigator.canShare && navigator.canShare(shareData)) {
+      navigator.share(shareData);
+    }
+  };
 
   return (
     <Modal onClose={onClose} show={show}>
@@ -41,7 +55,7 @@ export const ShareModal: React.FC<ShareModalProps> = ({
           <IconStyle color="bg-[#E6F3FA]">
             <TelegramIcon />
           </IconStyle>
-          <IconStyle>
+          <IconStyle onClick={handleShare}>
             <EllipsisHorizontalIcon />
           </IconStyle>
         </div>
@@ -53,12 +67,15 @@ export const ShareModal: React.FC<ShareModalProps> = ({
 const IconStyle = ({
   children,
   color,
+  onClick,
 }: {
   color?: string;
   children: React.ReactNode;
+  onClick?: () => void;
 }) => {
   return (
     <button
+      onClick={onClick}
       className={`flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 px-3 py-3 ${color}`}
     >
       {children}

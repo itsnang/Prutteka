@@ -34,9 +34,13 @@ import { EventType, useLocalInterestedEvent } from './useLocalInterestedEvent';
 
 interface EventDetailPageProps {
   event: EventType;
+  host: string;
 }
 
-export const EventDetailPage: NextPage<EventDetailPageProps> = ({ event }) => {
+export const EventDetailPage: NextPage<EventDetailPageProps> = ({
+  event,
+  host,
+}) => {
   const [attendModal, setAttendModal] = useState(false);
   const [shareModal, setShareModal] = useState(false);
   const { query } = useRouter();
@@ -87,6 +91,11 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({ event }) => {
               onClose={() => setAttendModal(false)}
             />
             <ShareModal
+              shareData={{
+                title: event.title,
+                text: event.title,
+                url: `https://${host}/event/${event.id}`,
+              }}
               show={shareModal}
               onClose={() => setShareModal(false)}
               img={event.img}
