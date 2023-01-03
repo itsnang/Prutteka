@@ -34,6 +34,7 @@ export const DatetimeForm: React.FC<DatetimeFormProps> = ({
       ...dateTimeState,
       customTimes: newCustomTimes,
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isInvalidInput, eventDays]);
 
   const timeForm = hasCustomTime ? (
@@ -45,7 +46,7 @@ export const DatetimeForm: React.FC<DatetimeFormProps> = ({
               <Typography size="xl" weight="bold">
                 {translateDate(date as Date, lang)}
               </Typography>
-              <div className="flex gap-4">
+              <div className="flex flex-col gap-2 rounded-2xl border border-gray-100 bg-white p-2 md:flex-row md:gap-4 md:border-0 md:bg-gray-50 md:p-0">
                 <InputField
                   name={`datetime.customTimes.${idx}.startTime`}
                   label={t.startTime[lang]}
@@ -68,7 +69,7 @@ export const DatetimeForm: React.FC<DatetimeFormProps> = ({
       )}
     </FieldArray>
   ) : (
-    <div className="flex gap-4">
+    <div className="flex flex-col gap-2 rounded-2xl border border-gray-100 bg-white p-2 md:flex-row md:gap-4 md:border-0 md:bg-gray-50 md:p-0">
       <InputField
         name="datetime.startTime"
         label={t.startTime[lang]}
@@ -90,7 +91,9 @@ export const DatetimeForm: React.FC<DatetimeFormProps> = ({
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex gap-4">
+      {/* flex flex-col gap-2 rounded-2xl border border-gray-100 bg-white p-2 md:flex-row md:gap-4 md:border-0 md:bg-gray-50 md:p-0 */}
+
+      <div className="flex flex-col gap-2 rounded-2xl border border-gray-100 bg-white p-2 md:flex-row md:gap-4 md:border-0 md:bg-gray-50 md:p-0">
         <InputField
           name="datetime.startDate"
           label={t.startDate[lang]}
