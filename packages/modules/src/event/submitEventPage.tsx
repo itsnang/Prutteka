@@ -8,7 +8,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { Formik, Form, Field, FieldArray } from 'formik';
 import { DatetimeForm } from './DatetimeForm';
-import { validationSchema } from './validationSchema';
+import { genValidationSchema } from './validationSchema';
 import { ScheduleForm } from './ScheduleForm';
 import {
   getEventLength,
@@ -16,7 +16,7 @@ import {
   getToday,
   getCurrentTime,
 } from './helper';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { SelectField } from './SelectField';
 import { EventDetail } from '../type/EventDetailType';
 
@@ -144,23 +144,31 @@ const categories = {
   ],
 };
 
-export const SubmitEventPage: NextPage = () => (
-  <Formik
-    initialValues={initialValues}
-    validationSchema={validationSchema}
-    onSubmit={(values) => console.log(values)}
-  >
-    {({ values }) => <InnerForm values={values} />}
-  </Formik>
-);
+export const SubmitEventPage: NextPage = () => {
+  const [lang, setLang] = useState<'en' | 'kh'>('en');
+  const validationSchema = useMemo(() => genValidationSchema(lang), [lang]);
+  return (
+    <Formik
+      initialValues={initialValues}
+      validationSchema={validationSchema}
+      onSubmit={(values) => console.log(values)}
+    >
+      {({ values }) => (
+        <InnerForm values={values} lang={lang} setLang={setLang} />
+      )}
+    </Formik>
+  );
+};
 
-const InnerForm = ({ values }: { values: EventDetail }) => {
+const InnerForm: React.FC<{
+  values: EventDetail;
+  lang: 'en' | 'kh';
+  setLang: (lang: 'en' | 'kh') => void;
+}> = ({ values, lang, setLang }) => {
   const [eventState, setEventState] = useState<{
     eventDays: Date[];
     isInvalidInput: boolean;
   }>({ eventDays: [], isInvalidInput: true });
-
-  const [lang, setLang] = useState<'en' | 'kh'>('en');
 
   useEffect(() => {
     const startDate = values.datetime.startDate;
@@ -179,7 +187,7 @@ const InnerForm = ({ values }: { values: EventDetail }) => {
       <div className="flex flex-col gap-6">
         <div className="flex justify-center">
           <button
-            type="button"
+            type="submit"
             className={`rounded-xl rounded-r-none border-2 border-r-0 border-gray-200 px-16 py-2.5 ${
               lang === 'en' ? 'bg-primary text-white' : 'bg-white'
             }`}
@@ -189,7 +197,7 @@ const InnerForm = ({ values }: { values: EventDetail }) => {
           </button>
           <button
             onClick={() => setLang('kh')}
-            type="button"
+            type="submit"
             className={`rounded-xl rounded-l-none border-2 border-l-0 border-gray-200 px-16 py-2.5 ${
               lang === 'kh' ? 'bg-primary text-white' : 'bg-white'
             }`}

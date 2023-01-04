@@ -1,6 +1,7 @@
 import React, { forwardRef } from 'react';
 
 import { useField } from 'formik';
+import { useTypeSafeTranslation } from 'shared-utils/hooks';
 
 interface InputFieldProps
   extends Partial<React.HTMLAttributes<HTMLInputElement>> {
@@ -24,6 +25,7 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
     ref
   ) => {
     const [field, meta] = useField(name);
+    const { t } = useTypeSafeTranslation();
 
     return (
       <div className={`space-y-2 ${containerClassName}`}>
@@ -44,7 +46,7 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
           />
         </label>
         {meta.error && meta.touched && (
-          <div className="text-red-600">{meta.error}</div>
+          <div className="text-red-600">{t(meta.error as never)}</div>
         )}
       </div>
     );
