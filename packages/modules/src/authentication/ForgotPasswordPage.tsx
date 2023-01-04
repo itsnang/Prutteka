@@ -10,7 +10,7 @@ import { useRouter } from 'next/router';
 import { useTypeSafeTranslation } from 'shared-utils/hooks';
 
 const validationSchema = Yup.object({
-  email: Yup.string().email('Invalid email address').required('Required'),
+  email: Yup.string().email('formik.email.invalid').required('formik.required'),
 });
 
 interface InitialValuesType {

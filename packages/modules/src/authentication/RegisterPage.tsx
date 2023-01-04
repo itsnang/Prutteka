@@ -12,12 +12,12 @@ import { Formik, Form } from 'formik';
 import { useTypeSafeTranslation } from 'shared-utils/hooks';
 
 const validationSchema = Yup.object({
-  name: Yup.string().required('Required'),
-  email: Yup.string().email('Invalid email address').required('Required'),
+  name: Yup.string().required('formik.required'),
+  email: Yup.string().email('formik.email.invalid').required('formik.required'),
   password: Yup.string()
-    .min(8, 'Must be at least 8 characters')
-    .max(60, 'Must be 60 characters or less')
-    .required('Required'),
+    .min(8, 'formik.password.min')
+    .max(60, 'formik.password.max')
+    .required('formik.required'),
 });
 
 interface InitialValuesType {
