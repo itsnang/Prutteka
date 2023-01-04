@@ -1,30 +1,33 @@
 {
-  "name": "workshop",
-  "version": "0.1.0",
-  "private": true,
+  "name": "storybook",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
   "scripts": {
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.20.7",
-    "@bbbtech/storybook-formik": "^2.5.0",
     "@storybook/addon-actions": "^6.5.15",
     "@storybook/addon-essentials": "^6.5.15",
     "@storybook/addon-interactions": "^6.5.15",
     "@storybook/addon-links": "^6.5.15",
-    "@storybook/builder-webpack5": "^6.5.15",
-    "@storybook/manager-webpack5": "^6.5.15",
+    "@storybook/addon-postcss": "^2.0.0",
     "@storybook/react": "^6.5.15",
     "@storybook/testing-library": "^0.0.13",
     "babel-loader": "^8.3.0",
-    "storybook-addon-next": "^1.7.1"
-  },
-  "dependencies": {
-    "@heroicons/react": "^2.0.13",
-    "ui": "*",
+    "eslint-config-custom": "*",
+    "formik": "^2.2.9",
+    "next": "13.0.0",
+    "next-i18next": "^13.0.2",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "next": "13.0.0"
+    "tsconfig": "*",
+    "typescript": "^4.5.2",
+    "ui": "*",
+    "@heroicons/react": "^2.0.13"
   }
 }

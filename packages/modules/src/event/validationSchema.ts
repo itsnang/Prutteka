@@ -1,31 +1,18 @@
 import * as Yup from 'yup';
 import { getEventLength } from './helper';
 
-const testRequiredCustomSchedules = {
-  message: 'this is a required field',
-  test: (value: any, ctx: any) => {
-    const { hasCustomSchedule } = ctx?.options?.from[2].value;
-
-    if (!hasCustomSchedule) return true;
-    return !!value;
-  },
-};
-
-const testRequiredSharedSchedule = {
-  message: 'this is a required field',
-  test: (value: any, ctx: any) => {
-    const { hasCustomSchedule } = ctx?.options?.from[1].value;
-    if (hasCustomSchedule) return true;
-    return !!value;
-  },
-};
-
 export const validationSchema = Yup.object().shape({
   details: Yup.object().shape({
-    name: Yup.string().required('This is a required field'),
+    name: Yup.object({
+      en: Yup.string().required('This is a required field'),
+      kh: Yup.string().required('This is a required field'),
+    }),
     type: Yup.string().required('This is a required field'),
     category: Yup.string().required('This is a required field'),
-    detail: Yup.string().required('This is a required field'),
+    detail: Yup.object({
+      en: Yup.string().required('This is a required field'),
+      kh: Yup.string().required('This is a required field'),
+    }),
     img: Yup.string(),
     nestedEvents: Yup.bool().required('This is a required field'),
   }),
@@ -86,8 +73,8 @@ export const validationSchema = Yup.object().shape({
   }),
   locations: Yup.array().of(
     Yup.object().shape({
-      name: Yup.string().required('This is a required field'),
-      link: Yup.string().required('This is a required field'),
+      name: Yup.object({ en: Yup.string(), kh: Yup.string() }),
+      link: Yup.string(),
     })
   ),
 
@@ -95,27 +82,25 @@ export const validationSchema = Yup.object().shape({
     hasCustomSchedule: Yup.bool(),
     sharedSchedules: Yup.array().of(
       Yup.object().shape({
-        startTime: Yup.string().test(testRequiredSharedSchedule),
-        endTime: Yup.string().test(testRequiredSharedSchedule),
-        activity: Yup.string().test(testRequiredSharedSchedule),
+        startTime: Yup.string(),
+        endTime: Yup.string(),
+        activity: Yup.object({
+          en: Yup.string(),
+          kh: Yup.string(),
+        }),
       })
     ),
     customSchedules: Yup.array().of(
       Yup.object().shape({
-        date: Yup.date().test({
-          message: 'This is a required field',
-          test: (value, ctx: any) => {
-            const { hasCustomSchedule } = ctx?.options?.from[1];
-
-            if (!hasCustomSchedule) return true;
-            return !!value;
-          },
-        }),
+        date: Yup.date(),
         schedules: Yup.array().of(
           Yup.object().shape({
-            startTime: Yup.string().test(testRequiredCustomSchedules),
-            endTime: Yup.string().test(testRequiredCustomSchedules),
-            activity: Yup.string().test(testRequiredCustomSchedules),
+            startTime: Yup.string(),
+            endTime: Yup.string(),
+            activity: Yup.object({
+              en: Yup.string(),
+              kh: Yup.string(),
+            }),
           })
         ),
       })
@@ -123,8 +108,11 @@ export const validationSchema = Yup.object().shape({
   }),
   joinMethods: Yup.array().of(
     Yup.object().shape({
-      method: Yup.string().required('This is a required field'),
-      link: Yup.string().required('This is a required field'),
+      method: Yup.object({
+        en: Yup.string(),
+        kh: Yup.string(),
+      }),
+      link: Yup.string(),
     })
   ),
 });

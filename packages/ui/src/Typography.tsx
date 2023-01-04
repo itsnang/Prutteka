@@ -111,7 +111,7 @@ export const Typography: React.FC<TypographyProps> = ({
   size,
   color,
   weight,
-  className,
+  className = '',
   children = '',
   ...props
 }) => {
