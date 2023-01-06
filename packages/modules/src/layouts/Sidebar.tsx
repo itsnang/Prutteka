@@ -28,20 +28,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
   }, [isOpen]);
 
   useEffect(() => {
-    console.log('render');
-
-    window.addEventListener('resize', () => {
+    const closeModal = () => {
       if (window.innerWidth > 1024) {
         handleClose();
       }
-      console.log('called');
-    });
+    };
+
+    window.addEventListener('resize', closeModal);
+
     return () => {
-      window.removeEventListener('resize', () => {
-        if (window.innerWidth > 1024) {
-          handleClose();
-        }
-      });
+      window.removeEventListener('resize', closeModal);
     };
   }, [handleClose]);
 
@@ -56,7 +52,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     >
       <div
         ref={sidebarRef}
-        className={`fixed right-0 flex max-h-96 flex-col items-center gap-8 bg-white py-8 transition-all duration-500 ${
+        className={`fixed right-0 flex max-h-96 flex-col items-center gap-8 rounded-b-2xl bg-white py-8 transition-all duration-500 ${
           isOpen
             ? 'pointer-events-auto translate-y-0'
             : 'pointer-events-none -translate-y-full'

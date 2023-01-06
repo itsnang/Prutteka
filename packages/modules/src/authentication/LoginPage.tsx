@@ -41,6 +41,7 @@ export const LoginPage: NextPageWithLayout = () => {
             height="72"
             width="184"
             className="mx-auto"
+            priority
           />
         </Link>
 
@@ -63,7 +64,7 @@ export const LoginPage: NextPageWithLayout = () => {
               />
               <Link
                 href="/forgot-password"
-                className="text-end text-gray-700 hover:underline"
+                className="self-end text-end text-gray-700 hover:underline"
               >
                 {t('register-page.forgot-password')}
               </Link>

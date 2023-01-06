@@ -43,6 +43,7 @@ export const RegisterPage: NextPageWithLayout = () => {
             height="72"
             width="184"
             className="mx-auto"
+            priority
           />
         </Link>
 

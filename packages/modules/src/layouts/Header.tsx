@@ -80,7 +80,7 @@ export const Header: React.FC = () => {
   );
 
   return (
-    <nav className=" fixed top-0 z-10 w-screen border-b border-gray-100 bg-white">
+    <nav className=" fixed top-0 z-20 w-screen border-b border-gray-100 bg-white">
       <div className="mx-auto flex max-w-5xl justify-between py-2 px-4">
         <div className="flex items-center gap-4">
           <Link href="/">
