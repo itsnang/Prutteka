@@ -1,7 +1,6 @@
 import { NextPage } from 'next';
 import { Button, InputField, Typography } from 'ui';
 import {
-  PhotoIcon,
   QuestionMarkCircleIcon,
   PlusIcon,
   MinusIcon,
@@ -16,9 +15,11 @@ import {
   getToday,
   getCurrentTime,
 } from './helper';
-import { useEffect, useState, useMemo } from 'react';
-import { SelectField } from './SelectField';
-import { EventDetail } from '../type/EventDetailType';
+import { useEffect, useMemo, useState } from 'react';
+import { SelectField } from 'ui/src/SelectField';
+import { EventDetail } from '../../type/EventDetailType';
+
+import { ImageUpload } from './ImageUpload';
 
 const initialValues = {
   details: {
@@ -182,6 +183,7 @@ const InnerForm: React.FC<{
         isInvalidInput: false,
       });
   }, [values.datetime.startDate, values.datetime.endDate]);
+
   return (
     <Form className="space-y-8 py-4 md:px-4">
       <div className="flex flex-col gap-6">
@@ -210,18 +212,7 @@ const InnerForm: React.FC<{
           {t.eventDetails[lang]}
         </Typography>
 
-        <div className="p-2.5">
-          <div className="relative mx-auto flex w-full max-w-[45rem] flex-col items-center justify-center gap-2.5 rounded-2xl border-2 bg-gray-100 py-20">
-            <PhotoIcon className="h-20 w-20" />
-            <Typography>{t.dragAndDrop[lang]}</Typography>
-            <Button icon={PhotoIcon} variant="secondary" className="px-6">
-              {t.uploadImage[lang]}
-            </Button>
-            <Typography className="absolute bottom-2">
-              {t.upTo10mb[lang]}
-            </Typography>
-          </div>
-        </div>
+        <ImageUpload t={t} lang={lang} />
 
         <div className="flex flex-col gap-4">
           <InputField

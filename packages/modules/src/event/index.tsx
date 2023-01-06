@@ -1,4 +1,4 @@
 export * from './EventDetailPage';
 export * from './EventNestedPage';
-export * from './submitEventPage';
+export * from './form/SubmitEventPage';
 export * from './useLocalInterestedEvent';

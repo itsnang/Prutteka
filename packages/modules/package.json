@@ -23,6 +23,7 @@
     "ui": "*",
     "@headlessui/react": "^1.7.4",
     "next-i18next": "^13.0.2",
-    "shared-utils": "*"
+    "shared-utils": "*",
+    "react-image-crop": "^10.0.9"
   }
 }
