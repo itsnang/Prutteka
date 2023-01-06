@@ -21,10 +21,10 @@ import {
   EventCard,
   SeoMeta,
   Typography,
+  ItemContainer,
+  EventInfoCard,
 } from 'ui';
 import { ShareModal } from '../shared';
-import { ItemContainer } from './ItemContainer';
-import { EventInfoCard } from './EventInfoCard';
 import { AttendModal } from './AttendModal';
 import { EVENTDATA } from '../constants';
 import { EventHeader } from './EventHeader';
