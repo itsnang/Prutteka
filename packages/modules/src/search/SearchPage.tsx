@@ -6,13 +6,15 @@ import { LOCATIONS } from '../constants';
 import { useTypeSafeTranslation } from 'shared-utils/hooks';
 import { EventType, useLocalInterestedEvent } from '../event';
 import { useRouter } from 'next/router';
+import { translateDate } from '../helpers';
+import { translateTime } from '../helpers/translateTime';
 
 interface SearchPageProps {
   events: EventType[];
 }
 
 export const Search = ({ events }: SearchPageProps) => {
-  const { t } = useTypeSafeTranslation();
+  const { t, i18n } = useTypeSafeTranslation();
 
   const locations = LOCATIONS.map((value, idx) => ({
     name: t(value),
@@ -66,14 +68,18 @@ export const Search = ({ events }: SearchPageProps) => {
               (_event) => _event.id === event.id
             );
 
+            const date = translateDate(event.date, i18n.language);
+            const time = translateTime(event.time, i18n.language);
+            const location = t(('locations.' + event.location) as any);
+
             return (
               <EventCard
                 isLandscape
                 key={event.id}
                 img={event.img}
-                date={event.date}
-                time={event.time}
-                location={event.location}
+                date={date}
+                time={time}
+                location={location}
                 title={event.title}
                 href={`/event/${event.id}`}
                 isActive={isActive}

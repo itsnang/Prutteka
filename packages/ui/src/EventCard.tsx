@@ -73,7 +73,7 @@ export const EventCard: React.FC<EventCardProps> = ({
   }
 
   return (
-    <div className="shadow-complete flex h-[22rem] w-screen max-w-[20rem] flex-col rounded-2xl bg-white p-1">
+    <div className="shadow-complete flex h-full min-h-[22rem] w-full flex-col rounded-2xl bg-white p-1">
       <Link
         href={href}
         className="relative aspect-[2/1] overflow-hidden rounded-xl"
@@ -82,14 +82,16 @@ export const EventCard: React.FC<EventCardProps> = ({
       </Link>
       <div className="flex flex-1 flex-col gap-4 p-[14px]">
         <div className="flex-1">
-          <div className="text-primary text-sm">Thu, Nov 14 | 5:00 PM</div>
+          <div className="text-primary text-sm">
+            {date} | {time}
+          </div>
           <Link
             className="line-clamp-2 text-xl font-medium text-gray-900"
             href={href}
           >
             {title}
           </Link>
-          <div className="text-secondary text-sm">Phnom Penh</div>
+          <div className="text-secondary text-sm">{location}</div>
         </div>
         <ButtonInterested hasText isActive={isActive} onClick={onInterested} />
       </div>

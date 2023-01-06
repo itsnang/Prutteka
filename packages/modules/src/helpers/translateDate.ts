@@ -1,3 +1,5 @@
+import { translateNumber } from './translateNumber';
+
 const dayMapping = {
   Mon: 'ចន្ទ',
   Tue: 'អង្គារ',
@@ -23,42 +25,27 @@ const monthMapping = {
   Dec: 'ធ្នូ',
 };
 
-const numberMapping = {
-  '0': '០',
-  '1': '១',
-  '2': '២',
-  '3': '៣',
-  '4': '៤',
-  '5': '៥',
-  '6': '៦',
-  '7': '៧',
-  '8': '៨',
-  '9': '៩',
-};
-
-function translateNumber(number: number) {
-  return (
-    String(number)
-      .split('')
-      //@ts-ignore
-      .map((num) => numberMapping[num])
-      .join('')
-  );
-}
-
 export function translateDate(
   date: Date | string | number,
   lang: 'en' | 'kh' = 'en'
 ) {
-  date = new Date(date).toDateString();
-  if (lang === 'en') return date;
+  date = new Date(date);
+  const currentYear = new Date().getFullYear();
+  const sameYear = date.getFullYear() === currentYear;
+  const options: Intl.DateTimeFormatOptions = {
+    weekday: 'short',
+    year: sameYear ? undefined : 'numeric',
+    month: 'short',
+    day: 'numeric',
+  };
+  if (lang === 'en') return date.toLocaleDateString('en-US', options);
 
-  const [day, month, dayNumber, year] = date.split(' ');
+  const [day, month, dayNumber, year] = date.toDateString().split(' ');
 
   //@ts-ignore
-  return `ថ្ងៃ${dayMapping[day]} ទី${translateNumber(dayNumber)} ខែ${
+  return `ថ្ងៃ${dayMapping[day]} ទី${translateNumber(dayNumber, lang)} ខែ${
     //@ts-ignore
     monthMapping[month]
     //@ts-ignore
-  } ឆ្នាំ${translateNumber(year)}`;
+  }${sameYear ? '' : ` ឆ្នាំ${translateNumber(year, lang)}`}`;
 }
