@@ -30,16 +30,16 @@ module.exports = {
     fontSize: {
       sm: '0.875rem', // 14px
       base: '1rem', // 16px
-      xl: '1.125rem', // 18px
-      '2xl': '1.25rem', // 20px
-      '3xl': '1.5rem', // 24px
-      '4xl': '1.75rem', // 28px
-      '5xl': '2rem', // 32px
-      '6xl': '2.25rem', // 36px
+      lg: '1.125rem', // 18px
+      xl: '1.25rem', // 20px
+      '2xl': '1.5rem', // 24px
+      '3xl': '1.75rem', // 28px
+      '4xl': '2rem', // 32px
+      '5xl': '2.25rem', // 36px
     },
     extend: {
       boxShadow: {
-        inner: 'inset 0 -6px 0 0 rgb(161, 161, 171, 25%)',
+        inner: '0px 4px 0px #cc0058',
         complete:
           '0 2px 14px 0 rgb(161, 161, 171, 25%), inset 0 -4px 0 0 rgb(161, 161, 171, 10%)',
       },
@@ -51,6 +51,16 @@ module.exports = {
       },
       spacing: {
         13: '3.25rem',
+      },
+      animation: {
+        pop: 'pop .25s ease-out',
+      },
+      keyframes: {
+        pop: {
+          '0%': { transform: 'scale(1)' },
+          '50%': { transform: 'scale(1.01)' },
+          '70%': { transform: 'scale(1)' },
+        },
       },
     },
   },
