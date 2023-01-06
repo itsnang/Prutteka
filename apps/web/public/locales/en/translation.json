@@ -100,5 +100,13 @@
     "nth-here": "Nothing here.",
     "go-home": "Time to go home",
     "home": "Home"
+  },
+  "formik": {
+    "required": "Please fill in the field above",
+    "email": { "invalid": "Please provide a valid email address" },
+    "password": {
+      "min": "Password must be longer than 8 characters",
+      "max": "Password cannot be longer than 60 characters"
+    }
   }
 }

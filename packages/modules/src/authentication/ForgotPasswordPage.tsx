@@ -10,7 +10,7 @@ import { useRouter } from 'next/router';
 import { useTypeSafeTranslation } from 'shared-utils/hooks';
 
 const validationSchema = Yup.object({
-  email: Yup.string().email('Invalid email address').required('Required'),
+  email: Yup.string().email('formik.email.invalid').required('formik.required'),
 });
 
 interface InitialValuesType {
@@ -19,7 +19,6 @@ interface InitialValuesType {
 
 export const ForgotPasswordPage: NextPageWithLayout = () => {
   const { t } = useTypeSafeTranslation();
-  const router = useRouter();
 
   const handleSubmit = ({ email }: InitialValuesType) => {
     console.log(email);
@@ -36,6 +35,7 @@ export const ForgotPasswordPage: NextPageWithLayout = () => {
             height="72"
             width="184"
             className="mx-auto"
+            priority
           />
         </Link>
 
@@ -46,7 +46,7 @@ export const ForgotPasswordPage: NextPageWithLayout = () => {
         >
           {() => (
             <Form className="flex flex-col gap-4 p-4">
-              <Link href="/login">
+              <Link href="/login" className="self-start">
                 <ArrowLongLeftIcon className="h-6 w-6" />
               </Link>
 
