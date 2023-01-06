@@ -1,10 +1,10 @@
 import { InputField, Typography } from 'ui';
 import { Field, FieldArray, useFormikContext } from 'formik';
 import { useEffect } from 'react';
-import { EventDetail } from '../type/EventDetailType';
+import { EventDetail } from '../../type/EventDetailType';
 import { getCurrentTime } from './helper';
-import { t } from './submitEventPage';
-import { translateDate } from '../helpers';
+import { t } from './SubmitEventPage';
+import { translateDate } from '../../helpers';
 
 interface DatetimeFormProps {
   dateTimeState: EventDetail['datetime'];
