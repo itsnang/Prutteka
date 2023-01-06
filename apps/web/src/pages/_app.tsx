@@ -18,6 +18,8 @@ type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
 };
 
+import 'react-image-crop/dist/ReactCrop.css';
+
 // loading route style
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
