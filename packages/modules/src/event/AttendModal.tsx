@@ -20,12 +20,14 @@ export const AttendModal: React.FC<AttendModalProp> = ({ show, onClose }) => {
       className="min-h-[21.875rem]"
     >
       <div className="mt-4 space-y-2">
-        <button className="flex w-full flex-col rounded-xl border p-3 text-left">
+        <button className="flex w-full flex-col overflow-hidden rounded-xl border p-3 text-left">
           Get a ticket now
-          <span className="flex items-center text-gray-500">
-            https://ticket.cambodiatechex.gov.kh
-            <ArrowTopRightOnSquareIcon className="ml-1 h-[1.125rem] w-[1.125rem]" />
-          </span>
+          <div className="flex items-center text-gray-500">
+            <div className="line-clamp-1 whitespace-normal break-all">
+              https://ticket.cambodiatechex.gov.kh/nesciunt
+            </div>
+            <ArrowTopRightOnSquareIcon className="ml-1 h-[1.125rem] w-[1.125rem] flex-shrink-0" />
+          </div>
         </button>
       </div>
     </Modal>
