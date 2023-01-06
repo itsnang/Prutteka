@@ -12,9 +12,11 @@ const CAROUSEL = [
 
 import { useTypeSafeTranslation } from 'shared-utils/hooks';
 import { useLocalInterestedEvent } from '../event';
+import { translateDate } from '../helpers';
+import { translateTime } from '../helpers/translateTime';
 
 export const HomePage: NextPage = () => {
-  const { t } = useTypeSafeTranslation();
+  const { t, i18n } = useTypeSafeTranslation();
   const [interestedEvents, setInterestedEvents] = useLocalInterestedEvent();
 
   return (
@@ -38,7 +40,7 @@ export const HomePage: NextPage = () => {
           title={t('home-page.spotlight-events') || ''}
           navigation
           pagination
-          titleClassName="text-xl md:text-2xl lg:text-3xl font-bold"
+          titleClassName="text-xl md:text-2xl font-bold"
         >
           {(Slide) =>
             CAROUSEL.map((carousel, idx) => (
@@ -50,18 +52,22 @@ export const HomePage: NextPage = () => {
         </Carousel>
         <CategorySelection title={t('home-page.explore') || ''} />
         <div className="flex justify-center">
-          <div className="grid grid-cols-1 place-items-center gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {EVENTDATA.map((event) => {
               const isActive = !!interestedEvents.find(
                 (_event) => _event.id === event.id
               );
+              const date = translateDate(event.date, i18n.language);
+              const time = translateTime(event.time, i18n.language);
+              const location = t(('locations.' + event.location) as any);
+
               return (
                 <EventCard
                   key={event.id}
                   img={event.img}
-                  date={event.date}
-                  time={event.time}
-                  location={event.location}
+                  date={date}
+                  time={time}
+                  location={location}
                   title={event.title}
                   href={`/event/${event.id}`}
                   isActive={isActive}

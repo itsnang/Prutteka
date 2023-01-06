@@ -23,14 +23,15 @@ import {
   Typography,
 } from 'ui';
 import { ShareModal } from '../shared';
-import { ItemContainer } from './ItemContainer';
-import { EventInfoCard } from './EventInfoCard';
+import { ItemContainer } from 'ui/src/ItemContainer';
+import { EventInfoCard } from 'ui/src/EventInfoCard';
 import { AttendModal } from './AttendModal';
 import { EVENTDATA } from '../constants';
 import { EventHeader } from './EventHeader';
 import { useRouter } from 'next/router';
 import { useTypeSafeTranslation } from 'shared-utils/hooks';
 import { EventType, useLocalInterestedEvent } from './useLocalInterestedEvent';
+import { translateTime } from '../helpers/translateTime';
 
 interface EventDetailPageProps {
   event: EventType;
@@ -44,7 +45,7 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
   const [attendModal, setAttendModal] = useState(false);
   const [shareModal, setShareModal] = useState(false);
   const { query } = useRouter();
-  const { t } = useTypeSafeTranslation();
+  const { t, i18n } = useTypeSafeTranslation();
   const [interestedEvents, setInterestedEvents] = useLocalInterestedEvent();
 
   const isActive = !!interestedEvents.find((_event) => _event.id === event.id);
@@ -106,35 +107,53 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
             <ButtonCategory>Fri, Nov 11</ButtonCategory>
             <ButtonCategory>Fri, Nov 11</ButtonCategory>
           </div>
-          <ItemContainer className="flex flex-col justify-between space-y-2 md:flex-row md:space-y-0 md:space-x-2">
+          <ItemContainer className="grid grid-cols-12 gap-2">
             <EventInfoCard
-              className="sm:flex-[3] lg:flex-1"
+              className="col-span-full sm:col-span-6 md:col-span-4"
               icon={ClockIcon}
               iconClassName="bg-tertiary-light text-tertiary"
             >
-              <Typography color="dark" weight="semibold" size="xl">
+              <Typography
+                color="dark"
+                weight="semibold"
+                size="base"
+                className="md:text-xl"
+              >
                 {t('event-detail-page.time')}
               </Typography>
-              <Typography>8:30 AM - 6:00 PM</Typography>
+              <Typography>
+                {translateTime('8:30', i18n.language)} -{' '}
+                {translateTime('19:00', i18n.language)}
+              </Typography>
             </EventInfoCard>
 
             <EventInfoCard
-              className="sm:flex-[2] lg:flex-1"
+              className="col-span-full sm:col-span-6 md:col-span-3"
               icon={TimeIcon}
               iconClassName="bg-primary-light"
             >
-              <Typography color="dark" weight="semibold" size="xl">
+              <Typography
+                color="dark"
+                weight="semibold"
+                size="base"
+                className="md:text-xl"
+              >
                 {t('event-detail-page.duration')}
               </Typography>
               <Typography>9h 30mns</Typography>
             </EventInfoCard>
 
             <EventInfoCard
-              className="sm:flex-[4] lg:flex-[2]"
+              className="col-span-full md:col-span-5"
               icon={MapPinIcon}
               iconClassName="bg-secondary-light text-secondary"
             >
-              <Typography color="dark" weight="semibold" size="xl">
+              <Typography
+                color="dark"
+                weight="semibold"
+                size="base"
+                className="md:text-xl"
+              >
                 {t('event-detail-page.location')}
               </Typography>
               <Typography>On-site (Phnom Penh) & Online</Typography>
@@ -143,9 +162,14 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
           <ItemContainer>
             <div className="flex items-center space-x-4">
               <div className="bg-secondary-light text-secondary rounded-xl p-2">
-                <MapIcon className="h-7 w-7" />
+                <MapIcon className="h-6 w-6 md:h-7 md:w-7" />
               </div>
-              <Typography color="dark" weight="semibold" size="2xl">
+              <Typography
+                color="dark"
+                weight="semibold"
+                size="lg"
+                className="md:text-xl lg:text-2xl"
+              >
                 {t('event-detail-page.map')}
               </Typography>
             </div>
@@ -177,16 +201,23 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
           <ItemContainer>
             <div className="flex items-center space-x-4">
               <div className="bg-primary-light text-primary rounded-xl p-2">
-                <CalendarDaysIcon className="h-7 w-7" />
+                <CalendarDaysIcon className="h-6 w-6 md:h-7 md:w-7" />
               </div>
-              <Typography color="dark" weight="semibold" size="2xl">
+              <Typography
+                color="dark"
+                weight="semibold"
+                size="lg"
+                className="md:text-xl lg:text-2xl"
+              >
                 {t('event-detail-page.schedule')}
               </Typography>
             </div>
-            <div className="mt-4 flex w-full flex-col items-stretch space-y-2">
-              <div className="flex-1 rounded-xl border border-gray-200 p-4 text-gray-700">
-                <span>8:30 AM - 6:00 PM</span>&nbsp;|&nbsp;
-                <span>Exhibition</span>
+            <div className="mt-6 flex w-full flex-col items-stretch space-y-2">
+              <div className="relative flex-1 rounded-xl border border-gray-200 px-4 py-4 text-gray-700">
+                <div className="absolute -top-4 left-6 rounded-lg border border-gray-200 bg-white px-2 py-1 text-sm">
+                  8:30 AM - 6:00 PM
+                </div>
+                <div>Exhibition</div>
               </div>
             </div>
           </ItemContainer>
@@ -231,11 +262,16 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
               <div className="rounded-xl bg-gray-200 p-2 text-gray-700">
                 <InformationCircleIcon className="h-7 w-7" />
               </div>
-              <Typography color="dark" weight="semibold" size="2xl">
+              <Typography
+                color="dark"
+                weight="semibold"
+                size="lg"
+                className="md:text-xl lg:text-2xl"
+              >
                 {t('event-detail-page.event-detail')}
               </Typography>
             </div>
-            <div className="mt-4 break-words text-gray-700">
+            <div className="mt-4 overflow-auto break-words text-gray-700">
               {`
             "Cambodia Tech Expo 2022" is the first, largest technology expo in Cambodia, held as an official sideline event of the ASEAN Summit 2022, and the first annual program hosted in the Kingdom of Cambodia by the Ministry of Industry, Science, Technology and Innovation (MISTI).
             The event is organized under the theme "Addressing Challenges Together through Tech Talents" which will take place at Diamond Island Convention and Exhibition Center, Koh Pich (Venue 1) and The Factory Phnom Penh (Venue 2) from 11th to 13th November 2022.
@@ -260,16 +296,16 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
               slidesPerView: 1.75,
             },
             640: {
-              slidesPerView: 2.5,
+              slidesPerView: 2,
             },
             768: {
-              slidesPerView: 2.75,
+              slidesPerView: 2.25,
             },
             1024: {
               slidesPerView: 3,
             },
           }}
-          slidesPerView={1.125}
+          slidesPerView={1}
           title={t('event-detail-page.other-events')}
           navigation
           pagination
@@ -281,7 +317,7 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
                 (_event) => _event.id === event.id
               );
               return (
-                <Slide key={event.id} className="flex justify-center pb-8">
+                <Slide key={event.id} className="pb-8">
                   <EventCard
                     img={event.img}
                     date={event.date}
@@ -307,8 +343,7 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
 const TimeIcon = () => {
   return (
     <svg
-      width="28"
-      height="28"
+      className="h-6 w-6 md:h-7 md:w-7"
       viewBox="0 0 28 28"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
