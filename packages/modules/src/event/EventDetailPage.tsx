@@ -32,6 +32,7 @@ import { useRouter } from 'next/router';
 import { useTypeSafeTranslation } from 'shared-utils/hooks';
 import { EventType, useLocalInterestedEvent } from './useLocalInterestedEvent';
 import { translateTime } from '../helpers/translateTime';
+import { getDuration } from '../helpers/getDuration';
 
 interface EventDetailPageProps {
   event: EventType;
@@ -140,7 +141,9 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
               >
                 {t('event-detail-page.duration')}
               </Typography>
-              <Typography>9h 30mns</Typography>
+              <Typography>
+                {getDuration('10:30', '19:20', i18n.language)}
+              </Typography>
             </EventInfoCard>
 
             <EventInfoCard
