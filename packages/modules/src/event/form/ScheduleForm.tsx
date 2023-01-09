@@ -60,7 +60,7 @@ export const ScheduleForm: React.FC<ScheduleFormProps> = ({
                       <div className="flex flex-col gap-2">
                         {customSchedule?.schedules?.map((_schedule, index) => (
                           <div
-                            className="flex flex-col gap-2 rounded-2xl border border-gray-100 bg-white p-2 md:flex-row md:gap-4 md:border-0 md:bg-gray-50 md:p-0"
+                            className="flex flex-col gap-2 rounded-2xl border border-gray-100 bg-white p-2 first:border-white/0 first:bg-white/0 md:flex-row md:gap-4 md:border-0 md:bg-gray-50 md:p-0"
                             key={index}
                           >
                             {index > 0 ? (
@@ -121,7 +121,7 @@ export const ScheduleForm: React.FC<ScheduleFormProps> = ({
             <div className="flex flex-col gap-4">
               {sharedSchedules?.map((_schedule, idx) => (
                 <div
-                  className="flex flex-col gap-2 rounded-2xl border border-gray-100 bg-white p-2 md:flex-row md:gap-4 md:border-0 md:bg-gray-50 md:p-0"
+                  className="flex flex-col gap-2 rounded-2xl border border-gray-100 bg-white p-2 first:border-white/0 first:bg-white/0 first:p-0 md:flex-row md:gap-4 md:border-0 md:bg-gray-50 md:p-0"
                   key={idx}
                 >
                   {idx > 0 ? (

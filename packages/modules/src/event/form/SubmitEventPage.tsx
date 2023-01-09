@@ -287,7 +287,7 @@ const InnerForm: React.FC<{
             <div className="flex flex-col gap-4">
               {values?.locations?.map((_location, idx) => (
                 <div
-                  className="flex items-start gap-2 rounded-2xl border border-gray-100 bg-white p-2 md:gap-4 md:border-0 md:bg-gray-50 md:p-0"
+                  className="flex items-start gap-2 rounded-2xl border border-gray-100 bg-white p-2 first:border-white/0 first:bg-white/0 md:gap-4 md:border-0 md:bg-gray-50 md:p-0"
                   key={idx}
                 >
                   {idx > 0 ? (
@@ -350,7 +350,7 @@ const InnerForm: React.FC<{
             <div className="flex flex-col gap-4">
               {values?.joinMethods?.map((_joinMethod, idx) => (
                 <div
-                  className="flex items-start gap-2 rounded-2xl border border-gray-100 bg-white p-2 md:gap-4 md:border-0 md:bg-gray-50 md:p-0"
+                  className="flex items-start gap-2 rounded-2xl border border-gray-100 bg-white p-2 first:border-white/0 first:bg-white/0 md:gap-4 md:border-0 md:bg-gray-50 md:p-0"
                   key={idx}
                 >
                   {idx > 0 ? (
