@@ -1,9 +1,11 @@
+import { EditorState } from 'draft-js';
+
 export interface EventDetail {
   details: {
     name: { en: string; kh: string };
     type: number;
     category: number;
-    detail: { en: string; kh: string };
+    detail: { en: string | EditorState; kh: string | EditorState };
     img: string;
     nestedEvents: boolean;
   };

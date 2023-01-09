@@ -1,5 +1,11 @@
 import { NextPage } from 'next';
-import { Button, InputField, Typography } from 'ui';
+import {
+  Button,
+  InputField,
+  RichEditor,
+  RichEditorDisplay,
+  Typography,
+} from 'ui';
 import {
   QuestionMarkCircleIcon,
   PlusIcon,
@@ -26,7 +32,7 @@ const initialValues = {
     name: { en: '', kh: '' },
     type: 0,
     category: 0,
-    detail: { en: '', kh: '' },
+    detail: { en: '<p>hello wolr<strong>nice</strong></p>\n', kh: '' },
     img: '',
     nestedEvents: false,
   },
@@ -240,10 +246,18 @@ const InnerForm: React.FC<{
             />
           </div>
 
-          <InputField
-            name={`details.detail.${lang}`}
-            label={t.details[lang]}
-            placeholder={t.details[lang]}
+          <RichEditor
+            containerClassName={lang === 'kh' ? 'hidden' : ''}
+            name="details.detail.en"
+            label={t.details.en}
+            placeholder={t.details.en}
+          />
+
+          <RichEditor
+            containerClassName={lang === 'en' ? 'hidden' : ''}
+            name="details.detail.kh"
+            label={t.details.kh}
+            placeholder={t.details.kh}
           />
 
           <label className="flex items-center gap-2">
