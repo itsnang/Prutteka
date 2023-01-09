@@ -53,7 +53,7 @@ export const ImageUpload = ({ t, lang }: { t: any; lang: 'en' | 'kh' }) => {
 
   return (
     <>
-      <div className="relative mx-auto flex aspect-[2/1] h-96 flex-col items-center justify-center gap-2.5 rounded-2xl border-2 py-20">
+      <div className="relative mx-auto flex aspect-[2/1] w-full flex-col items-center justify-center gap-2.5 rounded-2xl border-2 lg:h-96 lg:w-auto lg:py-20">
         {imageUrl ? (
           <Image
             src={imageUrl}
@@ -65,14 +65,19 @@ export const ImageUpload = ({ t, lang }: { t: any; lang: 'en' | 'kh' }) => {
         ) : null}
         <label
           htmlFor="details.img"
-          className={`flex min-w-[16rem] flex-col items-center rounded-2xl py-2 backdrop-blur-sm ${
+          className={`flex min-w-[16rem] items-center justify-center space-x-4 rounded-2xl py-4 backdrop-blur-sm sm:flex-col sm:space-x-0 ${
             imgSrc ? 'bg-gray-900/25 text-white' : 'text-gray-900'
           }`}
         >
-          <PhotoIcon className="h-20 w-20 stroke-[0.75px]" />
-          <Typography className={imgSrc ? 'text-white' : 'text-gray-900'}>
-            {t.dragAndDrop[lang]}
-          </Typography>
+          <div className="hidden flex-col items-center sm:flex">
+            <PhotoIcon className="h-20 w-20 stroke-[0.75px]" />
+            <Typography
+              className={`text-base ${imgSrc ? 'text-white' : 'text-gray-900'}`}
+            >
+              {t.dragAndDrop[lang]}
+            </Typography>
+          </div>
+
           <Field
             type="file"
             name="details.img"
@@ -80,19 +85,23 @@ export const ImageUpload = ({ t, lang }: { t: any; lang: 'en' | 'kh' }) => {
             className="hidden"
             onChange={handleFileInput}
           />
-          <Button
-            type="button"
-            icon={PhotoIcon}
-            variant="secondary"
-            className="pointer-events-none mt-8 px-6"
-          >
-            {t.uploadImage[lang]}
-          </Button>
-          <Typography
-            className={`mt-2 ${imgSrc ? 'text-white' : 'text-gray-900'}`}
-          >
-            {t.upTo10mb[lang]}
-          </Typography>
+          <div className="flex flex-col items-center">
+            <Button
+              type="button"
+              icon={PhotoIcon}
+              variant="secondary"
+              className="pointer-events-none px-4 text-sm sm:mt-8 sm:px-6"
+            >
+              {t.uploadImage[lang]}
+            </Button>
+            <Typography
+              className={`mt-2 text-sm ${
+                imgSrc ? 'text-white' : 'text-gray-900'
+              }`}
+            >
+              {t.upTo10mb[lang]}
+            </Typography>
+          </div>
         </label>
       </div>
 
