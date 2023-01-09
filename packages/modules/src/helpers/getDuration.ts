@@ -26,8 +26,13 @@ export const getDuration = (
     h = 'ម៉ោង';
     mns = 'នាទី';
   }
-
-  return `${translateNumber(hour, lang) + h} ${
-    translateNumber(minute, lang) + mns
-  }`;
+  if (hour <= 0) {
+    return translateNumber(minute, lang) + mns;
+  } else if (minute <= 0) {
+    return translateNumber(hour, lang) + h;
+  } else {
+    return `${translateNumber(hour, lang) + h} ${
+      translateNumber(minute, lang) + mns
+    }`;
+  }
 };
