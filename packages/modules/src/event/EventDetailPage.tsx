@@ -53,7 +53,11 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
 
   return (
     <>
-      <SeoMeta title=" - Prutteka" description="" />
+      <SeoMeta
+        title={`${event.title} - Prutteka`}
+        description=""
+        img={event.img}
+      />
       <div className="space-y-8">
         <EventHeader
           isHappening
