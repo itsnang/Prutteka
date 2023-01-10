@@ -28,7 +28,8 @@
     "shared-utils": "*",
     "swiper": "^8.4.5",
     "ui": "*",
-    "yup": "^0.32.11"
+    "yup": "^0.32.11",
+    "zustand": "^4.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",

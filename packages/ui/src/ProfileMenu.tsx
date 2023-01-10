@@ -3,7 +3,11 @@ import { UserIcon } from '@heroicons/react/24/solid';
 import Link from 'next/link';
 import { Fragment } from 'react';
 
-export const ProfileMenu = () => {
+interface ProfileMenuProps {
+  onLogout: () => void;
+}
+
+export const ProfileMenu: React.FC<ProfileMenuProps> = ({ onLogout }) => {
   return (
     <Menu as="div" className="relative">
       <Menu.Button className="bg-primary-light text-primary flex h-12 w-12 items-center justify-center rounded-xl sm:h-14 sm:w-14">
@@ -34,14 +38,14 @@ export const ProfileMenu = () => {
           </Menu.Item>
           <Menu.Item>
             {({ active }) => (
-              <Link
+              <button
                 className={`${
                   active ? 'bg-gray-100' : ''
-                } rounded-xl border bg-white px-4 py-2`}
-                href="/login"
+                } rounded-xl border bg-white px-4 py-2 text-left`}
+                onClick={onLogout}
               >
                 Logout
-              </Link>
+              </button>
             )}
           </Menu.Item>
         </Menu.Items>

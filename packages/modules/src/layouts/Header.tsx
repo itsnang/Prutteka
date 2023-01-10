@@ -9,11 +9,20 @@ import { StarIcon, Bars3Icon } from '@heroicons/react/24/solid';
 import { useTypeSafeTranslation } from 'shared-utils/hooks';
 import { Sidebar } from './Sidebar';
 import { useEffect } from 'react';
+import { useTokenStore } from '../auth';
 
 export const Header: React.FC = () => {
   const router = useRouter();
   const { t } = useTypeSafeTranslation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const hasToken = useTokenStore((s) => !!(s.accessToken && s.refreshToken));
+  const setTokens = useTokenStore((state) => state.setTokens);
+
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
 
   useEffect(() => {
     const handleRouteChange = () => {
@@ -45,6 +54,7 @@ export const Header: React.FC = () => {
   const changeTo = router.locale === 'en' ? 'kh' : 'en';
   const isSearchPage = router.pathname === '/search';
   const isInterestedPage = router.asPath === '/user/interested';
+  const isEventSubmitPage = router.asPath === '/event/submit';
 
   const searchComponent = isSearchPage ? null : (
     <div className="hidden lg:block">
@@ -98,6 +108,19 @@ export const Header: React.FC = () => {
         </div>
         <div className="flex divide-gray-300 md:space-x-4 md:divide-x">
           <div className="flex items-center gap-2">
+            {isHydrated ? (
+              hasToken && !isEventSubmitPage ? (
+                <Button
+                  as="link"
+                  href="/event/submit"
+                  className="px-6"
+                  hasShadow
+                >
+                  Submit Event
+                </Button>
+              ) : null
+            ) : null}
+
             <div className="xs:block hidden">
               <Button
                 variant="secondary"
@@ -127,8 +150,21 @@ export const Header: React.FC = () => {
           </div>
 
           <div className="hidden gap-2 pl-2 md:flex md:pl-4">
-            {authButton}
-            {/* <ProfileMenu /> */}
+            {isHydrated ? (
+              hasToken ? (
+                <ProfileMenu
+                  onLogout={() => {
+                    setTokens({
+                      accessToken: '',
+                      refreshToken: '',
+                    });
+                    router.push('/login');
+                  }}
+                />
+              ) : (
+                authButton
+              )
+            ) : null}
           </div>
         </div>
       </div>
