@@ -1,11 +1,5 @@
 import { NextPage } from 'next';
-import {
-  Button,
-  InputField,
-  RichEditor,
-  RichEditorDisplay,
-  Typography,
-} from 'ui';
+import { Button, InputField, RichEditor, SeoMeta, Typography } from 'ui';
 import {
   QuestionMarkCircleIcon,
   PlusIcon,
@@ -32,7 +26,7 @@ const initialValues = {
     name: { en: '', kh: '' },
     type: 0,
     category: 0,
-    detail: { en: '<p>hello wolr<strong>nice</strong></p>\n', kh: '' },
+    detail: { en: '<p>hello world<strong>nice</strong></p>\n', kh: '' },
     img: '',
     nestedEvents: false,
   },
@@ -155,15 +149,18 @@ export const SubmitEventPage: NextPage = () => {
   const [lang, setLang] = useState<'en' | 'kh'>('en');
   const validationSchema = useMemo(() => genValidationSchema(lang), [lang]);
   return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={validationSchema}
-      onSubmit={(values) => console.log(values)}
-    >
-      {({ values }) => (
-        <InnerForm values={values} lang={lang} setLang={setLang} />
-      )}
-    </Formik>
+    <>
+      <SeoMeta title="Submit an Event - Prutteka" description="" />
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={(values) => console.log(values)}
+      >
+        {({ values }) => (
+          <InnerForm values={values} lang={lang} setLang={setLang} />
+        )}
+      </Formik>
+    </>
   );
 };
 
