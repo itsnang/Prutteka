@@ -13,7 +13,7 @@ if (typeof window === 'object') {
 }
 
 const convertHtmlToDraft = (html: string | EditorState) => {
-  if (!htmlToDraft) return EditorState.createEmpty();
+  if (!htmlToDraft || !html) return EditorState.createEmpty();
   else if (typeof html !== 'string') return html;
   const blocksFromHtml = htmlToDraft(html);
   const { contentBlocks, entityMap } = blocksFromHtml;
@@ -53,10 +53,10 @@ export const RichEditor: React.FC<RichEditorProps> = ({
 
   useEffect(() => {
     setFieldValue(name, convertHtmlToDraft(value));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleEditorChange = (e: EditorState) => {
-    // setFieldValue(name, draftToHtml(convertToRaw(e.getCurrentContent())));
     setFieldValue(name, e);
   };
 
@@ -80,7 +80,9 @@ export const RichEditor: React.FC<RichEditorProps> = ({
             background: '#fff',
             borderRadius: '0 0 16px 16px',
           }}
-          editorState={value as never}
+          editorState={
+            typeof value !== 'string' ? value : EditorState.createEmpty()
+          }
           onEditorStateChange={handleEditorChange}
           toolbar={{
             options: [
@@ -107,9 +109,9 @@ export const RichEditor: React.FC<RichEditorProps> = ({
           }}
         />
       </label>
-      {meta.error && meta.touched && (
+      {/* {meta.error && meta.touched && (
         <div className="text-red-600">{t(meta.error as never)}</div>
-      )}
+      )} */}
     </div>
   );
 };
