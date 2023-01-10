@@ -107,19 +107,20 @@ export const Header: React.FC = () => {
           {searchComponent}
         </div>
         <div className="flex divide-gray-300 md:space-x-4 md:divide-x">
-          <div className="flex items-center gap-2">
-            {isHydrated ? (
-              hasToken && !isEventSubmitPage ? (
-                <Button
-                  as="link"
-                  href="/event/submit"
-                  className="px-6"
-                  hasShadow
-                >
-                  Submit Event
-                </Button>
-              ) : null
-            ) : null}
+          <div className="flex gap-2">
+            {isHydrated &&
+              (hasToken && !isEventSubmitPage ? (
+                <div className="hidden sm:block">
+                  <Button
+                    as="link"
+                    href="/event/submit"
+                    className="px-6"
+                    hasShadow
+                  >
+                    {t('common.submit-event')}
+                  </Button>
+                </div>
+              ) : null)}
 
             <div className="xs:block hidden">
               <Button
@@ -149,9 +150,9 @@ export const Header: React.FC = () => {
             </Button>
           </div>
 
-          <div className="hidden gap-2 pl-2 md:flex md:pl-4">
-            {isHydrated ? (
-              hasToken ? (
+          {isHydrated ? (
+            hasToken ? (
+              <div className="pl-2 md:pl-4">
                 <ProfileMenu
                   onLogout={() => {
                     setTokens({
@@ -161,11 +162,13 @@ export const Header: React.FC = () => {
                     router.push('/login');
                   }}
                 />
-              ) : (
-                authButton
-              )
-            ) : null}
-          </div>
+              </div>
+            ) : (
+              <div className="hidden gap-2 pl-2 md:flex md:pl-4">
+                {authButton}
+              </div>
+            )
+          ) : null}
         </div>
       </div>
 
@@ -184,7 +187,18 @@ export const Header: React.FC = () => {
         </div>
         <div className="my-3 mx-2 w-full border-b-2 border-gray-100 md:hidden" />
         <div className="flex w-full flex-col space-y-2 md:hidden">
-          {authButton}
+          {isHydrated && hasToken ? (
+            <Button
+              as="link"
+              href="/event/submit"
+              className="px-6 sm:hidden"
+              hasShadow
+            >
+              {t('common.submit-event')}
+            </Button>
+          ) : (
+            authButton
+          )}
         </div>
       </Sidebar>
     </nav>
