@@ -10,6 +10,9 @@ import {
 import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
 import { useTypeSafeTranslation } from 'shared-utils/hooks';
+import { useTokenStore } from '../auth/useTokenStore';
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 
 const validationSchema = Yup.object({
   email: Yup.string().email('formik.email.invalid').required('formik.required'),
@@ -26,9 +29,25 @@ interface InitialValuesType {
 
 export const LoginPage: NextPageWithLayout = () => {
   const { t } = useTypeSafeTranslation();
+  const { push } = useRouter();
+  const hasToken = useTokenStore((s) => !!(s.accessToken && s.refreshToken));
+  const setTokens = useTokenStore((state) => state.setTokens);
+
   const handleSubmit = ({ email, password }: InitialValuesType) => {
     console.log(email, password);
+
+    const token = {
+      accessToken: 'ACCESS',
+      refreshToken: 'REFRESH',
+    };
+    setTokens(token);
   };
+
+  useEffect(() => {
+    if (hasToken) {
+      push('/');
+    }
+  }, [push, hasToken]);
 
   return (
     <>
