@@ -9,11 +9,20 @@ import { StarIcon, Bars3Icon } from '@heroicons/react/24/solid';
 import { useTypeSafeTranslation } from 'shared-utils/hooks';
 import { Sidebar } from './Sidebar';
 import { useEffect } from 'react';
+import { useTokenStore } from '../auth';
 
 export const Header: React.FC = () => {
   const router = useRouter();
   const { t } = useTypeSafeTranslation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const hasToken = useTokenStore((s) => !!(s.accessToken && s.refreshToken));
+  const setTokens = useTokenStore((state) => state.setTokens);
+
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
 
   useEffect(() => {
     const handleRouteChange = () => {
@@ -45,6 +54,7 @@ export const Header: React.FC = () => {
   const changeTo = router.locale === 'en' ? 'kh' : 'en';
   const isSearchPage = router.pathname === '/search';
   const isInterestedPage = router.asPath === '/user/interested';
+  const isEventSubmitPage = router.asPath === '/event/submit';
 
   const searchComponent = isSearchPage ? null : (
     <div className="hidden lg:block">
@@ -80,7 +90,7 @@ export const Header: React.FC = () => {
   );
 
   return (
-    <nav className=" fixed top-0 z-10 w-screen border-b border-gray-100 bg-white">
+    <nav className=" fixed top-0 z-20 w-screen border-b border-gray-100 bg-white">
       <div className="mx-auto flex max-w-5xl justify-between py-2 px-4">
         <div className="flex items-center gap-4">
           <Link href="/">
@@ -97,7 +107,21 @@ export const Header: React.FC = () => {
           {searchComponent}
         </div>
         <div className="flex divide-gray-300 md:space-x-4 md:divide-x">
-          <div className="flex items-center gap-2">
+          <div className="flex gap-2">
+            {isHydrated &&
+              (hasToken && !isEventSubmitPage ? (
+                <div className="hidden sm:block">
+                  <Button
+                    as="link"
+                    href="/event/submit"
+                    className="px-6"
+                    hasShadow
+                  >
+                    {t('common.submit-event')}
+                  </Button>
+                </div>
+              ) : null)}
+
             <div className="xs:block hidden">
               <Button
                 variant="secondary"
@@ -126,10 +150,25 @@ export const Header: React.FC = () => {
             </Button>
           </div>
 
-          <div className="hidden gap-2 pl-2 md:flex md:pl-4">
-            {authButton}
-            {/* <ProfileMenu /> */}
-          </div>
+          {isHydrated ? (
+            hasToken ? (
+              <div className="pl-2 md:pl-4">
+                <ProfileMenu
+                  onLogout={() => {
+                    setTokens({
+                      accessToken: '',
+                      refreshToken: '',
+                    });
+                    router.push('/login');
+                  }}
+                />
+              </div>
+            ) : (
+              <div className="hidden gap-2 pl-2 md:flex md:pl-4">
+                {authButton}
+              </div>
+            )
+          ) : null}
         </div>
       </div>
 
@@ -148,7 +187,18 @@ export const Header: React.FC = () => {
         </div>
         <div className="my-3 mx-2 w-full border-b-2 border-gray-100 md:hidden" />
         <div className="flex w-full flex-col space-y-2 md:hidden">
-          {authButton}
+          {isHydrated && hasToken ? (
+            <Button
+              as="link"
+              href="/event/submit"
+              className="px-6 sm:hidden"
+              hasShadow
+            >
+              {t('common.submit-event')}
+            </Button>
+          ) : (
+            authButton
+          )}
         </div>
       </Sidebar>
     </nav>

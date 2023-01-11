@@ -1,9 +1,11 @@
+import { EditorState } from 'draft-js';
+
 export interface EventDetail {
   details: {
-    name: string;
-    type: string;
-    category: string;
-    detail: string;
+    name: { en: string; kh: string };
+    type: number;
+    category: number;
+    detail: { en: string | EditorState; kh: string | EditorState };
     img: string;
     nestedEvents: boolean;
   };
@@ -20,7 +22,7 @@ export interface EventDetail {
     }[];
   };
   locations: {
-    name: string;
+    name: { en: string; kh: string };
     link: string;
   }[];
   schedule: {
@@ -28,19 +30,19 @@ export interface EventDetail {
     sharedSchedules: {
       startTime: string;
       endTime: string;
-      activity: string;
+      activity: { en: string; kh: string };
     }[];
     customSchedules: {
       date?: Date;
       schedules: {
         startTime: string;
         endTime: string;
-        activity: string;
+        activity: { en: string; kh: string };
       }[];
     }[];
   };
   joinMethods: {
-    method: string;
+    method: { en: string; kh: string };
     link: string;
   }[];
 }

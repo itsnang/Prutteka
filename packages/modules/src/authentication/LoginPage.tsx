@@ -10,13 +10,16 @@ import {
 import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
 import { useTypeSafeTranslation } from 'shared-utils/hooks';
+import { useTokenStore } from '../auth/useTokenStore';
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 
 const validationSchema = Yup.object({
-  email: Yup.string().email('Invalid email address').required('Required'),
+  email: Yup.string().email('formik.email.invalid').required('formik.required'),
   password: Yup.string()
-    .min(8, 'Must be at least 8 characters')
-    .max(60, 'Must be 60 characters or less')
-    .required('Required'),
+    .min(8, 'formik.password.min')
+    .max(60, 'formik.password.max')
+    .required('formik.required'),
 });
 
 interface InitialValuesType {
@@ -26,9 +29,25 @@ interface InitialValuesType {
 
 export const LoginPage: NextPageWithLayout = () => {
   const { t } = useTypeSafeTranslation();
+  const { push } = useRouter();
+  const hasToken = useTokenStore((s) => !!(s.accessToken && s.refreshToken));
+  const setTokens = useTokenStore((state) => state.setTokens);
+
   const handleSubmit = ({ email, password }: InitialValuesType) => {
     console.log(email, password);
+
+    const token = {
+      accessToken: 'ACCESS',
+      refreshToken: 'REFRESH',
+    };
+    setTokens(token);
   };
+
+  useEffect(() => {
+    if (hasToken) {
+      push('/');
+    }
+  }, [push, hasToken]);
 
   return (
     <>
@@ -41,6 +60,7 @@ export const LoginPage: NextPageWithLayout = () => {
             height="72"
             width="184"
             className="mx-auto"
+            priority
           />
         </Link>
 
@@ -63,7 +83,7 @@ export const LoginPage: NextPageWithLayout = () => {
               />
               <Link
                 href="/forgot-password"
-                className="text-end text-gray-700 hover:underline"
+                className="self-end text-end text-gray-700 hover:underline"
               >
                 {t('register-page.forgot-password')}
               </Link>

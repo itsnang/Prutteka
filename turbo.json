@@ -12,6 +12,9 @@
     "dev": {
       "cache": false
     },
+    "storybook": {
+      "cache": false
+    },
     "deploy": {
       "dependsOn": ["build", "test", "lint"],
       "outputs": []

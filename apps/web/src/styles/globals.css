@@ -7,6 +7,12 @@
 @layer base {
   html {
     font-family: 'Inter', 'Kantumruy Pro', sans-serif;
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+    @apply focus:outline-none;
+  }
+  button,
+  a {
+    @apply transition-transform duration-75 active:scale-95;
   }
 }
 
@@ -48,4 +54,22 @@
 
 .swiper-pagination-bullet-active {
   background-color: #ff006e !important;
+}
+
+.rich_editor_display,
+.rich_editor_display ul,
+.rich_editor_display ol {
+  @apply space-y-4;
+}
+
+.rich_editor_display ul {
+  @apply list-disc pl-6;
+}
+
+.rich_editor_display ol {
+  @apply list-decimal pl-6;
+}
+
+.rich_editor_display a {
+  @apply text-secondary underline;
 }

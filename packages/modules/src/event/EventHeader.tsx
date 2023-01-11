@@ -3,6 +3,7 @@ import Image, { StaticImageData } from 'next/image';
 import Link, { LinkProps } from 'next/link';
 import { Typography } from 'ui';
 import { useTypeSafeTranslation } from 'shared-utils/hooks';
+import { translateDate } from '../helpers';
 
 interface EventHeader {
   img: string | StaticImageData;
@@ -19,7 +20,7 @@ export const EventHeader: React.FC<EventHeader> = ({
   date,
   source = '',
 }) => {
-  const { t } = useTypeSafeTranslation();
+  const { t, i18n } = useTypeSafeTranslation();
 
   return (
     <div className="space-y-4">
@@ -37,19 +38,19 @@ export const EventHeader: React.FC<EventHeader> = ({
         {isHappening ? (
           <Typography
             variant="span"
-            size="base"
+            size="sm"
             color="white"
             weight="medium"
-            className="bg-primary rounded-md py-1 px-2 uppercase"
+            className="bg-primary rounded-md py-1 px-2"
           >
             {t('event-detail-page.happening')}
           </Typography>
         ) : null}
-        <Typography variant="h1" size="4xl" className="md:text-5xl lg:text-6xl">
+        <Typography variant="h1" size="3xl" className="md:text-4xl lg:text-5xl">
           {title}
         </Typography>
-        <Typography size="base" color="primary">
-          {date}
+        <Typography size="lg" color="primary" className="">
+          {translateDate(date, i18n.language)}
         </Typography>
         <Typography variant="span" size="base" color="dark" weight="medium">
           From

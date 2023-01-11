@@ -1,4 +1,4 @@
-import { useTranslation } from 'next-i18next';
+import { I18n, useTranslation } from 'next-i18next';
 
 import translations from '../../../apps/web/public/locales/en/translation.json';
 
@@ -16,9 +16,14 @@ type Paths<T> = {
 
 export type TranslationKeys = Paths<typeof translations>;
 
+interface CustomI18nType extends I18n {
+  language: 'en' | 'kh';
+}
+
 export const useTypeSafeTranslation = () => {
-  const { t } = useTranslation('translation');
+  const { t, i18n } = useTranslation('translation');
   return {
     t: (s: TranslationKeys) => t(s),
+    i18n: i18n as CustomI18nType,
   };
 };

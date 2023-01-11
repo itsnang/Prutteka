@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface StyleClassName {
-  size?: 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl';
+  size?: 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl';
   color?:
     | 'dark'
     | 'base'
@@ -29,32 +29,32 @@ type VariantMapping = { [Property in Variant]: StyleClassName };
 
 const variantMapping: VariantMapping = {
   h1: {
-    size: '6xl',
+    size: '5xl',
     color: 'dark',
     weight: 'bold',
   },
   h2: {
-    size: '5xl',
+    size: '4xl',
     color: 'dark',
     weight: 'semibold',
   },
   h3: {
-    size: '4xl',
-    color: 'dark',
-    weight: 'medium',
-  },
-  h4: {
     size: '3xl',
     color: 'dark',
     weight: 'medium',
   },
-  h5: {
+  h4: {
     size: '2xl',
     color: 'dark',
     weight: 'medium',
   },
-  h6: {
+  h5: {
     size: 'xl',
+    color: 'dark',
+    weight: 'medium',
+  },
+  h6: {
+    size: 'lg',
     color: 'dark',
     weight: 'medium',
   },
@@ -84,7 +84,6 @@ const sizesMapping = {
   '3xl': 'text-3xl',
   '4xl': 'text-4xl',
   '5xl': 'text-5xl',
-  '6xl': 'text-6xl',
 };
 
 const colorMapping = {
@@ -111,7 +110,7 @@ export const Typography: React.FC<TypographyProps> = ({
   size,
   color,
   weight,
-  className,
+  className = '',
   children = '',
   ...props
 }) => {

@@ -15,7 +15,7 @@ export const ButtonCategory: React.FC<ButtonCategoryProps> = ({
     <button
       className={`inline-flex h-12 items-center justify-center rounded-full border-2 px-6 lg:h-14 ${
         isActive
-          ? 'bg-primary border-primary-dark font-medium text-white'
+          ? 'bg-primary-light border-primary text-primary font-medium'
           : 'border-gray-300 bg-gray-100'
       }`}
       style={{

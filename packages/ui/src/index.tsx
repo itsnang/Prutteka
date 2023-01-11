@@ -12,3 +12,7 @@ export * from './Search/SearchBar';
 export * from './Typography';
 export * from './SeoMeta';
 export * from './ProfileMenu';
+export * from './EventInfoCard';
+export * from './ItemContainer';
+export * from './RichEditor';
+export * from './RichEditorDisplay';

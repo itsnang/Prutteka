@@ -4,11 +4,15 @@
     "language": "EN",
     "login": "Log In",
     "register": "Register",
+    "logout": "Logout",
     "view-all": "View all",
     "interested": "Interested",
     "cancel": "Cancel",
     "delete": "Delete",
-    "categories": "Categories"
+    "categories": "Categories",
+    "submit-event": "Submit Event",
+    "my-event": "My Events",
+    "username": "Username"
   },
   "categories": {
     "all": "All",
@@ -100,5 +104,13 @@
     "nth-here": "Nothing here.",
     "go-home": "Time to go home",
     "home": "Home"
+  },
+  "formik": {
+    "required": "Please fill in the field above",
+    "email": { "invalid": "Please provide a valid email address" },
+    "password": {
+      "min": "Password must be longer than 8 characters",
+      "max": "Password cannot be longer than 60 characters"
+    }
   }
 }
