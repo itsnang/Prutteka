@@ -4,11 +4,15 @@
     "language": "ខ្មែរ",
     "login": "ចូល",
     "register": "ចុះឈ្មោះ",
+    "logout": "ចាកចេញ",
     "view-all": "ទាំងអស់",
     "interested": "ចាប់អារម្មណ៍",
     "cancel": "បោះបង់",
     "delete": "លុប",
-    "categories": "ប្រភេទ"
+    "categories": "ប្រភេទ",
+    "submit-event": "បង្កើតព្រឹត្តិការណ៍",
+    "my-event": "ព្រឹត្តិការណ៍របស់ខ្ញំុ",
+    "username": "ឈ្មោះប្រើប្រាស់"
   },
   "categories": {
     "all": "ទាំងអស់",
