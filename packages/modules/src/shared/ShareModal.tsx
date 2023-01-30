@@ -54,7 +54,8 @@ export const ShareModal: React.FC<ShareModalProps> = ({
               // ,{},{})
               window.open(
                 `https://www.facebook.com/sharer/sharer.php?u=${shareData.url}`,
-                '_blank'
+                '_blank',
+                'toolbar=yes,scrollbars=yes,resizable=yes,top=200,left=520,width=600,height=600'
               )
             }
             color="bg-[#EBEEF5]"
@@ -66,7 +67,8 @@ export const ShareModal: React.FC<ShareModalProps> = ({
             onClick={() =>
               window.open(
                 `https://telegram.me/share/?url=${shareData.url}`,
-                '_blank'
+                '_blank',
+                'toolbar=yes,scrollbars=yes,resizable=yes,top=200,left=520,width=600,height=600'
               )
             }
             color="bg-[#E6F3FA]"
