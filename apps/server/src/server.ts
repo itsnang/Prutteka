@@ -1,12 +1,24 @@
-import express, { Response, Request } from 'express';
+import * as dotenv from 'dotenv';
 
-const app = express();
-
-app.get('/api/v1/message', (req: Request, res: Response) => {
-  res.json('Hello from server please workssss');
+dotenv.config({
+  path:
+    process.cwd() +
+    (process.env.NODE_ENV === 'development' ? '/.env.local' : '/.env'),
 });
 
-const PORT = 4000;
-app.listen(PORT, () => {
-  console.log('Server is running on port: ', PORT);
-});
+import app from './app';
+import http from 'http';
+
+const server = http.createServer(app);
+
+const PORT = process.env.PORT || 4000;
+
+(async () => {
+  try {
+    server.listen(PORT, () => {
+      console.log('Server is running on port:', PORT);
+    });
+  } catch (error) {
+    console.log(error);
+  }
+})();

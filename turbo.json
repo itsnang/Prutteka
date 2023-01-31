@@ -1,5 +1,6 @@
 {
   "$schema": "https://turbo.build/schema.json",
+  "globalEnv": ["NODE_ENV"],
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
@@ -10,7 +11,8 @@
     },
     "test": {},
     "dev": {
-      "cache": false
+      "cache": false,
+      "env": ["MONGO_URI", "PORT"]
     },
     "storybook": {
       "cache": false
