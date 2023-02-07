@@ -18,7 +18,7 @@ servers:
     url: (Work in progress)
 
 paths:
-  /auth/register:
+  /register:
     post:
       tags: [Authentication]
       summary: Register an account
@@ -117,7 +117,7 @@ paths:
                           type: string
                           example: 'Enter a different email'
 
-  /auth/login:
+  /login:
     post:
       tags: [Authentication]
       summary: Login to start using our app
@@ -154,27 +154,6 @@ paths:
                         example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
         '400':
           $ref: '#/components/responses/mising_field'
-
-  /auth/forgot:
-    post:
-      tags: [Authentication]
-      summary: Reset password
-      description: Reset password
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                  format: email
-      responses:
-        '400':
-          $ref: '#/components/responses/mising_field'
-        '200':
-          description: Successfully **Sent**
 
   /events:
     post:
@@ -329,90 +308,6 @@ paths:
           $ref: '#/components/responses/mising_field'
         '200':
           $ref: '#/components/responses/event_submit'
-
-  /events/{id}/creator:
-    get:
-      tags: [Event]
-      summary: Get a single event creator
-      description: Get a single event creator based on the id
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: string
-            example: '63b393ed099bb754a6133494'
-          required: true
-          description: The id of the **event**
-      responses:
-        '404':
-          $ref: '#/components/responses/not_found'
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: object
-                    properties:
-                      type:
-                        type: string
-                        example: 'user'
-                      id:
-                        type: string
-                        example: '5effaa5662679b5af2c58829'
-                      attributes:
-                        type: object
-                        properties:
-                          name:
-                            type: string
-                            example: 'user name'
-                          profile_image:
-                            type: string
-                            example: 'https://example.com/profile/image.png'
-
-  /events/{id}/relationships/creator:
-    get:
-      tags: [Event]
-      summary: Get a single event relationships creator
-      description: Get a single event relationships creator based on the id
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: string
-            example: '63b393ed099bb754a6133494'
-          required: true
-          description: The id of the **event**
-      responses:
-        '404':
-          $ref: '#/components/responses/not_found'
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  links:
-                    type: object
-                    properties:
-                      self:
-                        type: string
-                        example: 'https://example.com/events/63b393ed099bb754a6133494/relationships/creator'
-                      related:
-                        type: string
-                        example: 'https://example.com/events/63b393ed099bb754a6133494/creator'
-                  data:
-                    type: object
-                    properties:
-                      id:
-                        type: string
-                        example: '5effaa5662679b5af2c58829'
-                      type:
-                        type: string
-                        example: 'user'
 
   /events/{id}/interested:
     post:
@@ -1238,15 +1133,6 @@ components:
                 creator:
                   type: object
                   properties:
-                    links:
-                      type: object
-                      properties:
-                        self:
-                          type: string
-                          example: 'https://example.com/events/63b393ed099bb754a6133494/relationships/creator'
-                        related:
-                          type: string
-                          example: 'https://example.com/events/63b393ed099bb754a6133494/creator'
                     data:
                       type: object
                       properties:
@@ -1402,15 +1288,6 @@ components:
                 creator:
                   type: object
                   properties:
-                    links:
-                      type: object
-                      properties:
-                        self:
-                          type: string
-                          example: 'https://example.com/events/63b393ed099bb754a6133494/relationships/creator'
-                        related:
-                          type: string
-                          example: 'https://example.com/events/63b393ed099bb754a6133494/creator'
                     data:
                       type: object
                       properties:
