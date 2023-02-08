@@ -30,6 +30,8 @@
     "react-draft-wysiwyg": "^1.15.0",
     "html-to-draftjs": "^1.5.0",
     "react-image-crop": "^10.0.9",
-    "zustand": "^4.2.0"
+    "zustand": "^4.2.0",
+    "firebase-config": "*",
+    "firebase": "^9.17.1"
   }
 }
