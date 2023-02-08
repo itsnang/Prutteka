@@ -32,7 +32,7 @@ export const Modal: React.FC<ModalProps> = ({
           <div className="fixed inset-0 bg-black bg-opacity-25" />
         </Transition.Child>
         <div className="fixed inset-0 overflow-y-auto">
-          <div className="opa flex min-h-full items-center justify-center p-4">
+          <div className="opa mt-20 flex min-h-full items-start justify-center p-4 md:mt-40">
             <Transition.Child
               as={Fragment}
               enter="duration-[25ms]"
