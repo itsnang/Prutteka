@@ -2,14 +2,17 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-import { SearchBar, Button, ProfileMenu } from 'ui';
+import { SearchBar, Button } from 'ui';
+import { ProfileMenu } from './ProfileMenu';
 import { StarIcon, Bars3Icon } from '@heroicons/react/24/solid';
 import { useTypeSafeTranslation } from 'shared-utils/hooks';
 import { Sidebar } from './Sidebar';
-import { useEffect } from 'react';
 import { useTokenStore } from '../auth';
+
+import { auth } from 'firebase-config';
+import { signOut } from 'firebase/auth';
 
 export const Header: React.FC = () => {
   const router = useRouter();
@@ -154,11 +157,12 @@ export const Header: React.FC = () => {
             hasToken ? (
               <div className="pl-2 md:pl-4">
                 <ProfileMenu
-                  onLogout={() => {
+                  onLogout={async () => {
                     setTokens({
                       accessToken: '',
                       refreshToken: '',
                     });
+                    await signOut(auth);
                     router.push('/login');
                   }}
                 />
