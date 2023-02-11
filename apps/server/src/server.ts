@@ -1,12 +1,22 @@
-import express, { Response, Request } from 'express';
+import dotenv from 'dotenv-flow';
 
-const app = express();
+dotenv.config();
 
-app.get('/api/v1/message', (req: Request, res: Response) => {
-  res.json('Hello from server please workssss');
-});
+import app from './app';
+import connectDB from './db/connect';
+import http from 'http';
 
-const PORT = 4000;
-app.listen(PORT, () => {
-  console.log('Server is running on port: ', PORT);
-});
+const server = http.createServer(app);
+
+const PORT = process.env.PORT || 4000;
+
+(async () => {
+  try {
+    await connectDB(process.env.MONGO_URI as string);
+    server.listen(PORT, () => {
+      console.log('Server is listening on port', PORT);
+    });
+  } catch (error) {
+    console.log(error);
+  }
+})();
