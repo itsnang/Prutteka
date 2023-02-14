@@ -14,6 +14,14 @@ import { useTokenStore } from '../auth/useTokenStore';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 
+import { auth } from 'firebase-config';
+import {
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
+  FacebookAuthProvider,
+} from 'firebase/auth';
+
 const validationSchema = Yup.object({
   email: Yup.string().email('formik.email.invalid').required('formik.required'),
   password: Yup.string()
@@ -27,20 +35,30 @@ interface InitialValuesType {
   password: string;
 }
 
+const googleProvider = new GoogleAuthProvider();
+const facebookProvider = new FacebookAuthProvider();
+
 export const LoginPage: NextPageWithLayout = () => {
   const { t } = useTypeSafeTranslation();
   const { push } = useRouter();
   const hasToken = useTokenStore((s) => !!(s.accessToken && s.refreshToken));
   const setTokens = useTokenStore((state) => state.setTokens);
 
-  const handleSubmit = ({ email, password }: InitialValuesType) => {
-    console.log(email, password);
+  const handleSubmit = async ({ email, password }: InitialValuesType) => {
+    try {
+      console.log(email, password);
 
-    const token = {
-      accessToken: 'ACCESS',
-      refreshToken: 'REFRESH',
-    };
-    setTokens(token);
+      const response = await signInWithEmailAndPassword(auth, email, password);
+      console.log(response);
+
+      const token = {
+        accessToken: 'ACCESS',
+        refreshToken: auth.currentUser?.refreshToken || '',
+      };
+      setTokens(token);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   useEffect(() => {
@@ -65,12 +83,12 @@ export const LoginPage: NextPageWithLayout = () => {
         </Link>
 
         <Formik
-          initialValues={{ email: '', password: '' }}
+          initialValues={{ email: '', password: '', confirmCode: '' }}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
           {() => (
-            <Form className="flex flex-col gap-4 p-4">
+            <Form className="relative flex flex-col gap-4 overflow-x-hidden p-4">
               <InputField
                 name="email"
                 placeholder={t('register-page.email') || ''}
@@ -87,7 +105,7 @@ export const LoginPage: NextPageWithLayout = () => {
               >
                 {t('register-page.forgot-password')}
               </Link>
-              <Button hasShadow type="submit">
+              <Button id="sign-in-button" hasShadow type="submit">
                 {t('register-page.login')}
               </Button>
               <div className="my-3 mx-2 border-b-2 border-gray-200" />
@@ -105,6 +123,11 @@ export const LoginPage: NextPageWithLayout = () => {
                 icon={GoogleIcon}
                 className="gap-6"
                 type="button"
+                onClick={async () => {
+                  try {
+                    await signInWithPopup(auth, googleProvider);
+                  } catch (error) {}
+                }}
               >
                 {t('register-page.continue-with-google')}
               </Button>
@@ -113,6 +136,11 @@ export const LoginPage: NextPageWithLayout = () => {
                 icon={FacebookIcon}
                 className="gap-6"
                 type="button"
+                onClick={async () => {
+                  try {
+                    await signInWithPopup(auth, facebookProvider);
+                  } catch (error) {}
+                }}
               >
                 {t('register-page.continue-with-facebook')}
               </Button>
