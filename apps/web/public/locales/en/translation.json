@@ -53,6 +53,15 @@
     "preah-vihear": "Preah Vihear",
     "tbong-khmum": "Tbong Khmum"
   },
+  "filter-date": {
+    "anytime": "Anytime",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "this-weekend": "This weekend",
+    "this-month": "This month",
+    "next-month": "Next month",
+    "choose-a-date": "Choose a date"
+  },
   "modals": {
     "share-event": "Share this event with your social community",
     "delete-event": "Are you sure you want to deleted this event?"

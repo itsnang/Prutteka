@@ -10,6 +10,7 @@ export interface ButtonProps
   fullWidth?: boolean;
   roundedFull?: boolean;
   isLoading?: boolean;
+  iconClassName?: string;
   icon?: (props: React.ComponentProps<'svg'>) => JSX.Element;
 }
 
@@ -37,12 +38,13 @@ export const Button: React.FC<RequireChildrenOrIcon> = ({
   icon,
   href,
   fullWidth,
+  iconClassName = '',
   roundedFull,
   isLoading = false,
   ...props
 }) => {
   const Icon = icon;
-  const iconClassName = `sm:h-6 h-5 w-5 sm:w-6 ${
+  iconClassName = `sm:h-6 ${iconClassName} h-5 w-5 sm:w-6 ${
     children ? 'mr-[0.625rem]' : ''
   }`;
   const componentClassname = `${
