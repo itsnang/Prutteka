@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 
 import {
   Translation,
@@ -19,18 +19,22 @@ interface Event {
   locations: Location[];
   schedules: Schedule[];
   join_methods: JoinMethod[];
+  created_by: mongoose.Types.ObjectId;
 }
 
-const translationSchema = new mongoose.Schema<Translation>({
-  en: {
-    type: String,
-    default: '',
+const translationSchema = new mongoose.Schema<Translation>(
+  {
+    en: {
+      type: String,
+      default: '',
+    },
+    kh: {
+      type: String,
+      default: '',
+    },
   },
-  kh: {
-    type: String,
-    default: '',
-  },
-});
+  { _id: false }
+);
 
 const eventSchema = new mongoose.Schema<Event>({
   name: {
@@ -178,6 +182,11 @@ const eventSchema = new mongoose.Schema<Event>({
       'Please provide at least one event join method',
     ],
   },
+  created_by: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: [true, 'Please provide authorize token'],
+  },
 });
 
-export default mongoose.model('event', eventSchema);
+export default mongoose.model('Event', eventSchema);
