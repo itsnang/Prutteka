@@ -5,6 +5,7 @@ import serializer from '../serializer/event';
 import ApiFeature from '../utils/api-feature';
 import buildUrl from '../utils/build-url';
 import { BadRequestError } from '../errors';
+import cloudinary from '../libs/cloudinary';
 
 type RequestQuery = {
   [key: string]: string;
@@ -46,6 +47,44 @@ export const getAllEvents: Controller = async (req, res, next) => {
     }).serialize(doc);
 
     res.status(200).json(allEvents);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const createEvent: Controller = async (req, res, next) => {
+  try {
+    //@ts-ignore
+    const image_file = req?.files?.image_src;
+
+    if (!image_file)
+      throw new BadRequestError('Please provide an Image for your event');
+
+    await Event.validate({
+      ...req.body,
+      created_by: '',
+      image_src: 'https://www.example.com/image.jpeg',
+    });
+
+    const result = await cloudinary.uploader.upload(
+      image_file[0].path as string
+    );
+
+    const newEvent = await Event.create({
+      ...req.body,
+      image_src: result.url,
+    });
+
+    res.json({
+      type: 'events',
+      id: newEvent._id,
+      attributes: {
+        ...newEvent.toJSON(),
+        links: {
+          self: `http://localhost:3000/events/${newEvent._id}`,
+        },
+      },
+    });
   } catch (error) {
     next(error);
   }
