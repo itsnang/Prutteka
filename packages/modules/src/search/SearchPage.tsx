@@ -1,7 +1,10 @@
 import { useState, useMemo, useEffect } from 'react';
-import { AutoCompleteInput, EventCard, SearchBar, SeoMeta } from 'ui';
-import { CategorySelection } from '../shared';
-import { MapPinIcon } from '@heroicons/react/24/solid';
+import { AutoCompleteInput, EventCard, SearchBar, SeoMeta, Button } from 'ui';
+import { CategorySelection, FilterModal } from '../shared';
+import {
+  MapPinIcon,
+  AdjustmentsHorizontalIcon,
+} from '@heroicons/react/24/solid';
 import { LOCATIONS } from '../constants';
 import { useTypeSafeTranslation } from 'shared-utils/hooks';
 import { EventType, useLocalInterestedEvent } from '../event';
@@ -21,7 +24,9 @@ export const Search = ({ events }: SearchPageProps) => {
     value: value as string,
     id: idx,
   }));
+
   const [selected, setSelected] = useState(locations[0]);
+  const [filterModal, setFilterModal] = useState(false);
 
   const [interestedEvents, setInterestedEvents] = useLocalInterestedEvent();
   const { query, push } = useRouter();
@@ -44,22 +49,39 @@ export const Search = ({ events }: SearchPageProps) => {
             }}
             value={(query?.search as string) ?? ''}
           />
-          <AutoCompleteInput
-            items={locations}
-            selected={
-              locations.find((v) => v.id === selected.id) || locations[0]
-            }
-            setSelected={(event) => {
-              setSelected(event);
-              push({
-                pathname: '/search',
-                query: { ...query, location: event.value.split('.')[1] },
-              });
-              return event;
-            }}
-            leftIcon={MapPinIcon}
-            leftIconClassName="text-secondary"
-          />
+          <div className="flex">
+            <div className="mx-1 flex-1">
+              <AutoCompleteInput
+                items={locations}
+                selected={
+                  locations.find((v) => v.id === selected.id) || locations[0]
+                }
+                setSelected={(event) => {
+                  setSelected(event);
+                  push({
+                    pathname: '/search',
+                    query: { ...query, location: event.value.split('.')[1] },
+                  });
+                  return event;
+                }}
+                leftIcon={MapPinIcon}
+                leftIconClassName="text-secondary"
+              />
+            </div>
+            <Button
+              className="mt-1 px-4"
+              iconClassName="text-primary"
+              variant="secondary"
+              icon={AdjustmentsHorizontalIcon}
+              onClick={() => setFilterModal(true)}
+            >
+              Filter
+            </Button>
+            <FilterModal
+              show={filterModal}
+              onClose={() => setFilterModal(false)}
+            />
+          </div>
         </div>
         <CategorySelection title={t('search-page.search-results')} />
         <div className="flex flex-col gap-[0.625rem]">
