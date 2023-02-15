@@ -68,7 +68,7 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
         <div className="space-y-4">
           <ItemContainer className="flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-x-4">
             <Button
-              icon={TicketIcon}
+              icon={<TicketIcon />}
               className="h-12 sm:h-14 md:flex-1"
               onClick={() => setAttendModal(true)}
             >
@@ -115,7 +115,7 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
           <ItemContainer className="grid grid-cols-12 gap-2">
             <EventInfoCard
               className="col-span-full sm:col-span-6 md:col-span-4"
-              icon={ClockIcon}
+              icon={<ClockIcon />}
               iconClassName="bg-tertiary-light text-tertiary"
             >
               <Typography
@@ -134,7 +134,7 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
 
             <EventInfoCard
               className="col-span-full sm:col-span-6 md:col-span-3"
-              icon={TimeIcon}
+              icon={<TimeIcon />}
               iconClassName="bg-primary-light"
             >
               <Typography
@@ -152,7 +152,7 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
 
             <EventInfoCard
               className="col-span-full md:col-span-5"
-              icon={MapPinIcon}
+              icon={<MapPinIcon />}
               iconClassName="bg-secondary-light text-secondary"
             >
               <Typography

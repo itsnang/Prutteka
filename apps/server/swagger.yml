@@ -1,0 +1,1325 @@
+openapi: 3.0.3
+info:
+  title: Prutteka API
+  description: An api for our app Prutteka
+  version: 1.0.0
+
+tags:
+  - name: Authentication
+    description: operations relating to authentication
+  - name: User
+    description: operations relating to users
+  - name: Event
+    description: operations relating to events
+
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: (Work in progress)
+
+paths:
+  /register:
+    post:
+      tags: [Authentication]
+      summary: Register an account
+      description: Register with name email and password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                image_src:
+                  type: string
+                  example: 'https://example.com/image/image.png'
+                name:
+                  type: string
+                  example: 'user name'
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  example: 'password123'
+      responses:
+        '201':
+          description: Successfully **Registered**
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        example: user
+                      id:
+                        type: string
+                        example: '5effaa5662679b5af2c58829'
+                      attributes:
+                        type: object
+                        properties:
+                          email:
+                            type: string
+                            format: email
+                          name:
+                            type: string
+                            example: 'user name'
+                          accessToken:
+                            type: string
+                            example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
+                          refreshToken:
+                            type: string
+                            example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
+        '400':
+          description: Invalid username, email or password
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        status:
+                          type: string
+                          example: '400'
+                        title:
+                          type: string
+                          example: 'Invalid Attribute'
+                        detail:
+                          type: string
+                          example: 'Enter a valid email address, username and password combination'
+        '409':
+          description: Email is already registered
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        status:
+                          type: string
+                          example: '409'
+                        title:
+                          type: string
+                          example: 'Email Already Registered'
+                        detail:
+                          type: string
+                          example: 'Enter a different email'
+
+  /login:
+    post:
+      tags: [Authentication]
+      summary: Login to start using our app
+      description: Login with Email and Password to get a **jwt** back
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  example: 'password123'
+      responses:
+        '200':
+          description: Successfully **Logged in**
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      accessToken:
+                        type: string
+                        example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
+                      refreshToken:
+                        type: string
+                        example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
+        '400':
+          $ref: '#/components/responses/mising_field'
+
+  /events:
+    post:
+      tags: [Event]
+      summary: Submit an event
+      description: Submit an event
+      parameters:
+        - $ref: '#/components/parameters/authHeader'
+      requestBody:
+        $ref: '#/components/requestBodies/Event'
+      responses:
+        '401':
+          $ref: '#/components/responses/unauthorized'
+        '400':
+          $ref: '#/components/responses/mising_field'
+        '200':
+          $ref: '#/components/responses/event_submit'
+    get:
+      tags: [Event]
+      summary: Get a list of Events
+      description: Get available Events. User can pass in query such as location, category, page and search.
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+            example: 'event name'
+          description: Keyword to filter based on event title
+        - in: query
+          name: page[offset]
+          schema:
+            type: integer
+            default: 0
+            example: '0'
+          description: The number of page to offset
+        - in: query
+          name: page[limit]
+          schema:
+            type: integer
+            default: 10
+            example: '10'
+          description: The number of page to offset
+        - in: query
+          name: category
+          schema:
+            type: string
+            example: 'technology'
+          description: Similiar to search but more specific
+        - in: query
+          name: location
+          schema:
+            type: string
+            example: 'phnom-penh'
+          description: The location (province) of the event
+      responses:
+        '200':
+          description: Return an array of events based on the provided query
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Events'
+
+  /events/{id}:
+    get:
+      tags: [Event]
+      summary: Get a single event
+      description: Get a single event based on the id
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            example: '63b393ed099bb754a6133494'
+          required: true
+          description: The id of the **event**
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/SingleEventWithIncluded'
+                  - $ref: '#/components/schemas/SingleEvent'
+        '404':
+          $ref: '#/components/responses/not_found'
+
+    delete:
+      tags: [Event]
+      summary: Delete an event
+      description: Delete an event based on the id
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            example: '63b393ed099bb754a6133494'
+          required: true
+          description: the id of the **event**
+      responses:
+        '204':
+          description: Successfully Deleted
+
+    put:
+      tags: [Event]
+      summary: Edit an Event
+      description: |
+        Owner can edit their event's detail
+
+        Require **Authentication**
+      parameters:
+        - $ref: '#components/parameters/authHeader'
+        - in: path
+          name: id
+          schema:
+            type: string
+            example: '63b393ed099bb754a6133494'
+          required: true
+          description: the id of the **event**
+      requestBody:
+        $ref: '#/components/requestBodies/Event'
+      responses:
+        '401':
+          $ref: '#/components/responses/unauthorized'
+        '400':
+          $ref: '#/components/responses/mising_field'
+        '200':
+          $ref: '#/components/responses/event_submit'
+    post:
+      tags: [Event]
+      summary: Submit a nested event to an Event
+      description: |
+        User can register to an event
+
+        Require **Authentication**
+      parameters:
+        - $ref: '#/components/parameters/authHeader'
+        - in: path
+          name: id
+          schema:
+            type: string
+            example: '63b393ed099bb754a6133494'
+          required: true
+          description: the id of the **event**
+      requestBody:
+        $ref: '#/components/requestBodies/Event'
+
+      responses:
+        '401':
+          $ref: '#/components/responses/unauthorized'
+        '400':
+          $ref: '#/components/responses/mising_field'
+        '200':
+          $ref: '#/components/responses/event_submit'
+
+  /events/{id}/interested:
+    post:
+      tags: [Event]
+      summary: Add an event to interested list
+      description: Add a new event to the user **Interested** list
+      parameters:
+        - $ref: '#/components/parameters/authHeader'
+        - in: path
+          name: id
+          schema:
+            type: string
+            example: '63b393ed099bb754a6133494'
+          required: true
+          description: the id of the **event**
+      responses:
+        '200':
+          description: Success
+        '401':
+          $ref: '#/components/responses/unauthorized'
+        '404':
+          $ref: '#/components/responses/not_found'
+    delete:
+      tags: [Event]
+      summary: Remove an event from interested list
+      description: Remove an event from user's *interested list*
+      parameters:
+        - $ref: '#/components/parameters/authHeader'
+        - in: path
+          name: id
+          schema:
+            type: string
+            example: '63b393ed099bb754a6133494'
+          required: true
+          description: the id of the **event**
+      responses:
+        '204':
+          description: Success
+        '401':
+          $ref: '#/components/responses/unauthorized'
+        '404':
+          $ref: '#/components/responses/not_found'
+
+  /events/{id}/register:
+    post:
+      tags: [Event]
+      summary: Register to an Event
+      description: |
+        User can register to an event
+
+        Require **Authentication**
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            example: '63b393ed099bb754a6133494'
+          required: true
+          description: the id of the **event**
+        - $ref: '#/components/parameters/authHeader'
+      responses:
+        '200':
+          description: Success
+        '400':
+          $ref: '#/components/responses/mising_field'
+        '401':
+          $ref: '#/components/responses/unauthorized'
+        '404':
+          $ref: '#/components/responses/not_found'
+
+  /users/notification:
+    get:
+      tags: [User]
+      summary: Get all user notifications
+      description: |
+        Return all the user notifications
+
+        Needs **Authentication**!
+      parameters:
+        - $ref: '#/components/parameters/authHeader'
+      responses:
+        '200':
+          description: Success
+          content:
+            applicaion/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                      example: 'notification'
+                    id:
+                      type: string
+                      example: '507f191e810c19729de860ea'
+                    attributes:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          example: 'notification name'
+                        image_src:
+                          type: string
+                          example: 'https://example.com/image/image.png'
+                    links:
+                      type: object
+                      properties:
+                        self:
+                          type: string
+                          example: 'https://example.com/events/507f191e810c19729de860ea'
+
+  /users/{id}/events:
+    get:
+      tags: [User]
+      summary: Get all user events
+      description: |
+        Return all the events that belong to the user.
+
+        No Needs **Authentication**!
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            example: '5effaa5662679b5af2c58829'
+          required: true
+          description: the id of the **user**
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          example: 'event'
+                        id:
+                          type: string
+                          example: '63b393ed099bb754a6133494'
+                        attributes:
+                          type: object
+                          properties:
+                            image_src:
+                              type: string
+                              example: 'https://example.com/image/image.png'
+                            name:
+                              type: object
+                              properties:
+                                en:
+                                  type: string
+                                  example: 'event name'
+                                kh:
+                                  type: string
+                                  example: 'ឈ្មោះព្រឹត្តិការណ៍'
+                            start_date:
+                              type: string
+                              format: date_time
+                              example: '2023-01-26T00:00:00.000Z'
+                            start_time:
+                              type: string
+                              format: time
+                              example: '07:30'
+                            locations:
+                              type: string
+                              example: 'phnom-penh'
+                        links:
+                          type: object
+                          properties:
+                            self:
+                              type: string
+                              example: 'https://example.com/events/63b393ed099bb754a6133494'
+        '404':
+          $ref: '#/components/responses/not_found'
+
+  /users/{id}/follow:
+    post:
+      tags: [User]
+      summary: Follow user
+      description: User can follow another user
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            example: '5effaa5662679b5af2c58829'
+          required: true
+          description: the id of the **user**
+        - $ref: '#/components/parameters/authHeader'
+      responses:
+        '200':
+          description: Success
+
+  /users/events/interested:
+    get:
+      tags: [User]
+      summary: Get all interested events
+      description: Get all the events that the user has marked as **Interested**
+      parameters:
+        - $ref: '#/components/parameters/authHeader'
+      responses:
+        '401':
+          $ref: '#/components/responses/mising_field'
+        '200':
+          description: Success
+          content:
+            applicaion/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SingleEvent'
+
+components:
+  responses:
+    'event_submit':
+      description: Successfully Submitted
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SingleEvent'
+    'mising_field':
+      description: Missing required field
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              errors:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    status:
+                      type: string
+                      example: '400'
+                    detail:
+                      type: string
+                      example: 'Missing required field'
+    'unauthorized':
+      description: Invalid authorization token
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              errors:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    status:
+                      type: string
+                      example: '401'
+                    detail:
+                      type: string
+                      example: 'No token or invalid authorization token'
+    'not_found':
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              errors:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    status:
+                      type: string
+                      example: '404'
+                    detail:
+                      type: string
+                      example: 'Content not found'
+
+  parameters:
+    authHeader:
+      in: header
+      name: Authorization
+      required: true
+      schema:
+        type: string
+        format: Bearer
+        example: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
+
+  requestBodies:
+    Event:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              image_src:
+                type: string
+                example: 'https://example.com/image/image.png'
+              name:
+                type: object
+                properties:
+                  en:
+                    type: string
+                    example: 'event name'
+                  kh:
+                    type: string
+                    example: 'ឈ្មោះព្រឹត្តិការណ៍'
+              type:
+                type: string
+                example: 'online'
+              category:
+                type: string
+                example: 'music'
+              detail:
+                type: object
+                properties:
+                  en:
+                    type: string
+                    example: 'event detail'
+                  kh:
+                    type: string
+                    example: 'ព័ត៌មានព្រឹត្តិការណ៍'
+              is_nested:
+                type: boolean
+                example: true
+              date_time:
+                type: object
+                properties:
+                  start_date:
+                    type: string
+                    format: date-time
+                    example: '2023-01-26T00:00:00.000Z'
+                  end_date:
+                    type: string
+                    format: date-time
+                    example: '2023-01-30T00:00:00.000Z'
+                  times:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        start_time:
+                          type: string
+                          format: time
+                          example: '07:00'
+                        end_time:
+                          type: string
+                          format: time
+                          example: '19:00'
+              locations:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: object
+                      properties:
+                        en:
+                          type: string
+                          example: 'Phnom Penh'
+                        kh:
+                          type: string
+                          example: 'ភ្នំពេញ'
+                    link:
+                      type: string
+                      example: 'https://goo.gl/maps/5QD7bDn7damhFudx9'
+              schedules:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    date:
+                      type: string
+                      format: date-time
+                      example: null
+                    schedules:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          start_time:
+                            type: string
+                            format: time
+                            example: '07:00'
+                          end_time:
+                            type: string
+                            format: time
+                            example: '19:00'
+                          activity:
+                            type: object
+                            properties:
+                              en:
+                                type: string
+                                example: 'Exhibition'
+                              kh:
+                                type: string
+                                example: 'តាំងពិព័រណ៍'
+              join_methods:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    method:
+                      type: object
+                      properties:
+                        en:
+                          type: string
+                          example: 'Get the ticket'
+                        kh:
+                          type: string
+                          example: 'យកសំបុត្រ'
+                    link:
+                      type: string
+                      example: 'https://example.com'
+
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 1
+        name:
+          type: string
+          example: Example Username
+        email:
+          type: string
+          format: email
+          example: example@gmail.com
+        password:
+          type: string
+          example: secure_password
+    Events:
+      type: object
+      properties:
+        links:
+          type: object
+          properties:
+            self:
+              type: string
+              example: 'https://example.com/events'
+            prev:
+              type: string
+              example: 'https://example.com/events?page[offset]=-1'
+            next:
+              type: string
+              example: 'https://example.com/events?page[offset]=1'
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                example: 'events'
+              id:
+                type: string
+                example: '63b393ed099bb754a6133494'
+              attributes:
+                type: object
+                properties:
+                  image_src:
+                    type: string
+                    example: 'https://example.com/image/image.png'
+                  title:
+                    type: object
+                    properties:
+                      en:
+                        type: string
+                        example: 'event name'
+                      kh:
+                        type: string
+                        example: 'ឈ្មោះព្រឹត្តិការណ៍'
+                  start_date:
+                    type: string
+                    format: date-time
+                    example: '2023-01-26T00:00:00.000Z'
+                  start_time:
+                    type: string
+                    format: date-time
+                    example: '07:00'
+                  locations:
+                    type: string
+                    example: 'phnom-penh'
+              relationships:
+                type: object
+                properties:
+                  creator:
+                    type: object
+                    properties:
+                      links:
+                        type: object
+                        properties:
+                          self:
+                            type: string
+                            example: 'https://example.com/events/63b393ed099bb754a6133494/relationships/creator'
+                          related:
+                            type: string
+                            example: 'https://example.com/events/63b393ed099bb754a6133494/creator'
+                      data:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            example: '5effaa5662679b5af2c58829'
+                          type:
+                            type: string
+                            example: 'user'
+              links:
+                type: object
+                properties:
+                  self:
+                    type: string
+                    example: 'https://example.com/events/63b393ed099bb754a6133494'
+        included:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                example: 'user'
+              id:
+                type: string
+                example: '5effaa5662679b5af2c58829'
+              attributes:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: 'user name'
+                  image_src:
+                    type: string
+                    example: 'https://example.com/profile/image.png'
+              links:
+                type: object
+                properties:
+                  self:
+                    type: string
+                    example: 'https://example.com/users/5effaa5662679b5af2c58829'
+    SingleEvent:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            type:
+              type: string
+              example: 'events'
+            id:
+              type: string
+              example: '63b393ed099bb754a6133494'
+            attributes:
+              type: object
+              properties:
+                image_src:
+                  type: string
+                  example: 'https://example.com/image/image.png'
+                name:
+                  type: object
+                  properties:
+                    en:
+                      type: string
+                      example: 'event name'
+                    kh:
+                      type: string
+                      example: 'ឈ្មោះព្រឹត្តិការណ៍'
+                type:
+                  type: string
+                  example: 'online'
+                category:
+                  type: string
+                  example: 'music'
+                detail:
+                  type: object
+                  properties:
+                    en:
+                      type: string
+                      example: 'event detail'
+                    kh:
+                      type: string
+                      example: 'ព័ត៌មានព្រឹត្តិការណ៍'
+                is_nested:
+                  type: boolean
+                  example: true
+                date_time:
+                  type: object
+                  properties:
+                    start_date:
+                      type: string
+                      format: date-time
+                      example: '2023-01-26T00:00:00.000Z'
+                    end_date:
+                      type: string
+                      format: date-time
+                      example: '2023-01-30T00:00:00.000Z'
+                    times:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          start_time:
+                            type: string
+                            format: time
+                            example: '07:00'
+                          end_time:
+                            type: string
+                            format: time
+                            example: '19:00'
+                locations:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: object
+                        properties:
+                          en:
+                            type: string
+                            example: 'Phnom Penh'
+                          kh:
+                            type: string
+                            example: 'ភ្នំពេញ'
+                      link:
+                        type: string
+                        example: 'https://goo.gl/maps/5QD7bDn7damhFudx9'
+                schedules:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      date:
+                        type: string
+                        format: date-time
+                        example: null
+                      schedules:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            start_time:
+                              type: string
+                              format: time
+                              example: '07:00'
+                            end_time:
+                              type: string
+                              format: time
+                              example: '19:00'
+                            activity:
+                              type: object
+                              properties:
+                                en:
+                                  type: string
+                                  example: 'Exhibition'
+                                kh:
+                                  type: string
+                                  example: 'តាំងពិព័រណ៍'
+                join_methods:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      method:
+                        type: object
+                        properties:
+                          en:
+                            type: string
+                            example: 'Get the ticket'
+                          kh:
+                            type: string
+                            example: 'យកសំបុត្រ'
+                      link:
+                        type: string
+                        example: 'https://example.com'
+            links:
+              type: object
+              properties:
+                self:
+                  type: string
+                  example: 'https://example.com/events/63b393ed099bb754a6133494'
+    SingleEventWithRelationships:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            type:
+              type: string
+              example: 'events'
+            id:
+              type: string
+              example: '63b393ed099bb754a6133494'
+            attributes:
+              type: object
+              properties:
+                image_src:
+                  type: string
+                  example: 'https://example.com/image/image.png'
+                name:
+                  type: object
+                  properties:
+                    en:
+                      type: string
+                      example: 'event name'
+                    kh:
+                      type: string
+                      example: 'ឈ្មោះព្រឹត្តិការណ៍'
+                type:
+                  type: string
+                  example: 'online'
+                category:
+                  type: string
+                  example: 'music'
+                detail:
+                  type: object
+                  properties:
+                    en:
+                      type: string
+                      example: 'event detail'
+                    kh:
+                      type: string
+                      example: 'ព័ត៌មានព្រឹត្តិការណ៍'
+                is_nested:
+                  type: boolean
+                  example: true
+                date_time:
+                  type: object
+                  properties:
+                    start_date:
+                      type: string
+                      format: date-time
+                      example: '2023-01-26T00:00:00.000Z'
+                    end_date:
+                      type: string
+                      format: date-time
+                      example: '2023-01-30T00:00:00.000Z'
+                    times:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          start_time:
+                            type: string
+                            format: time
+                            example: '07:00'
+                          end_time:
+                            type: string
+                            format: time
+                            example: '19:00'
+                locations:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: object
+                        properties:
+                          en:
+                            type: string
+                            example: 'Phnom Penh'
+                          kh:
+                            type: string
+                            example: 'ភ្នំពេញ'
+                      link:
+                        type: string
+                        example: 'https://goo.gl/maps/5QD7bDn7damhFudx9'
+                schedules:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      date:
+                        type: string
+                        format: date-time
+                        example: null
+                      schedules:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            start_time:
+                              type: string
+                              format: time
+                              example: '07:00'
+                            end_time:
+                              type: string
+                              format: time
+                              example: '19:00'
+                            activity:
+                              type: object
+                              properties:
+                                en:
+                                  type: string
+                                  example: 'Exhibition'
+                                kh:
+                                  type: string
+                                  example: 'តាំងពិព័រណ៍'
+                join_methods:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      method:
+                        type: object
+                        properties:
+                          en:
+                            type: string
+                            example: 'Get the ticket'
+                          kh:
+                            type: string
+                            example: 'យកសំបុត្រ'
+                      link:
+                        type: string
+                        example: 'https://example.com'
+            relationships:
+              type: object
+              properties:
+                creator:
+                  type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: '5effaa5662679b5af2c58829'
+                        type:
+                          type: string
+                          example: 'user'
+            links:
+              type: object
+              properties:
+                self:
+                  type: string
+                  example: 'https://example.com/events/63b393ed099bb754a6133494'
+    SingleEventWithIncluded:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            type:
+              type: string
+              example: 'events'
+            id:
+              type: string
+              example: '63b393ed099bb754a6133494'
+            attributes:
+              type: object
+              properties:
+                image_src:
+                  type: string
+                  example: 'https://example.com/image/image.png'
+                name:
+                  type: object
+                  properties:
+                    en:
+                      type: string
+                      example: 'event name'
+                    kh:
+                      type: string
+                      example: 'ឈ្មោះព្រឹត្តិការណ៍'
+                type:
+                  type: string
+                  example: 'online'
+                category:
+                  type: string
+                  example: 'music'
+                detail:
+                  type: object
+                  properties:
+                    en:
+                      type: string
+                      example: 'event detail'
+                    kh:
+                      type: string
+                      example: 'ព័ត៌មានព្រឹត្តិការណ៍'
+                is_nested:
+                  type: boolean
+                  example: true
+                date_time:
+                  type: object
+                  properties:
+                    start_date:
+                      type: string
+                      format: date-time
+                      example: '2023-01-26T00:00:00.000Z'
+                    end_date:
+                      type: string
+                      format: date-time
+                      example: '2023-01-30T00:00:00.000Z'
+                    times:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          start_time:
+                            type: string
+                            format: time
+                            example: '07:00'
+                          end_time:
+                            type: string
+                            format: time
+                            example: '19:00'
+                locations:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: object
+                        properties:
+                          en:
+                            type: string
+                            example: 'Phnom Penh'
+                          kh:
+                            type: string
+                            example: 'ភ្នំពេញ'
+                      link:
+                        type: string
+                        example: 'https://goo.gl/maps/5QD7bDn7damhFudx9'
+                schedules:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      date:
+                        type: string
+                        format: date-time
+                        example: null
+                      schedules:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            start_time:
+                              type: string
+                              format: time
+                              example: '07:00'
+                            end_time:
+                              type: string
+                              format: time
+                              example: '19:00'
+                            activity:
+                              type: object
+                              properties:
+                                en:
+                                  type: string
+                                  example: 'Exhibition'
+                                kh:
+                                  type: string
+                                  example: 'តាំងពិព័រណ៍'
+                join_methods:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      method:
+                        type: object
+                        properties:
+                          en:
+                            type: string
+                            example: 'Get the ticket'
+                          kh:
+                            type: string
+                            example: 'យកសំបុត្រ'
+                      link:
+                        type: string
+                        example: 'https://example.com'
+            relationships:
+              type: object
+              properties:
+                creator:
+                  type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: '5effaa5662679b5af2c58829'
+                        type:
+                          type: string
+                          example: 'user'
+            links:
+              type: object
+              properties:
+                self:
+                  type: string
+                  example: 'https://example.com/events/63b393ed099bb754a6133494'
+        included:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                example: 'user'
+              id:
+                type: string
+                example: '5effaa5662679b5af2c58829'
+              attributes:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: 'user name'
+                  image_src:
+                    type: string
+                    example: 'https://example.com/profile/image.png'

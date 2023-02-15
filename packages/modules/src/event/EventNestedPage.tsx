@@ -49,7 +49,7 @@ export const EventNestedPage: NextPage<EventNestedPageProps> = ({ event }) => {
               as="link"
               href={`/event/${query?.eventId}`}
               variant="secondary"
-              icon={ArrowLongLeftIcon}
+              icon={<ArrowLongLeftIcon />}
             />
             <div className="flex">
               <div className="my-3 mx-2 hidden w-20 border-b-2 border-gray-200 md:block" />

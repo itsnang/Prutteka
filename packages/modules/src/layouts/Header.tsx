@@ -139,7 +139,7 @@ export const Header: React.FC = () => {
                 as="link"
                 href="/user/interested"
                 variant="secondary"
-                icon={StarIcon}
+                icon={<StarIcon />}
                 className="text-tertiary"
               />
             )}
