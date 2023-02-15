@@ -111,7 +111,7 @@ export const UserEventCard: React.FC<UserEventCardProps> = ({
                   {isNested ? (
                     <Button
                       variant="secondary"
-                      icon={RectangleStackIcon}
+                      icon={<RectangleStackIcon />}
                     ></Button>
                   ) : null}
 
@@ -119,14 +119,14 @@ export const UserEventCard: React.FC<UserEventCardProps> = ({
                     variant="secondary"
                     as="link"
                     href="/"
-                    icon={PencilIcon}
+                    icon={<PencilIcon />}
                   ></Button>
 
                   <Button
                     onClick={() => setShow(true)}
                     className="text-primary bg-primary-light border-primary"
                     variant="secondary"
-                    icon={TrashIcon}
+                    icon={<TrashIcon />}
                   ></Button>
                 </div>
               </div>

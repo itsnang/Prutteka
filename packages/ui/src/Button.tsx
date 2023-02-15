@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import Link, { LinkProps } from 'next/link';
 
 export interface ButtonProps
@@ -11,7 +11,7 @@ export interface ButtonProps
   roundedFull?: boolean;
   isLoading?: boolean;
   iconClassName?: string;
-  icon?: (props: React.ComponentProps<'svg'>) => JSX.Element;
+  icon?: ReactElement;
 }
 
 //User must pass in at least one children or one icon or both but cannot missing both
@@ -43,7 +43,6 @@ export const Button: React.FC<RequireChildrenOrIcon> = ({
   isLoading = false,
   ...props
 }) => {
-  const Icon = icon;
   iconClassName = `sm:h-6 ${iconClassName} h-5 w-5 sm:w-6 ${
     children ? 'mr-[0.625rem]' : ''
   }`;
@@ -60,7 +59,7 @@ export const Button: React.FC<RequireChildrenOrIcon> = ({
   if (as === 'link') {
     return (
       <Link href={href ?? ''} className={componentClassname}>
-        {Icon ? <Icon className={iconClassName} /> : null}
+        {icon ? React.cloneElement(icon, { className: iconClassName }) : null}
         {typeof children === 'string' ? children : null}
       </Link>
     );
@@ -90,7 +89,8 @@ export const Button: React.FC<RequireChildrenOrIcon> = ({
           ></path>
         </svg>
       ) : null}
-      {Icon ? <Icon className={iconClassName} /> : null}
+      {icon ? React.cloneElement(icon, { className: iconClassName }) : null}
+      {/* {Icon ? <Icon className={iconClassName} /> : null} */}
       {children}
     </button>
   );

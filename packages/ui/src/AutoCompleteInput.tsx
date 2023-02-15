@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, ReactElement, useState } from 'react';
 import { Combobox, Transition } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
 
@@ -10,7 +10,7 @@ export interface ItemType {
 
 interface AutoCompleteInputProps {
   items: ItemType[];
-  leftIcon?: (props: React.ComponentProps<'svg'>) => JSX.Element;
+  leftIcon?: ReactElement;
   leftIconClassName?: string;
   selected: ItemType;
   setSelected: (item: ItemType) => ItemType;
@@ -35,22 +35,20 @@ export const AutoCompleteInput: React.FC<AutoCompleteInputProps> = ({
             .includes(query.toLowerCase().replace(/\s+/g, ''))
         );
 
-  const LeftIcon = leftIcon;
-
   return (
     <Combobox value={selected} onChange={setSelected}>
       <div className="relative mt-1">
         <div className="relative flex w-full cursor-default items-center overflow-hidden rounded-2xl border bg-white text-left">
-          {LeftIcon ? (
-            <LeftIcon
-              className={`ml-3 h-5 w-5 sm:h-6 sm:w-6 ${
-                leftIconClassName ? leftIconClassName : ''
-              }`}
-            />
-          ) : null}
+          {leftIcon
+            ? React.cloneElement(leftIcon, {
+                className: `ml-3 h-5 w-5 sm:h-6 sm:w-6 ${
+                  leftIconClassName ? leftIconClassName : ''
+                }`,
+              })
+            : null}
           <Combobox.Input
             className={`w-full border-none py-3 pr-10 text-gray-900 outline-none sm:py-4 ${
-              LeftIcon ? 'pl-2' : 'pl-4'
+              leftIcon ? 'pl-2' : 'pl-4'
             }`}
             displayValue={(item: ItemType) => item?.name}
             onChange={(event) => setQuery(event.target.value)}

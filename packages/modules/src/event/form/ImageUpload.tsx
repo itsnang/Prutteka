@@ -88,7 +88,7 @@ export const ImageUpload = ({ t, lang }: { t: any; lang: 'en' | 'kh' }) => {
           <div className="flex flex-col items-center">
             <Button
               type="button"
-              icon={PhotoIcon}
+              icon={<PhotoIcon />}
               variant="secondary"
               className="pointer-events-none px-4 text-sm sm:mt-8 sm:px-6"
             >

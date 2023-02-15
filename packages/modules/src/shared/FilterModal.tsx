@@ -44,7 +44,7 @@ export const FilterModal: React.FC<FilterModalProps> = ({ show, onClose }) => {
               setSelected(event);
               return event;
             }}
-            leftIcon={CalendarDaysIcon}
+            leftIcon={<CalendarDaysIcon />}
             leftIconClassName="text-primary"
           />
         </div>

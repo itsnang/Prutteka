@@ -64,7 +64,7 @@ export const Search = ({ events }: SearchPageProps) => {
                   });
                   return event;
                 }}
-                leftIcon={MapPinIcon}
+                leftIcon={<MapPinIcon />}
                 leftIconClassName="text-secondary"
               />
             </div>
@@ -72,7 +72,7 @@ export const Search = ({ events }: SearchPageProps) => {
               className="mt-1 px-4"
               iconClassName="text-primary"
               variant="secondary"
-              icon={AdjustmentsHorizontalIcon}
+              icon={<AdjustmentsHorizontalIcon />}
               onClick={() => setFilterModal(true)}
             >
               Filter
