@@ -8,8 +8,11 @@ interface Message {
 interface User {
   username: string;
   email: string;
-  password: string;
+  img_src?: string;
+  followers?: Types.ObjectId[];
+  following?: Types.ObjectId[];
   notifications?: Message[];
+  events?: Types.ObjectId[];
 }
 
 const notificationsSchema = new Schema<Message, Model<Message>>({
@@ -19,7 +22,7 @@ const notificationsSchema = new Schema<Message, Model<Message>>({
   },
 });
 
-const userSchema = new Schema<User, Model<User>>({
+const userSchema = new Schema<User>({
   username: {
     type: String,
     required: [true, 'Username must be provided'],
@@ -36,7 +39,18 @@ const userSchema = new Schema<User, Model<User>>({
       'Please provide a correct email',
     ],
   },
+  img_src: {
+    type: String,
+  },
+  followers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  following: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   notifications: [notificationsSchema],
+  events: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Event',
+    },
+  ],
 });
 
-export default mongoose.model('user', userSchema);
+export default mongoose.model('User', userSchema);
