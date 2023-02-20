@@ -15,3 +15,4 @@ export * from './EventInfoCard';
 export * from './ItemContainer';
 export * from './RichEditor';
 export * from './RichEditorDisplay';
+export * from './DatePicker';

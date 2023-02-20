@@ -5,16 +5,17 @@ import { Button, EventCard, SearchBar, Typography } from 'ui';
 import { EventHeader } from './EventHeader';
 import { DeleteModal } from '../shared';
 import { ArrowLongLeftIcon } from '@heroicons/react/24/outline';
-import { EVENTDATA } from '../constants';
+// import { EVENTDATA } from '../constants';
 import { useDebounce, useTypeSafeTranslation } from 'shared-utils/hooks';
-import { EventType, useLocalInterestedEvent } from './useLocalInterestedEvent';
+import { useLocalInterestedEvent } from './useLocalInterestedEvent';
 import { NextPage } from 'next';
 
+import { APIResponseEvent } from 'custom-types';
 interface EventNestedPageProps {
-  event: EventType;
+  data: APIResponseEvent;
 }
 
-export const EventNestedPage: NextPage<EventNestedPageProps> = ({ event }) => {
+export const EventNestedPage: NextPage<EventNestedPageProps> = ({ data }) => {
   const [deleteModal, setDeleteModal] = useState(false);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const { query, push } = useRouter();
@@ -24,23 +25,25 @@ export const EventNestedPage: NextPage<EventNestedPageProps> = ({ event }) => {
 
   const [searchQuery, setSearchQuery] = useState('');
   const debounceSearch = useDebounce(searchQuery, 500);
-  const queryEvents =
-    debounceSearch === ''
-      ? EVENTDATA
-      : EVENTDATA.filter((event) =>
-          event.title
-            .toLowerCase()
-            .replace(/\s+/g, '')
-            .includes(debounceSearch.toLowerCase().replace(/\s+/g, ''))
-        );
+  // const queryEvents =
+  //   debounceSearch === ''
+  //     ? EVENTDATA
+  //     : EVENTDATA.filter((event) =>
+  //         event.title
+  //           .toLowerCase()
+  //           .replace(/\s+/g, '')
+  //           .includes(debounceSearch.toLowerCase().replace(/\s+/g, ''))
+  //       );
+
+  const event = data.data;
 
   return (
     <div className="space-y-8">
       <EventHeader
         isHappening
-        img={event.img}
-        title={event.title}
-        date={event.date}
+        img={event.attributes.image_src}
+        title={event.attributes.name.en}
+        date={event.attributes.date_time.start_date}
       />
       <div className="space-y-4">
         <div className="flex w-full flex-col space-y-4 md:flex-row md:space-y-0">
@@ -49,7 +52,7 @@ export const EventNestedPage: NextPage<EventNestedPageProps> = ({ event }) => {
               as="link"
               href={`/event/${query?.eventId}`}
               variant="secondary"
-              icon={ArrowLongLeftIcon}
+              icon={<ArrowLongLeftIcon />}
             />
             <div className="flex">
               <div className="my-3 mx-2 hidden w-20 border-b-2 border-gray-200 md:block" />
@@ -78,7 +81,7 @@ export const EventNestedPage: NextPage<EventNestedPageProps> = ({ event }) => {
         <Button hasShadow className="w-full">
           {t('event-detail-page.add-event')}
         </Button>
-        {queryEvents.map((event) => {
+        {/* {queryEvents.map((event) => {
           const isActive = !!interestedEvents.find(
             (_event) => _event.id === event.id
           );
@@ -103,7 +106,7 @@ export const EventNestedPage: NextPage<EventNestedPageProps> = ({ event }) => {
               }}
             />
           );
-        })}
+        })} */}
         <DeleteModal
           show={deleteModal}
           onClose={() => setDeleteModal(false)}

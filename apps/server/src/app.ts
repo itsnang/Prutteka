@@ -11,12 +11,14 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+import userRoutes from './routes/user.routes';
 import eventRoutes from './routes/event.routes';
 
 app.get('/api/v1/message', (req: Request, res: Response) => {
   res.json('Hello from server please workssss');
 });
 
+app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/events', eventRoutes);
 
 app.use(NotFoundMiddleware);

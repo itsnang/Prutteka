@@ -1,27 +1,19 @@
 import { useEffect, useState } from 'react';
 import { useLocalStorage } from 'shared-utils/hooks';
-
-export interface EventType {
-  date: string;
-  time: string;
-  title: string;
-  location: string;
-  img: string;
-  id: number;
-}
+import { Event } from 'custom-types';
 
 export function useLocalInterestedEvent() {
-  const [localEvents, setLocalEvents] = useLocalStorage<EventType[]>(
+  const [localEvents, setLocalEvents] = useLocalStorage<Event[]>(
     'interested-events',
     []
   );
-  const [interestedEvents, setInterestedEvents] = useState<EventType[]>([]);
+  const [interestedEvents, setInterestedEvents] = useState<Event[]>([]);
 
   useEffect(() => {
     setInterestedEvents(localEvents);
   }, [localEvents]);
 
-  const handleSetInterestedEvents = (event: EventType) => {
+  const handleSetInterestedEvents = (event: Event) => {
     const isActive = !!interestedEvents.find(
       (_event) => _event.id === event.id
     );

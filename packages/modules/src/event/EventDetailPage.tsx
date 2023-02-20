@@ -30,17 +30,21 @@ import { EVENTDATA } from '../constants';
 import { EventHeader } from './EventHeader';
 import { useRouter } from 'next/router';
 import { useTypeSafeTranslation } from 'shared-utils/hooks';
-import { EventType, useLocalInterestedEvent } from './useLocalInterestedEvent';
+import { useLocalInterestedEvent } from './useLocalInterestedEvent';
 import { translateTime } from '../helpers/translateTime';
-import { getDuration } from '../helpers/getDuration';
+import { getDuration, translateDate } from '../helpers';
+import { getEventDays } from './form/helper';
+
+import { APIResponseEvent } from 'custom-types';
+import Link from 'next/link';
 
 interface EventDetailPageProps {
-  event: EventType;
+  data: APIResponseEvent;
   host: string;
 }
 
 export const EventDetailPage: NextPage<EventDetailPageProps> = ({
-  event,
+  data,
   host,
 }) => {
   const [attendModal, setAttendModal] = useState(false);
@@ -49,26 +53,35 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
   const { t, i18n } = useTypeSafeTranslation();
   const [interestedEvents, setInterestedEvents] = useLocalInterestedEvent();
 
-  const isActive = !!interestedEvents.find((_event) => _event.id === event.id);
+  // const isActive = !!interestedEvents.find((_event) => _event.id === event.id);
 
+  const event = data.data;
+
+  const dateRange = getEventDays(
+    event.attributes.date_time.start_date,
+    event.attributes.date_time.end_date
+  );
   return (
     <>
       <SeoMeta
-        title={`${event.title} - Prutteka`}
+        title={`${translateTextObject(
+          event.attributes.name,
+          i18n.language
+        )} - Prutteka`}
         description=""
-        img={event.img}
+        img={event.attributes.image_src}
       />
       <div className="space-y-8">
         <EventHeader
           isHappening
-          img={event.img}
-          title={event.title}
-          date={event.date}
+          img={event.attributes.image_src}
+          title={event.attributes.name.en}
+          date={event.attributes.date_time.start_date}
         />
         <div className="space-y-4">
           <ItemContainer className="flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-x-4">
             <Button
-              icon={TicketIcon}
+              icon={<TicketIcon />}
               className="h-12 sm:h-14 md:flex-1"
               onClick={() => setAttendModal(true)}
             >
@@ -79,7 +92,7 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
                 isDefault={false}
                 className="flex flex-1 justify-between rounded-2xl px-4"
                 hasText
-                isActive={isActive}
+                // isActive={isActive}
                 onClick={() => {
                   setInterestedEvents(event);
                 }}
@@ -98,24 +111,26 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
             />
             <ShareModal
               shareData={{
-                title: event.title,
-                text: event.title,
+                title: event.attributes.name.en,
+                text: event.attributes.name.en,
                 url: `https://${host}/event/${event.id}`,
               }}
               show={shareModal}
               onClose={() => setShareModal(false)}
-              img={event.img}
+              img={event.attributes.image_src}
             />
           </ItemContainer>
           <div className="custom-scrollbar flex space-x-4 overflow-x-auto">
-            <ButtonCategory>Fri, Nov 11</ButtonCategory>
-            <ButtonCategory>Fri, Nov 11</ButtonCategory>
-            <ButtonCategory>Fri, Nov 11</ButtonCategory>
+            {dateRange.map((date) => (
+              <ButtonCategory>
+                {translateDate(date, i18n.language)}
+              </ButtonCategory>
+            ))}
           </div>
           <ItemContainer className="grid grid-cols-12 gap-2">
             <EventInfoCard
               className="col-span-full sm:col-span-6 md:col-span-4"
-              icon={ClockIcon}
+              icon={<ClockIcon />}
               iconClassName="bg-tertiary-light text-tertiary"
             >
               <Typography
@@ -134,7 +149,7 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
 
             <EventInfoCard
               className="col-span-full sm:col-span-6 md:col-span-3"
-              icon={TimeIcon}
+              icon={<TimeIcon />}
               iconClassName="bg-primary-light"
             >
               <Typography
@@ -152,7 +167,7 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
 
             <EventInfoCard
               className="col-span-full md:col-span-5"
-              icon={MapPinIcon}
+              icon={<MapPinIcon />}
               iconClassName="bg-secondary-light text-secondary"
             >
               <Typography
@@ -181,27 +196,18 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
               </Typography>
             </div>
             <div className="mt-4 space-y-4">
-              <div className="space-y-2">
-                <Typography>
-                  Venue1: (Building A-F) Diamond Island Convention and
-                  Exhibition Center
-                </Typography>
-                <button className="flex rounded-lg border border-gray-200 py-2 px-4 font-normal">
-                  {t('event-detail-page.view-on-map')}
-                  <ArrowTopRightOnSquareIcon className="ml-2 h-5 w-5" />
-                </button>
-              </div>
-
-              <div className="space-y-2">
-                <Typography>
-                  Venue1: (Building A-F) Diamond Island Convention and
-                  Exhibition Center
-                </Typography>
-                <button className="flex rounded-lg border border-gray-200 p-2 px-4 font-normal">
-                  {t('event-detail-page.view-on-map')}
-                  <ArrowTopRightOnSquareIcon className="ml-2 h-5 w-5" />
-                </button>
-              </div>
+              {event.attributes.locations.map((location) => (
+                <div className="space-y-2">
+                  <Typography>{location.name}</Typography>
+                  <Link
+                    href={location.link}
+                    className="inline-flex rounded-lg border border-gray-200 py-2 px-4 font-normal"
+                  >
+                    {t('event-detail-page.view-on-map')}
+                    <ArrowTopRightOnSquareIcon className="ml-2 h-5 w-5" />
+                  </Link>
+                </div>
+              ))}
             </div>
           </ItemContainer>
 
@@ -220,12 +226,29 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
               </Typography>
             </div>
             <div className="mt-6 flex w-full flex-col items-stretch space-y-2">
-              <div className="relative flex-1 rounded-xl border border-gray-200 px-4 py-4 text-gray-700">
-                <div className="absolute -top-4 left-6 rounded-lg border border-gray-200 bg-white px-2 py-1 text-sm">
-                  8:30 AM - 6:00 PM
-                </div>
-                <div>Exhibition</div>
-              </div>
+              {event.attributes.schedules.map((schedule) =>
+                schedule.schedules.map((schedule) => (
+                  <div className="relative flex-1 rounded-xl border border-gray-200 px-4 py-4 text-gray-700">
+                    <div className="absolute -top-4 left-6 rounded-lg border border-gray-200 bg-white px-2 py-1 text-sm">
+                      {translateTime(
+                        new Date(schedule.start_time).toTimeString(),
+                        i18n.language
+                      )}{' '}
+                      -{' '}
+                      {translateTime(
+                        new Date(schedule.end_time).toTimeString(),
+                        i18n.language
+                      )}
+                    </div>
+                    <div>
+                      {translateTextObject(
+                        schedule.activity as any,
+                        i18n.language
+                      )}
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </ItemContainer>
 
@@ -279,20 +302,7 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
               </Typography>
             </div>
             <div className="mt-4 overflow-auto break-words text-gray-700">
-              {`
-            "Cambodia Tech Expo 2022" is the first, largest technology expo in Cambodia, held as an official sideline event of the ASEAN Summit 2022, and the first annual program hosted in the Kingdom of Cambodia by the Ministry of Industry, Science, Technology and Innovation (MISTI).
-            The event is organized under the theme "Addressing Challenges Together through Tech Talents" which will take place at Diamond Island Convention and Exhibition Center, Koh Pich (Venue 1) and The Factory Phnom Penh (Venue 2) from 11th to 13th November 2022.
-            Get ready to join the largest technology expo in Cambodia! Join us for free!
-            Date: November 11-13, 2022
-            Location: Diamond Island Convention and Exhibition Center and The Factory Phnom Penh
-            Register now via https://ticket.cambodiatechex.gov.kh/
-            For more information, follow us on our social media channels:
-            Website: https://cambodiatechex.gov.kh/
-            Facebook Page: https://web.facebook.com/cambodiatechexpo
-            Instagram: https://www.instagram.com/cambodiatechexpo
-            Telegram Channel: https://t.me/cambodiatechexpo
-            YouTube Channel: https://www.youtube.com/channel/UCS1bGN882amxiIDxginl4ZA
-            `}
+              {translateTextObject(event.attributes.detail, i18n.language)}
             </div>
           </ItemContainer>
         </div>
@@ -320,9 +330,9 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
         >
           {(Slide) =>
             EVENTDATA.map((event) => {
-              const isActive = !!interestedEvents.find(
-                (_event) => _event.id === event.id
-              );
+              // const isActive = !!interestedEvents.find(
+              //   (_event) => _event.id === event.id
+              // );
               return (
                 <Slide key={event.id} className="pb-8">
                   <EventCard
@@ -332,10 +342,10 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
                     title={event.title}
                     location={event.location}
                     href={`/event/${event.id}`}
-                    isActive={isActive}
-                    onInterested={() => {
-                      setInterestedEvents(event);
-                    }}
+                    // isActive={isActive}
+                    // onInterested={() => {
+                    //   setInterestedEvents(event);
+                    // }}
                   />
                 </Slide>
               );
@@ -345,6 +355,17 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
       </div>
     </>
   );
+};
+
+const translateTextObject = (
+  textObj: { en: string; kh: string },
+  lang: 'en' | 'kh'
+) => {
+  const isEN = lang === 'en';
+  if (textObj?.[lang].trim() === '') {
+    return textObj?.[isEN ? 'kh' : 'en'];
+  }
+  return textObj?.[lang];
 };
 
 const TimeIcon = () => {

@@ -16,6 +16,7 @@ interface Event {
   detail: Translation;
   is_nested: boolean;
   date_time: DateTime;
+  location: String;
   locations: Location[];
   schedules: Schedule[];
   join_methods: JoinMethod[];
@@ -135,6 +136,37 @@ const eventSchema = new mongoose.Schema<Event>({
         },
       },
     ],
+  },
+  location: {
+    type: String,
+    enum: [
+      'phnom-penh',
+      'banteay-meanchey',
+      'battambang',
+      'kampong-cham',
+      'kampong-chhnang',
+      'kampong-speu',
+      'kampo',
+      'kandal',
+      'kep',
+      'koh-kong',
+      'kratie',
+      'mondulkiri',
+      'oddor-meanchey',
+      'pailin',
+      'prev-veng',
+      'pursat',
+      'rattanakiri',
+      'siem-reap',
+      'sihanouk-ville',
+      'stung-treng',
+      'svay-rieng',
+      'takeo',
+      'kampong-thom',
+      'preah-vihear',
+      'tbong-khmum',
+    ],
+    required: [true, 'Please provide event location'],
   },
   locations: [
     {

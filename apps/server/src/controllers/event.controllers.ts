@@ -4,7 +4,7 @@ import Event from '../models/event';
 import serializer from '../serializer/event';
 import ApiFeature from '../utils/api-feature';
 import buildUrl from '../utils/build-url';
-import { BadRequestError } from '../errors';
+import { BadRequestError, NotFoundError } from '../errors';
 import cloudinary from '../libs/cloudinary';
 
 type RequestQuery = {
@@ -21,9 +21,9 @@ export const getAllEvents: Controller = async (req, res, next) => {
     const queryObj = { ...req.query } as RequestQuery;
 
     const events = new ApiFeature(Event, queryObj);
-    events.filter().sort().limitFields().paginate().include();
+    events.filter().sort().limitFields().paginate();
 
-    const doc = await events.execute();
+    const doc = await events.model.populate('created_by', '');
 
     const offset = queryObj.page?.offset ? +queryObj.page?.offset : 0;
     const limit = queryObj.page?.limit ? +queryObj.page?.limit : 10;
@@ -54,7 +54,7 @@ export const getAllEvents: Controller = async (req, res, next) => {
 
 export const createEvent: Controller = async (req, res, next) => {
   try {
-    //@ts-ignore
+    // @ts-ignore
     const image_file = req?.files?.image_src;
 
     if (!image_file)
@@ -72,7 +72,7 @@ export const createEvent: Controller = async (req, res, next) => {
 
     const newEvent = await Event.create({
       ...req.body,
-      image_src: result.url,
+      image_src: result,
     });
 
     res.json({
@@ -85,6 +85,30 @@ export const createEvent: Controller = async (req, res, next) => {
         },
       },
     });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getEvent: Controller = async (req, res, next) => {
+  try {
+    const eventId = req.params.eventId;
+
+    const doc = await Event.findById(eventId).populate('created_by');
+
+    if (!doc) {
+      throw new NotFoundError('Event is not found');
+    }
+
+    const currentUrl = new URL(
+      req.protocol + '://' + req.get('host') + req.originalUrl
+    );
+
+    const event = serializer({
+      self: currentUrl,
+    }).serialize(doc);
+
+    res.status(200).json(event);
   } catch (error) {
     next(error);
   }

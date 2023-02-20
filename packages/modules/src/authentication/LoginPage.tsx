@@ -120,7 +120,7 @@ export const LoginPage: NextPageWithLayout = () => {
               <Typography className="text-center">or</Typography>
               <Button
                 variant="secondary"
-                icon={GoogleIcon}
+                icon={<GoogleIcon />}
                 className="gap-6"
                 type="button"
                 onClick={async () => {
@@ -133,7 +133,7 @@ export const LoginPage: NextPageWithLayout = () => {
               </Button>
               <Button
                 variant="secondary"
-                icon={FacebookIcon}
+                icon={<FacebookIcon />}
                 className="gap-6"
                 type="button"
                 onClick={async () => {
