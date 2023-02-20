@@ -8,7 +8,7 @@
   ],
   "scripts": {
     "build": "turbo run build",
-    "dev": "turbo run dev --parallel",
+    "dev": "dotenv -- turbo run dev --parallel",
     "lint": "turbo run lint",
     "test": "turbo run test",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
@@ -16,6 +16,7 @@
     "storybook": "turbo run storybook"
   },
   "devDependencies": {
+    "dotenv-cli": "^7.0.0",
     "eslint-config-custom": "*",
     "husky": "^8.0.0",
     "lint-staged": "^13.1.0",

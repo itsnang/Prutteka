@@ -10,6 +10,13 @@ import {
 import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
 import { useTypeSafeTranslation } from 'shared-utils/hooks';
+import { auth } from 'firebase-config';
+import {
+  createUserWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
+  FacebookAuthProvider,
+} from 'firebase/auth';
 
 const validationSchema = Yup.object({
   name: Yup.string().required('formik.required'),
@@ -26,10 +33,25 @@ interface InitialValuesType {
   password: string;
 }
 
+const googleProvider = new GoogleAuthProvider();
+const facebookProvider = new FacebookAuthProvider();
+
 export const RegisterPage: NextPageWithLayout = () => {
   const { t } = useTypeSafeTranslation();
-  const handleSubmit = ({ email, password, name }: InitialValuesType) => {
-    console.log(name, email, password);
+
+  const handleSubmit = async ({ email, password, name }: InitialValuesType) => {
+    try {
+      console.log(name, email, password);
+
+      const response = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      console.log(response);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -80,17 +102,27 @@ export const RegisterPage: NextPageWithLayout = () => {
               <Typography className="text-center">or</Typography>
               <Button
                 variant="secondary"
-                icon={GoogleIcon}
+                icon={<GoogleIcon />}
                 className="gap-6"
                 type="button"
+                onClick={async () => {
+                  try {
+                    await signInWithPopup(auth, googleProvider);
+                  } catch (error) {}
+                }}
               >
                 {t('register-page.continue-with-google')}
               </Button>
               <Button
                 variant="secondary"
-                icon={FacebookIcon}
+                icon={<FacebookIcon />}
                 className="gap-6"
                 type="button"
+                onClick={async () => {
+                  try {
+                    await signInWithPopup(auth, facebookProvider);
+                  } catch (error) {}
+                }}
               >
                 {t('register-page.continue-with-facebook')}
               </Button>

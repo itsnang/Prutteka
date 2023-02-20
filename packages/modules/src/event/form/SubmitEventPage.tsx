@@ -182,7 +182,7 @@ const InnerForm: React.FC<{
       return setEventState((prev) => ({ ...prev, isInvalidInput: true }));
     else
       setEventState({
-        eventDays: getEventDays(startDate, eventLength),
+        eventDays: getEventDays(startDate, endDate),
         isInvalidInput: false,
       });
   }, [values.datetime.startDate, values.datetime.endDate]);

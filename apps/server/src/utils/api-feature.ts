@@ -2,7 +2,7 @@ import { Mode } from 'fs';
 import { Model, Document, FilterQuery } from 'mongoose';
 
 interface IQuery {
-  [key: string]: string;
+  [key: string]: any;
 }
 
 class QueryBuilder<
@@ -23,21 +23,32 @@ class QueryBuilder<
     const excludedFields = ['page', 'sort', 'limit', 'fields'];
     excludedFields.forEach((el) => delete queryObj[el]);
 
-    let queryStr = JSON.stringify(queryObj.filter ?? {});
-    queryStr = queryStr.replace(
-      /\b(gte|gt|lte|lt|regex)\b/g,
-      (match) => `$${match}`
-    );
+    const allowSearchField = ['name.en', 'name.kh'];
+    if (this.queryObj.search) {
+      const searchRegex = new RegExp(this.queryObj.search, 'i');
+
+      const searchFields = allowSearchField.map((field) => ({
+        [field]: searchRegex,
+      }));
+
+      queryObj.search = searchFields;
+    }
+
+    let filterQuery = JSON.stringify(queryObj.filter ?? {});
+    if (this.queryObj.filter) {
+      filterQuery = filterQuery.replace(
+        /\b(gte|gt|lte|lt)\b/g,
+        (match) => `$${match}`
+      );
+    }
+
+    const query = {
+      $or: queryObj.search ?? [],
+      ...queryObj.filter,
+    };
 
     if ('find' in this.model) {
-      const queryResult = this.model.find(
-        JSON.parse(queryStr, (key, value) => {
-          if (key === 'regex') {
-            return new RegExp(value, 'i');
-          }
-          return value;
-        }) as FilterQuery<T>
-      );
+      const queryResult = this.model.find(query);
       this.model = queryResult as M;
     }
 
@@ -86,17 +97,6 @@ class QueryBuilder<
 
     if ('skip' in this.model && 'limit' in this.model) {
       this.model = this.model.skip(skip).limit(limit) as M;
-    }
-
-    return this;
-  }
-
-  public include(): this {
-    if (this.queryObj.include) {
-      const includes = this.queryObj.include.split(',').join(' ');
-      if ('populate' in this.model) {
-        this.model = this.model.populate(includes);
-      }
     }
 
     return this;

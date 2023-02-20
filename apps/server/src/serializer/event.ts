@@ -9,25 +9,26 @@ const serializer = (topLevelLinks: {
     keyForAttribute: 'underscore_case',
     topLevelLinks: {
       self: topLevelLinks.self,
-      prev: topLevelLinks.prev ?? null,
-      next: topLevelLinks.next ?? null,
+      prev: topLevelLinks.prev,
+      next: topLevelLinks.next,
     } as {},
     attributes: [
       'name',
       'type',
       'category',
       'image_src',
+      'detail',
       'date_time',
+      'location',
       'locations',
+      'schedules',
+      'join_methods',
       'created_by',
     ],
-    typeForAttribute: () => {
-      return 'user';
-    },
     created_by: {
       ref: 'id',
       included: true,
-      attributes: ['username', 'email', 'events', 'notifications'],
+      attributes: ['username'],
     },
   });
 };

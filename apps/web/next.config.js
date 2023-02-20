@@ -8,5 +8,8 @@ module.exports = {
   experimental: {
     transpilePackages: ['ui', 'modules'],
   },
+  images: {
+    domains: ['res.cloudinary.com'],
+  },
   i18n,
 };

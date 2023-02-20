@@ -21,7 +21,19 @@
     "test": {},
     "dev": {
       "cache": false,
-      "env": ["MONGO_URI", "PORT"]
+      "env": [
+        "MONGO_URI",
+        "PORT",
+        "NEXT_PUBLIC_API_KEY",
+        "NEXT_PUBLIC_AUTH_DOMAIN",
+        "NEXT_PUBLIC_PROJECT_ID",
+        "NEXT_PUBLIC_STORAGE_BUCKET",
+        "NEXT_PUBLIC_MESSAGING_SENDER_ID",
+        "NEXT_PUBLIC_APP_ID",
+        "CLOUDINARY_CLOUD_NAME",
+        "CLOUDINARY_API_KEY",
+        "CLOUDINARY_API_SECRET"
+      ]
     },
     "storybook": {
       "cache": false

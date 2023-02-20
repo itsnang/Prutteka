@@ -76,7 +76,7 @@ export const EventCard: React.FC<EventCardProps> = ({
     <div className="shadow-complete flex h-full min-h-[22rem] w-full flex-col rounded-2xl bg-white p-1">
       <Link
         href={href}
-        className="relative aspect-[2/1] overflow-hidden rounded-xl"
+        className="relative aspect-[2/1] w-full overflow-hidden rounded-xl"
       >
         <Image src={img} alt="title" fill className="object-cover" />
       </Link>
