@@ -32,6 +32,7 @@
     "react-image-crop": "^10.0.9",
     "zustand": "^4.2.0",
     "firebase-config": "*",
-    "firebase": "^9.17.1"
+    "firebase": "^9.17.1",
+    "custom-types": "*"
   }
 }

@@ -1,12 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
 
-import { CustomAPIError } from '../errors/custom-api';
-
-import { StatusCodes } from 'http-status-codes';
+import { StatusCodes, ReasonPhrases } from 'http-status-codes';
 
 interface IError {
+  name: string;
   message: string;
   statusCode: number;
+  errors: object;
+  code: number;
 }
 
 export default function ErrorHandlerMiddleware(
@@ -15,17 +16,51 @@ export default function ErrorHandlerMiddleware(
   res: Response,
   next: NextFunction
 ) {
-  if (err instanceof CustomAPIError) {
-    return res
-      .status(err.statusCode)
-      .json({ status: 'failed', message: err.message });
+  // debug
+  console.log('Error: ', err);
+
+  const customError = {
+    // set default
+    statusCode: err.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
+    errors: err.errors || [
+      {
+        status: StatusCodes.INTERNAL_SERVER_ERROR,
+        name: ReasonPhrases.INTERNAL_SERVER_ERROR.split(' ').join(''),
+        message: 'Something went wrong, try again later',
+        path: 'internal_server',
+      },
+    ],
+  };
+
+  if ((err.name && err.code === 11000) || err.name === 'ValidationError') {
+    customError.errors = Object.values(err.errors).map((err) =>
+      Object.assign(
+        {
+          status: StatusCodes.BAD_REQUEST,
+          name: err.name,
+          message: err.message,
+        },
+        err
+      )
+    );
+    customError.statusCode = StatusCodes.BAD_REQUEST;
   }
 
-  // debug
-  console.log('Error: ', err.message);
+  if (err.name === 'CastError') {
+    customError.errors = Object.values(err.errors).map((err) =>
+      Object.assign(
+        {
+          status: StatusCodes.NOT_FOUND,
+          name: err.name,
+          message: err.message,
+        },
+        err
+      )
+    );
+    customError.statusCode = StatusCodes.NOT_FOUND;
+  }
 
-  return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-    status: 'failed',
-    message: 'Something went wrong, try again later',
+  return res.status(customError.statusCode).json({
+    errors: customError.errors,
   });
 }

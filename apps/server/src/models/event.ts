@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 
 import {
   Translation,
@@ -16,21 +16,26 @@ interface Event {
   detail: Translation;
   is_nested: boolean;
   date_time: DateTime;
+  location: String;
   locations: Location[];
   schedules: Schedule[];
   join_methods: JoinMethod[];
+  created_by: mongoose.Types.ObjectId;
 }
 
-const translationSchema = new mongoose.Schema<Translation>({
-  en: {
-    type: String,
-    default: '',
+const translationSchema = new mongoose.Schema<Translation>(
+  {
+    en: {
+      type: String,
+      default: '',
+    },
+    kh: {
+      type: String,
+      default: '',
+    },
   },
-  kh: {
-    type: String,
-    default: '',
-  },
-});
+  { _id: false }
+);
 
 const eventSchema = new mongoose.Schema<Event>({
   name: {
@@ -132,6 +137,37 @@ const eventSchema = new mongoose.Schema<Event>({
       },
     ],
   },
+  location: {
+    type: String,
+    enum: [
+      'phnom-penh',
+      'banteay-meanchey',
+      'battambang',
+      'kampong-cham',
+      'kampong-chhnang',
+      'kampong-speu',
+      'kampo',
+      'kandal',
+      'kep',
+      'koh-kong',
+      'kratie',
+      'mondulkiri',
+      'oddor-meanchey',
+      'pailin',
+      'prev-veng',
+      'pursat',
+      'rattanakiri',
+      'siem-reap',
+      'sihanouk-ville',
+      'stung-treng',
+      'svay-rieng',
+      'takeo',
+      'kampong-thom',
+      'preah-vihear',
+      'tbong-khmum',
+    ],
+    required: [true, 'Please provide event location'],
+  },
   locations: [
     {
       name: {
@@ -178,6 +214,11 @@ const eventSchema = new mongoose.Schema<Event>({
       'Please provide at least one event join method',
     ],
   },
+  created_by: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: [true, 'Please provide authorize token'],
+  },
 });
 
-export default mongoose.model('event', eventSchema);
+export default mongoose.model('Event', eventSchema);
