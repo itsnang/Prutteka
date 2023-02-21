@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState } from 'react';
 import { AutoCompleteInput, EventCard, SearchBar, SeoMeta, Button } from 'ui';
 import { CategorySelection, FilterModal } from '../shared';
 import {
@@ -7,16 +7,18 @@ import {
 } from '@heroicons/react/24/solid';
 import { LOCATIONS } from '../constants';
 import { useTypeSafeTranslation } from 'shared-utils/hooks';
-import { EventType, useLocalInterestedEvent } from '../event';
+import { useLocalInterestedEvent } from '../event';
 import { useRouter } from 'next/router';
 import { translateDate } from '../helpers';
 import { translateTime } from '../helpers/translateTime';
 
+import { APIResponseEvents } from 'custom-types';
+
 interface SearchPageProps {
-  events: EventType[];
+  data: APIResponseEvents;
 }
 
-export const Search = ({ events }: SearchPageProps) => {
+export const Search = ({ data }: SearchPageProps) => {
   const { t, i18n } = useTypeSafeTranslation();
 
   const locations = LOCATIONS.map((value, idx) => ({
@@ -30,6 +32,8 @@ export const Search = ({ events }: SearchPageProps) => {
 
   const [interestedEvents, setInterestedEvents] = useLocalInterestedEvent();
   const { query, push } = useRouter();
+
+  const events = data.data;
 
   return (
     <>
@@ -90,19 +94,27 @@ export const Search = ({ events }: SearchPageProps) => {
               (_event) => _event.id === event.id
             );
 
-            const date = translateDate(event.date, i18n.language);
-            const time = translateTime(event.time, i18n.language);
-            const location = t(('locations.' + event.location) as any);
+            const date = translateDate(
+              event.attributes.date_time.start_date,
+              i18n.language
+            );
+            const time = translateTime(
+              event.attributes.date_time.times[0].start_time,
+              i18n.language
+            );
+            const location = t(
+              ('locations.' + event.attributes.location) as any
+            );
 
             return (
               <EventCard
                 isLandscape
                 key={event.id}
-                img={event.img}
+                img={event.attributes.image_src}
                 date={date}
                 time={time}
                 location={location}
-                title={event.title}
+                title={event.attributes.name.en}
                 href={`/event/${event.id}`}
                 isActive={isActive}
                 onInterested={() => {

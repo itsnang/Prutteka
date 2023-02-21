@@ -17,7 +17,7 @@ export default function ErrorHandlerMiddleware(
   next: NextFunction
 ) {
   // debug
-  // console.log('Error: ', err);
+  console.log('Error: ', err);
 
   const customError = {
     // set default

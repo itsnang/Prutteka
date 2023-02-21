@@ -46,11 +46,16 @@ const getDayAfter = (startDate: string | Date, dayToAdd: number) => {
  *  "Wed, 28 Dec"
  * ]
  * @param startDate
- * @param eventLength
+ * @param endDate
  * @returns
  */
-export const getEventDays = (startDate: string | Date, eventLength: number) => {
+export const getEventDays = (
+  startDate: string | Date,
+  endDate: string | Date
+) => {
   const eventDays = [];
+
+  const eventLength = getEventLength(startDate, endDate);
 
   for (let day = 0; day < eventLength; day++) {
     eventDays.push(getDayAfter(startDate, day));

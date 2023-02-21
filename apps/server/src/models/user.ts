@@ -6,6 +6,7 @@ interface Message {
 }
 
 interface User {
+  uid: string;
   username: string;
   email: string;
   img_src?: string;
@@ -13,6 +14,7 @@ interface User {
   following?: Types.ObjectId[];
   notifications?: Message[];
   events?: Types.ObjectId[];
+  interested_events?: Types.ObjectId[];
 }
 
 const notificationsSchema = new Schema<Message, Model<Message>>({
@@ -23,6 +25,10 @@ const notificationsSchema = new Schema<Message, Model<Message>>({
 });
 
 const userSchema = new Schema<User>({
+  uid: {
+    type: String,
+    required: [true, 'Please provide uid'],
+  },
   username: {
     type: String,
     required: [true, 'Username must be provided'],
@@ -41,11 +47,18 @@ const userSchema = new Schema<User>({
   },
   img_src: {
     type: String,
+    default: '',
   },
   followers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   following: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   notifications: [notificationsSchema],
   events: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Event',
+    },
+  ],
+  interested_events: [
     {
       type: Schema.Types.ObjectId,
       ref: 'Event',

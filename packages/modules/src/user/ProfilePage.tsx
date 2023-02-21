@@ -54,9 +54,9 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
         <div className="flex justify-center">
           <div className="my-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {EVENTDATA.map((event) => {
-              const isActive = !!interestedEvents.find(
-                (_event) => _event.id === event.id
-              );
+              // const isActive = !!interestedEvents.find(
+              //   (_event) => _event.id === event.id
+              // );
               const date = translateDate(event.date, i18n.language);
               const time = translateTime(event.time, i18n.language);
               const location = t(('locations.' + event.location) as any);
@@ -70,10 +70,10 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                   location={location}
                   title={event.title}
                   href={`/event/${event.id}`}
-                  isActive={isActive}
-                  onInterested={() => {
-                    setInterestedEvents(event);
-                  }}
+                  // isActive={isActive}
+                  // onInterested={() => {
+                  //   setInterestedEvents(event);
+                  // }}
                 />
               );
             })}
