@@ -13,13 +13,15 @@ app.use(express.urlencoded({ extended: true }));
 
 import userRoutes from './routes/user.routes';
 import eventRoutes from './routes/event.routes';
+import authRoutes from './routes/auth.routes';
 
 app.get('/api/v1/message', (req: Request, res: Response) => {
-  res.json('Hello from server please workssss');
+  res.json('Hello from server');
 });
 
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/events', eventRoutes);
+app.use('/api/v1', authRoutes);
 
 app.use(NotFoundMiddleware);
 app.use(ErrorHandlerMiddleware);

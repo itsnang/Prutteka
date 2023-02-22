@@ -2,18 +2,17 @@ import create from 'zustand';
 import { combine, persist } from 'zustand/middleware';
 
 export const useTokenStore = create(
-  persist(
-    combine(
-      {
-        accessToken: '',
-        refreshToken: '',
+  combine(
+    {
+      refreshToken: '',
+    },
+    (set) => ({
+      setToken: (refreshToken: string) => {
+        set({ refreshToken });
       },
-      (set) => ({
-        setTokens: (x: { accessToken: string; refreshToken: string }) => {
-          set(x);
-        },
-      })
-    ),
-    { name: 'token' }
+      clearToken: () => {
+        set({ refreshToken: '' });
+      },
+    })
   )
 );

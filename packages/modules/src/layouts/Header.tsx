@@ -12,20 +12,15 @@ import { Sidebar } from './Sidebar';
 import { useTokenStore } from '../auth';
 
 import { auth } from 'firebase-config';
-import { signOut } from 'firebase/auth';
+import { signOut, onAuthStateChanged } from 'firebase/auth';
 
 export const Header: React.FC = () => {
   const router = useRouter();
   const { t } = useTypeSafeTranslation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const hasToken = useTokenStore((s) => !!(s.accessToken && s.refreshToken));
-  const setTokens = useTokenStore((state) => state.setTokens);
-
-  const [isHydrated, setIsHydrated] = useState(false);
-
-  useEffect(() => {
-    setIsHydrated(true);
-  }, []);
+  const hasToken = useTokenStore((s) => !!s.refreshToken);
+  const setToken = useTokenStore((state) => state.setToken);
+  const clearToken = useTokenStore((state) => state.clearToken);
 
   useEffect(() => {
     const handleRouteChange = () => {
@@ -38,6 +33,21 @@ export const Header: React.FC = () => {
       router.events.off('routeChangeStart', handleRouteChange);
     };
   }, [router.events]);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const token = await user.getIdToken();
+        setToken(token);
+      } else {
+        clearToken();
+      }
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, [setToken, clearToken]);
 
   const changeLocale = (newLocale: string) => {
     const { pathname, asPath, query } = router;
@@ -111,19 +121,18 @@ export const Header: React.FC = () => {
         </div>
         <div className="flex divide-gray-300 md:space-x-4 md:divide-x">
           <div className="flex gap-2">
-            {isHydrated &&
-              (hasToken && !isEventSubmitPage ? (
-                <div className="hidden sm:block">
-                  <Button
-                    as="link"
-                    href="/event/submit"
-                    className="px-6"
-                    hasShadow
-                  >
-                    {t('common.submit-event')}
-                  </Button>
-                </div>
-              ) : null)}
+            {hasToken && !isEventSubmitPage ? (
+              <div className="hidden sm:block">
+                <Button
+                  as="link"
+                  href="/event/submit"
+                  className="px-6"
+                  hasShadow
+                >
+                  {t('common.submit-event')}
+                </Button>
+              </div>
+            ) : null}
 
             <div className="xs:block hidden">
               <Button
@@ -153,26 +162,21 @@ export const Header: React.FC = () => {
             </Button>
           </div>
 
-          {isHydrated ? (
-            hasToken ? (
-              <div className="pl-2 md:pl-4">
-                <ProfileMenu
-                  onLogout={async () => {
-                    setTokens({
-                      accessToken: '',
-                      refreshToken: '',
-                    });
-                    await signOut(auth);
-                    router.push('/login');
-                  }}
-                />
-              </div>
-            ) : (
-              <div className="hidden gap-2 pl-2 md:flex md:pl-4">
-                {authButton}
-              </div>
-            )
-          ) : null}
+          {hasToken ? (
+            <div className="pl-2 md:pl-4">
+              <ProfileMenu
+                onLogout={async () => {
+                  clearToken();
+                  await signOut(auth);
+                  router.push('/login');
+                }}
+              />
+            </div>
+          ) : (
+            <div className="hidden gap-2 pl-2 md:flex md:pl-4">
+              {authButton}
+            </div>
+          )}
         </div>
       </div>
 
@@ -191,7 +195,7 @@ export const Header: React.FC = () => {
         </div>
         <div className="my-3 mx-2 w-full border-b-2 border-gray-100 md:hidden" />
         <div className="flex w-full flex-col space-y-2 md:hidden">
-          {isHydrated && hasToken ? (
+          {hasToken ? (
             <Button
               as="link"
               href="/event/submit"

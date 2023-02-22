@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { Button, InputField, SeoMeta, Typography } from 'ui';
+import { Button, InputField, Message, SeoMeta, Typography } from 'ui';
 import {
   AuthLayout,
   FacebookIcon,
@@ -16,7 +16,13 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
   FacebookAuthProvider,
+  onAuthStateChanged,
 } from 'firebase/auth';
+import { useEffect, useState } from 'react';
+import { AuthError } from '@firebase/auth';
+import { useTokenStore } from '../auth/useTokenStore';
+import { useRouter } from 'next/router';
+import { useVerifyLoggedIn } from '../auth/useVerifyLoggedIn';
 
 const validationSchema = Yup.object({
   name: Yup.string().required('formik.required'),
@@ -37,22 +43,78 @@ const googleProvider = new GoogleAuthProvider();
 const facebookProvider = new FacebookAuthProvider();
 
 export const RegisterPage: NextPageWithLayout = () => {
+  const { push } = useRouter();
   const { t } = useTypeSafeTranslation();
+  const setToken = useTokenStore((state) => state.setToken);
+  const hasToken = useVerifyLoggedIn();
+  const [isSubmiting, setIsSubmiting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleSubmit = async ({ email, password, name }: InitialValuesType) => {
     try {
-      console.log(name, email, password);
-
-      const response = await createUserWithEmailAndPassword(
+      setIsSubmiting(true);
+      const createdUser = await createUserWithEmailAndPassword(
         auth,
         email,
         password
       );
-      console.log(response);
-    } catch (err) {
-      console.log(err);
+
+      const token = await createdUser.user.getIdToken();
+
+      const API_URL = process.env.NEXT_PUBLIC_API_ENDPOINT || '';
+      const response = await fetch(`${API_URL}/api/v1/signup`, {
+        method: 'POST',
+        body: JSON.stringify({
+          username: name,
+          email: email,
+        }),
+        headers: {
+          authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      if ((error as AuthError).code === 'auth/email-already-in-use') {
+        return setErrorMessage('Email is already existed');
+      }
+      setErrorMessage('Something went wrong');
+    } finally {
+      setIsSubmiting(false);
     }
   };
+
+  const handleGoogleSignIn = async () => {
+    try {
+      setIsSubmiting(true);
+      const response = await signInWithPopup(auth, googleProvider);
+      const token = await response.user.getIdToken();
+      setToken(token);
+    } catch (error) {
+    } finally {
+      setIsSubmiting(false);
+    }
+  };
+
+  const handleFacebookSignIn = async () => {
+    try {
+      setIsSubmiting(true);
+      const response = await signInWithPopup(auth, facebookProvider);
+      const token = await response.user.getIdToken();
+      setToken(token);
+    } catch (error) {
+    } finally {
+      setIsSubmiting(false);
+    }
+  };
+
+  useEffect(() => {
+    if (hasToken) {
+      push('/');
+    }
+  }, [push, hasToken]);
 
   return (
     <>
@@ -91,8 +153,10 @@ export const RegisterPage: NextPageWithLayout = () => {
                 placeholder={t('register-page.password') || ''}
                 type="password"
               />
-
-              <Button hasShadow type="submit">
+              {!!errorMessage ? (
+                <Message variant="error">{errorMessage}</Message>
+              ) : null}
+              <Button hasShadow type="submit" isLoading={isSubmiting}>
                 {t('register-page.create-new-account')}
               </Button>
               <div className="my-3 mx-2 border-b-2 border-gray-200" />
@@ -103,26 +167,18 @@ export const RegisterPage: NextPageWithLayout = () => {
               <Button
                 variant="secondary"
                 icon={<GoogleIcon />}
-                className="gap-6"
                 type="button"
-                onClick={async () => {
-                  try {
-                    await signInWithPopup(auth, googleProvider);
-                  } catch (error) {}
-                }}
+                onClick={handleGoogleSignIn}
+                isLoading={isSubmiting}
               >
                 {t('register-page.continue-with-google')}
               </Button>
               <Button
                 variant="secondary"
                 icon={<FacebookIcon />}
-                className="gap-6"
                 type="button"
-                onClick={async () => {
-                  try {
-                    await signInWithPopup(auth, facebookProvider);
-                  } catch (error) {}
-                }}
+                onClick={handleFacebookSignIn}
+                isLoading={isSubmiting}
               >
                 {t('register-page.continue-with-facebook')}
               </Button>

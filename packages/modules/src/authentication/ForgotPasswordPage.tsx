@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { Button, InputField, Typography, SeoMeta } from 'ui';
+import { Button, InputField, Typography, SeoMeta, Message } from 'ui';
 import { AuthLayout, NextPageWithLayout } from './AuthLayout';
 import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
@@ -23,12 +23,12 @@ interface InitialValuesType {
 export const ForgotPasswordPage: NextPageWithLayout = () => {
   const { t } = useTypeSafeTranslation();
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [message, setMessage] = useState('');
+  const [isSubmiting, setIsSubmiting] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
 
   const handleSubmit = async ({ email }: InitialValuesType) => {
     try {
-      setIsLoading(true);
+      setIsSubmiting(true);
       await sendPasswordResetEmail(auth, email);
       setMessage(
         'A reset password email has been sent to the email address.\nPlease check your inbox (or spam folder).'
@@ -39,7 +39,7 @@ export const ForgotPasswordPage: NextPageWithLayout = () => {
         'A reset password email has been sent to the email address.\nPlease check your inbox (or spam folder).'
       );
     } finally {
-      setIsLoading(false);
+      setIsSubmiting(false);
     }
   };
 
@@ -71,10 +71,8 @@ export const ForgotPasswordPage: NextPageWithLayout = () => {
 
               <Typography>{t('register-page.forgot-password')}</Typography>
 
-              {message.length > 0 ? (
-                <div className="bg-primary-light text-primary rounded-2xl p-4">
-                  {message}
-                </div>
+              {!!message ? (
+                <Message variant="success">{message}</Message>
               ) : null}
 
               <InputField
@@ -83,13 +81,7 @@ export const ForgotPasswordPage: NextPageWithLayout = () => {
                 type="email"
               />
 
-              <Button
-                hasShadow
-                type="submit"
-                disabled={isLoading}
-                className="transition-colors duration-200 disabled:bg-opacity-80"
-                isLoading={isLoading}
-              >
+              <Button hasShadow type="submit" isLoading={isSubmiting}>
                 {t('register-page.submit')}
               </Button>
             </Form>
