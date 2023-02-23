@@ -3,7 +3,7 @@ import { HomePage } from 'modules';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { GetStaticProps } from 'next';
 
-const API_URL = process.env.API_ENDPOINT || '';
+const API_URL = process.env.NEXT_PUBLIC_API_ENDPOINT || '';
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const response = await fetch(`${API_URL}/api/v1/events`);
@@ -15,6 +15,7 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
       data: data,
       ...(await serverSideTranslations(locale ?? 'en')),
     },
+    revalidate: 10,
   };
 };
 

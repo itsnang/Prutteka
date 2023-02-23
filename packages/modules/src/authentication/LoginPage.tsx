@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { Button, InputField, SeoMeta, Typography } from 'ui';
+import { Button, InputField, Message, SeoMeta, Typography } from 'ui';
 import {
   AuthLayout,
   FacebookIcon,
@@ -11,7 +11,7 @@ import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
 import { useTypeSafeTranslation } from 'shared-utils/hooks';
 import { useTokenStore } from '../auth/useTokenStore';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
 import { auth } from 'firebase-config';
@@ -20,7 +20,10 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
   FacebookAuthProvider,
+  onAuthStateChanged,
 } from 'firebase/auth';
+import { AuthError } from '@firebase/auth';
+import { useVerifyLoggedIn } from '../auth/useVerifyLoggedIn';
 
 const validationSchema = Yup.object({
   email: Yup.string().email('formik.email.invalid').required('formik.required'),
@@ -41,23 +44,78 @@ const facebookProvider = new FacebookAuthProvider();
 export const LoginPage: NextPageWithLayout = () => {
   const { t } = useTypeSafeTranslation();
   const { push } = useRouter();
-  const hasToken = useTokenStore((s) => !!(s.accessToken && s.refreshToken));
-  const setTokens = useTokenStore((state) => state.setTokens);
+  const setToken = useTokenStore((state) => state.setToken);
+  const hasToken = useVerifyLoggedIn();
+  const [isSubmiting, setIsSubmiting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const handleSubmit = async ({ email, password }: InitialValuesType) => {
+  const handleEmailPasswordLogin = async ({
+    email,
+    password,
+  }: InitialValuesType) => {
     try {
-      console.log(email, password);
+      setIsSubmiting(true);
+      const firebaseReponse = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const token = await firebaseReponse.user.getIdToken();
+      setToken(token);
 
-      const response = await signInWithEmailAndPassword(auth, email, password);
-      console.log(response);
+      const API_URL = process.env.NEXT_PUBLIC_API_ENDPOINT || '';
+      const response = await fetch(`${API_URL}/api/v1/login`, {
+        method: 'POST',
+        body: JSON.stringify({
+          username: name,
+          email: email,
+        }),
+        headers: {
+          authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
 
-      const token = {
-        accessToken: 'ACCESS',
-        refreshToken: auth.currentUser?.refreshToken || '',
-      };
-      setTokens(token);
-    } catch (err) {
-      console.log(err);
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+      const errorCode = (error as AuthError).code;
+
+      if (
+        errorCode === 'auth/user-not-found' ||
+        errorCode === 'auth/wrong-password'
+      ) {
+        return setErrorMessage('Email or password is incorrect');
+      }
+      setErrorMessage('Something went wrong');
+    } finally {
+      setIsSubmiting(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    try {
+      setIsSubmiting(true);
+      const response = await signInWithPopup(auth, googleProvider);
+      const token = await response.user.getIdToken();
+      setToken(token);
+    } catch (error) {
+    } finally {
+      setIsSubmiting(false);
+    }
+  };
+
+  const handleFacebookSignIn = async () => {
+    try {
+      setIsSubmiting(true);
+      const response = await signInWithPopup(auth, facebookProvider);
+      const token = await response.user.getIdToken();
+      setToken(token);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsSubmiting(false);
     }
   };
 
@@ -85,7 +143,7 @@ export const LoginPage: NextPageWithLayout = () => {
         <Formik
           initialValues={{ email: '', password: '', confirmCode: '' }}
           validationSchema={validationSchema}
-          onSubmit={handleSubmit}
+          onSubmit={handleEmailPasswordLogin}
         >
           {() => (
             <Form className="relative flex flex-col gap-4 overflow-x-hidden p-4">
@@ -105,7 +163,15 @@ export const LoginPage: NextPageWithLayout = () => {
               >
                 {t('register-page.forgot-password')}
               </Link>
-              <Button id="sign-in-button" hasShadow type="submit">
+              {!!errorMessage ? (
+                <Message variant="error">{errorMessage}</Message>
+              ) : null}
+              <Button
+                id="sign-in-button"
+                hasShadow
+                type="submit"
+                isLoading={isSubmiting}
+              >
                 {t('register-page.login')}
               </Button>
               <div className="my-3 mx-2 border-b-2 border-gray-200" />
@@ -114,6 +180,7 @@ export const LoginPage: NextPageWithLayout = () => {
                 as="link"
                 href="/register"
                 type="button"
+                isLoading={isSubmiting}
               >
                 {t('register-page.create-new-account')}
               </Button>
@@ -121,26 +188,18 @@ export const LoginPage: NextPageWithLayout = () => {
               <Button
                 variant="secondary"
                 icon={<GoogleIcon />}
-                className="gap-6"
                 type="button"
-                onClick={async () => {
-                  try {
-                    await signInWithPopup(auth, googleProvider);
-                  } catch (error) {}
-                }}
+                onClick={handleGoogleSignIn}
+                isLoading={isSubmiting}
               >
                 {t('register-page.continue-with-google')}
               </Button>
               <Button
                 variant="secondary"
                 icon={<FacebookIcon />}
-                className="gap-6"
                 type="button"
-                onClick={async () => {
-                  try {
-                    await signInWithPopup(auth, facebookProvider);
-                  } catch (error) {}
-                }}
+                onClick={handleFacebookSignIn}
+                isLoading={isSubmiting}
               >
                 {t('register-page.continue-with-facebook')}
               </Button>
