@@ -34,6 +34,7 @@
     "firebase-config": "*",
     "firebase": "^9.17.1",
     "custom-types": "*",
-    "swr": "^2.0.3"
+    "swr": "^2.0.3",
+    "axios": "^1.3.4"
   }
 }

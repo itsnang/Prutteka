@@ -19,6 +19,7 @@
     "tailwind-config": "*",
     "yup": "^0.32.11",
     "@headlessui/react": "^1.7.4",
-    "next-i18next": "^13.0.2"
+    "next-i18next": "^13.0.2",
+    "axios": "^1.3.4"
   }
 }
