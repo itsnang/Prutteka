@@ -6,7 +6,7 @@ interface IError {
   name: string;
   message: string;
   statusCode: number;
-  errors: object;
+  errors: any[];
   code: number;
 }
 
@@ -47,17 +47,28 @@ export default function ErrorHandlerMiddleware(
   }
 
   if (err.name === 'CastError') {
+    customError.errors = [
+      {
+        status: StatusCodes.BAD_REQUEST,
+        name: err.name,
+        message: err.message,
+      },
+    ];
+
+    customError.statusCode = StatusCodes.NOT_FOUND;
+  }
+
+  if (err.name === 'NotFoundError') {
     customError.errors = Object.values(err.errors).map((err) =>
       Object.assign(
         {
           status: StatusCodes.NOT_FOUND,
-          name: err.name,
-          message: err.message,
+          name: err.name || '',
+          message: err.message || '',
         },
         err
       )
     );
-    customError.statusCode = StatusCodes.NOT_FOUND;
   }
 
   return res.status(customError.statusCode).json({
