@@ -11,6 +11,7 @@ interface EventHeader {
   title: string;
   date: string;
   source?: LinkProps['href'];
+  organizer?: string;
 }
 
 export const EventHeader: React.FC<EventHeader> = ({
@@ -19,6 +20,7 @@ export const EventHeader: React.FC<EventHeader> = ({
   isHappening = false,
   date,
   source = '',
+  organizer = '',
 }) => {
   const { t, i18n } = useTypeSafeTranslation();
 
@@ -55,8 +57,8 @@ export const EventHeader: React.FC<EventHeader> = ({
         <Typography variant="span" size="base" color="dark" weight="medium">
           From
         </Typography>
-        <Link href={source} className="text-secondary ml-2 underline">
-          Source
+        <Link href={source} className="text-secondary ml-2">
+          {organizer}
         </Link>
       </div>
     </div>

@@ -17,3 +17,4 @@ export * from './RichEditor';
 export * from './RichEditorDisplay';
 export * from './DatePicker';
 export * from './Message';
+export * from './EventCardSkeleton';

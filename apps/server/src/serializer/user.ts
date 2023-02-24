@@ -9,8 +9,11 @@ const serializer = (topLevelLinks: { self: string | URL }) => {
     attributes: [
       'username',
       'email',
-      'notifications',
       'image_src',
+      'notifications',
+      'following',
+      'followers',
+      'events',
       'interested_events',
     ],
   });

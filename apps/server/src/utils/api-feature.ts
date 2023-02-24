@@ -11,7 +11,6 @@ class QueryBuilder<
 > {
   public model: M;
   private queryObj: IQuery;
-  options: any;
 
   constructor(model: M, queryObj: IQuery) {
     this.model = model;
@@ -23,7 +22,10 @@ class QueryBuilder<
     const excludedFields = ['page', 'sort', 'limit', 'fields'];
     excludedFields.forEach((el) => delete queryObj[el]);
 
+    let query = {} as any;
+
     const allowSearchField = ['name.en', 'name.kh'];
+
     if (this.queryObj.search) {
       const searchRegex = new RegExp(this.queryObj.search, 'i');
 
@@ -31,21 +33,35 @@ class QueryBuilder<
         [field]: searchRegex,
       }));
 
-      queryObj.search = searchFields;
+      query.$or = searchFields;
     }
 
-    let filterQuery = JSON.stringify(queryObj.filter ?? {});
     if (this.queryObj.filter) {
+      let filterQuery = JSON.stringify(queryObj.filter ?? {});
       filterQuery = filterQuery.replace(
         /\b(gte|gt|lte|lt)\b/g,
         (match) => `$${match}`
       );
-    }
+      query = Object.assign(query, JSON.parse(filterQuery));
 
-    const query = {
-      $or: queryObj.search ?? [],
-      ...queryObj.filter,
-    };
+      if (this.queryObj.filter.category) {
+        const categoryQuery = this.queryObj.filter.category;
+
+        switch (categoryQuery) {
+          case 'all':
+            delete query.category;
+            break;
+          case 'recently-added':
+            delete query.category;
+            if ('sort' in this.model) {
+              this.model = this.model.sort('-created_at');
+            }
+            break;
+          default:
+            query.category = this.queryObj.filter.category;
+        }
+      }
+    }
 
     if ('find' in this.model) {
       const queryResult = this.model.find(query);
@@ -63,7 +79,7 @@ class QueryBuilder<
       }
     } else {
       if ('sort' in this.model) {
-        this.model = this.model.sort('-createdAt');
+        this.model = this.model.sort('-created_at');
       }
     }
 

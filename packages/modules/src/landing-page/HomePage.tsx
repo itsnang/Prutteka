@@ -1,6 +1,7 @@
+import { useState } from 'react';
 import { NextPage } from 'next';
 import { CategorySelection } from '../shared';
-import { Banner, Carousel, EventCard, SeoMeta } from 'ui';
+import { Banner, Carousel, EventCard, EventCardSkeleton, SeoMeta } from 'ui';
 
 // mock data
 // will be removed
@@ -16,16 +17,24 @@ import { translateDate } from '../helpers';
 import { translateTime } from '../helpers/translateTime';
 
 import { APIResponseEvents } from 'custom-types';
-
+import useSWR from 'swr';
+import { fetcher } from '../helpers';
 interface HomePageProps {
   data: APIResponseEvents;
 }
 
+const API_URL = process.env.NEXT_PUBLIC_API_ENDPOINT;
+
 export const HomePage: NextPage<HomePageProps> = ({ data }) => {
   const { t, i18n } = useTypeSafeTranslation();
   const [interestedEvents, setInterestedEvents] = useLocalInterestedEvent();
+  const [category, setCategory] = useState<string | null>(null);
+  const { data: queryData, isLoading } = useSWR<APIResponseEvents>(
+    `${API_URL}/api/v1/events?filter[category]=${category}`,
+    fetcher
+  );
 
-  const events = data.data;
+  const events = !!category ? queryData?.data : data.data;
 
   return (
     <>
@@ -58,43 +67,60 @@ export const HomePage: NextPage<HomePageProps> = ({ data }) => {
             ))
           }
         </Carousel>
-        <CategorySelection title={t('home-page.explore') || ''} />
+        <CategorySelection
+          title={t('home-page.explore')}
+          onSelect={(category) => setCategory(category)}
+        />
         <div className="flex justify-center">
-          <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {events.map((event) => {
-              const isActive = !!interestedEvents.find(
-                (_event) => _event.id === event.id
-              );
+          {events && events.length > 0 && !isLoading ? (
+            <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {events.map((event) => {
+                const isActive = !!interestedEvents.find(
+                  (_event) => _event.id === event.id
+                );
 
-              const date = translateDate(
-                event.attributes.date_time.start_date,
-                i18n.language
-              );
-              const time = translateTime(
-                event.attributes.date_time.times[0].start_time,
-                i18n.language
-              );
-              const location = t(
-                ('locations.' + event.attributes.location) as any
-              );
+                const date = translateDate(
+                  event.attributes.date_time.start_date,
+                  i18n.language
+                );
+                const time = translateTime(
+                  event.attributes.date_time.times[0].start_time,
+                  i18n.language
+                );
+                const location = t(
+                  ('locations.' + event.attributes.location) as any
+                );
 
-              return (
-                <EventCard
-                  key={event.id}
-                  img={event.attributes.image_src}
-                  date={date}
-                  time={time}
-                  location={location}
-                  title={event.attributes.name.en}
-                  href={`/event/${event.id}`}
-                  isActive={isActive}
-                  onInterested={() => {
-                    setInterestedEvents(event);
-                  }}
-                />
-              );
-            })}
-          </div>
+                return (
+                  <EventCard
+                    key={event.id}
+                    img={event.attributes.image_src}
+                    date={date}
+                    time={time}
+                    location={location}
+                    title={event.attributes.name.en}
+                    href={`/event/${event.id}`}
+                    isActive={isActive}
+                    onInterested={() => {
+                      setInterestedEvents(event);
+                    }}
+                  />
+                );
+              })}
+            </div>
+          ) : (
+            <>
+              {isLoading ? (
+                <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {Array.from({ length: 6 }).map((_, index) => (
+                    <EventCardSkeleton key={index} />
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center">No events</div>
+              )}
+            </>
+          )}
         </div>
       </div>
     </>

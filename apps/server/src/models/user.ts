@@ -27,6 +27,7 @@ const notificationsSchema = new Schema<Message, Model<Message>>({
 const userSchema = new Schema<User>({
   uid: {
     type: String,
+    unique: true,
     required: [true, 'Please provide uid'],
   },
   username: {

@@ -33,6 +33,7 @@
     "zustand": "^4.2.0",
     "firebase-config": "*",
     "firebase": "^9.17.1",
-    "custom-types": "*"
+    "custom-types": "*",
+    "swr": "^2.0.3"
   }
 }

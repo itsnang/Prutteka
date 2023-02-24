@@ -2,35 +2,23 @@ import { Controller } from './types';
 
 import Event from '../models/event';
 import serializer from '../serializer/event';
-import ApiFeature from '../utils/api-feature';
 import buildUrl from '../utils/build-url';
-import { BadRequestError, NotFoundError } from '../errors';
+import { BadRequestError, NotFoundError, UnAuthorizedError } from '../errors';
 import cloudinary from '../libs/cloudinary';
-
-type RequestQuery = {
-  [key: string]: string;
-} & {
-  page?: {
-    offset: number;
-    limit: number;
-  };
-};
+import getCurrentUrl from '../utils/getCurrentUrl';
+import EventServices from '../services/event.services';
+import userServices from '../services/user.services';
 
 export const getAllEvents: Controller = async (req, res, next) => {
   try {
-    const queryObj = { ...req.query } as RequestQuery;
+    const query = req.query as any;
 
-    const events = new ApiFeature(Event, queryObj);
-    events.filter().sort().limitFields().paginate();
+    const doc = await EventServices.getEvents(query);
 
-    const doc = await events.model.populate('created_by', '');
+    const offset = query.page?.offset ? +query.page?.offset : 0;
+    const limit = query.page?.limit ? +query.page?.limit : 10;
 
-    const offset = queryObj.page?.offset ? +queryObj.page?.offset : 0;
-    const limit = queryObj.page?.limit ? +queryObj.page?.limit : 10;
-
-    const currentUrl = new URL(
-      req.protocol + '://' + req.get('host') + req.originalUrl
-    );
+    const currentUrl = getCurrentUrl(req);
     const nextPage = buildUrl(
       currentUrl,
       `page[offset]=${offset + 1}&page[limit]=${limit}`
@@ -46,6 +34,7 @@ export const getAllEvents: Controller = async (req, res, next) => {
       prev: previousPage,
     }).serialize(doc);
 
+    // setTimeout(() => {}, 1000);
     res.status(200).json(allEvents);
   } catch (error) {
     next(error);
@@ -55,24 +44,22 @@ export const getAllEvents: Controller = async (req, res, next) => {
 export const createEvent: Controller = async (req, res, next) => {
   try {
     // @ts-ignore
-    const image_file = req?.files?.image_src;
+    // const image_file = req?.files?.image_src;
 
-    if (!image_file)
-      throw new BadRequestError('Please provide an Image for your event');
+    // if (!image_file)
+    //   throw new BadRequestError('Please provide an Image for your event');
 
     await Event.validate({
       ...req.body,
-      created_by: '',
-      image_src: 'https://www.example.com/image.jpeg',
+      created_by: '63ec58d01a38a046ed44afda',
     });
 
-    const result = await cloudinary.uploader.upload(
-      image_file[0].path as string
-    );
+    // const result = await cloudinary.uploader.upload(
+    //   image_file[0].path as string
+    // );
 
     const newEvent = await Event.create({
       ...req.body,
-      image_src: result,
     });
 
     res.json({
@@ -94,21 +81,43 @@ export const getEvent: Controller = async (req, res, next) => {
   try {
     const eventId = req.params.eventId;
 
-    const doc = await Event.findById(eventId).populate('created_by');
+    const doc = await EventServices.getEvent(eventId);
 
     if (!doc) {
       throw new NotFoundError('Event is not found');
     }
 
-    const currentUrl = new URL(
-      req.protocol + '://' + req.get('host') + req.originalUrl
-    );
+    const currentUrl = getCurrentUrl(req);
 
     const event = serializer({
       self: currentUrl,
     }).serialize(doc);
 
     res.status(200).json(event);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteEvent: Controller = async (req, res, next) => {
+  try {
+    const eventId = req.params.eventId;
+    const uid = req.user?.uid;
+    if (!uid) {
+      throw new UnAuthorizedError('Please provide token');
+    }
+
+    const user = await userServices.getUserByUid(uid);
+    if (!user) {
+      throw new UnAuthorizedError('User does not exist');
+    }
+
+    const doc = await EventServices.deleteEvent(eventId, user._id);
+    if (!doc) {
+      throw new NotFoundError('Event is not found');
+    }
+
+    res.status(204).send();
   } catch (error) {
     next(error);
   }

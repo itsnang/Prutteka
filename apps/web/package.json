@@ -28,6 +28,7 @@
     "react-image-crop": "^10.0.9",
     "shared-utils": "*",
     "swiper": "^8.4.5",
+    "swr": "^2.0.3",
     "ui": "*",
     "yup": "^0.32.11",
     "zustand": "^4.2.0"

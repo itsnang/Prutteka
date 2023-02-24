@@ -42,7 +42,13 @@ export interface Time {
   start_time: string;
   end_time: string;
   _id: string;
-  activity?: Detail;
+}
+
+export interface Schedule {
+  start_time: string;
+  end_time: string;
+  _id: string;
+  activity: Detail;
 }
 
 export interface Detail {
@@ -64,15 +70,15 @@ export interface Location {
 
 export interface Schedule {
   date: string;
-  schedules: Time[];
+  schedules: Schedule[];
   _id: string;
 }
 
 export interface DatumRelationships {
-  created_by: CreatedBy;
+  organizer: Organizer;
 }
 
-export interface CreatedBy {
+export interface Organizer {
   data: Data;
 }
 

@@ -32,7 +32,7 @@ import { useRouter } from 'next/router';
 import { useTypeSafeTranslation } from 'shared-utils/hooks';
 import { useLocalInterestedEvent } from './useLocalInterestedEvent';
 import { translateTime } from '../helpers/translateTime';
-import { getDuration, translateDate } from '../helpers';
+import { getDuration, translateDate, convertTime } from '../helpers';
 import { getEventDays } from './form/helper';
 
 import { APIResponseEvent } from 'custom-types';
@@ -49,18 +49,38 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
 }) => {
   const [attendModal, setAttendModal] = useState(false);
   const [shareModal, setShareModal] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(0);
   const { query } = useRouter();
   const { t, i18n } = useTypeSafeTranslation();
   const [interestedEvents, setInterestedEvents] = useLocalInterestedEvent();
 
-  // const isActive = !!interestedEvents.find((_event) => _event.id === event.id);
-
   const event = data.data;
+  const currentDate = new Date();
+  const startDate = new Date(event.attributes.date_time.start_date);
+  const endDate = new Date(event.attributes.date_time.end_date);
+  const isHappening = startDate <= currentDate && endDate >= currentDate;
+
+  const isActive = !!interestedEvents.find((_event) => _event.id === event.id);
 
   const dateRange = getEventDays(
     event.attributes.date_time.start_date,
     event.attributes.date_time.end_date
   );
+
+  const times = event.attributes.date_time.times;
+  const startTime =
+    selectedIndex >= times.length
+      ? convertTime(times[0].start_time)
+      : convertTime(times[selectedIndex].start_time);
+  const endTime =
+    selectedIndex >= times.length
+      ? convertTime(times[0].end_time)
+      : convertTime(times[selectedIndex].end_time);
+
+  const user = data.included.find(
+    (u) => u.id === event.relationships.organizer.data.id
+  );
+
   return (
     <>
       <SeoMeta
@@ -73,10 +93,11 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
       />
       <div className="space-y-8">
         <EventHeader
-          isHappening
+          isHappening={isHappening}
           img={event.attributes.image_src}
           title={event.attributes.name.en}
           date={event.attributes.date_time.start_date}
+          organizer={user?.attributes.username}
         />
         <div className="space-y-4">
           <ItemContainer className="flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-x-4">
@@ -92,7 +113,7 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
                 isDefault={false}
                 className="flex flex-1 justify-between rounded-2xl px-4"
                 hasText
-                // isActive={isActive}
+                isActive={isActive}
                 onClick={() => {
                   setInterestedEvents(event);
                 }}
@@ -121,8 +142,12 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
             />
           </ItemContainer>
           <div className="custom-scrollbar flex space-x-4 overflow-x-auto">
-            {dateRange.map((date) => (
-              <ButtonCategory>
+            {dateRange.map((date, index) => (
+              <ButtonCategory
+                key={index}
+                isActive={index === selectedIndex}
+                onClick={() => setSelectedIndex(index)}
+              >
                 {translateDate(date, i18n.language)}
               </ButtonCategory>
             ))}
@@ -142,8 +167,8 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
                 {t('event-detail-page.time')}
               </Typography>
               <Typography>
-                {translateTime('8:30', i18n.language)} -{' '}
-                {translateTime('19:00', i18n.language)}
+                {translateTime(startTime, i18n.language)} -{' '}
+                {translateTime(endTime, i18n.language)}
               </Typography>
             </EventInfoCard>
 
@@ -161,7 +186,7 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
                 {t('event-detail-page.duration')}
               </Typography>
               <Typography>
-                {getDuration('10:30', '19:20', i18n.language)}
+                {getDuration(startTime, endTime, i18n.language)}
               </Typography>
             </EventInfoCard>
 
@@ -197,7 +222,7 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
             </div>
             <div className="mt-4 space-y-4">
               {event.attributes.locations.map((location) => (
-                <div className="space-y-2">
+                <div key={location._id} className="space-y-2">
                   <Typography>{location.name}</Typography>
                   <Link
                     href={location.link}
@@ -226,28 +251,28 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
               </Typography>
             </div>
             <div className="mt-6 flex w-full flex-col items-stretch space-y-2">
-              {event.attributes.schedules.map((schedule) =>
-                schedule.schedules.map((schedule) => (
-                  <div className="relative flex-1 rounded-xl border border-gray-200 px-4 py-4 text-gray-700">
-                    <div className="absolute -top-4 left-6 rounded-lg border border-gray-200 bg-white px-2 py-1 text-sm">
-                      {translateTime(
-                        new Date(schedule.start_time).toTimeString(),
-                        i18n.language
-                      )}{' '}
-                      -{' '}
-                      {translateTime(
-                        new Date(schedule.end_time).toTimeString(),
-                        i18n.language
-                      )}
+              {event.attributes.schedules.map((_schedule) =>
+                _schedule.schedules.map((schedule) => {
+                  const startTime = convertTime(schedule.start_time);
+                  const endTime = convertTime(schedule.end_time);
+                  return (
+                    <div
+                      key={schedule._id}
+                      className="relative flex-1 rounded-xl border border-gray-200 px-4 py-4 text-gray-700"
+                    >
+                      <div className="absolute -top-4 left-6 rounded-lg border border-gray-200 bg-white px-2 py-1 text-sm">
+                        {translateTime(startTime, i18n.language)} -{' '}
+                        {translateTime(endTime, i18n.language)}
+                      </div>
+                      <div>
+                        {translateTextObject(
+                          schedule.activity as any,
+                          i18n.language
+                        )}
+                      </div>
                     </div>
-                    <div>
-                      {translateTextObject(
-                        schedule.activity as any,
-                        i18n.language
-                      )}
-                    </div>
-                  </div>
-                ))
+                  );
+                })
               )}
             </div>
           </ItemContainer>
@@ -260,7 +285,7 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
               </Typography>
               <div className="my-3 mx-2 w-20 border-b-2 border-gray-200" />
             </div>
-            {EVENTDATA.slice(3).map((event) => (
+            {/* {EVENTDATA.slice(3).map((event) => (
               <EventCard
                 isLandscape
                 key={event.id}
@@ -271,7 +296,7 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
                 title={event.title}
                 href="/event"
               />
-            ))}
+            ))} */}
             <div className="flex space-x-4">
               <Button
                 as="link"
@@ -306,7 +331,7 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
             </div>
           </ItemContainer>
         </div>
-        <Carousel
+        {/* <Carousel
           autoplay
           breakpoints={{
             460: {
@@ -351,7 +376,7 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
               );
             })
           }
-        </Carousel>
+        </Carousel> */}
       </div>
     </>
   );

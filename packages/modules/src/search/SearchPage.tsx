@@ -87,7 +87,12 @@ export const Search = ({ data }: SearchPageProps) => {
             />
           </div>
         </div>
-        <CategorySelection title={t('search-page.search-results')} />
+        <CategorySelection
+          title={t('search-page.search-results')}
+          onSelect={(category) =>
+            push({ query: { ...query, category: category } })
+          }
+        />
         <div className="flex flex-col gap-[0.625rem]">
           {events.map((event) => {
             const isActive = !!interestedEvents.find(

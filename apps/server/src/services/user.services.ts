@@ -1,11 +1,8 @@
 import User from '../models/user';
 
 class UserService {
-  async createUser(user: any, uid: string) {
-    return User.create({
-      ...user,
-      uid,
-    });
+  async getUserByUid(uid: string) {
+    return User.findOne({ uid });
   }
 }
 
