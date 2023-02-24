@@ -20,7 +20,8 @@ interface Event {
   locations: Location[];
   schedules: Schedule[];
   join_methods: JoinMethod[];
-  created_by: mongoose.Types.ObjectId;
+  organizer: mongoose.Types.ObjectId;
+  created_at: Date;
 }
 
 const translationSchema = new mongoose.Schema<Translation>(
@@ -214,10 +215,14 @@ const eventSchema = new mongoose.Schema<Event>({
       'Please provide at least one event join method',
     ],
   },
-  created_by: {
+  organizer: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: [true, 'Please provide authorize token'],
+  },
+  created_at: {
+    type: Date,
+    default: Date.now(),
   },
 });
 

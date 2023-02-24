@@ -23,9 +23,10 @@ const serializer = (topLevelLinks: {
       'locations',
       'schedules',
       'join_methods',
-      'created_by',
+      'organizer',
+      'created_at',
     ],
-    created_by: {
+    organizer: {
       ref: 'id',
       included: true,
       attributes: ['username'],
