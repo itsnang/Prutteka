@@ -36,6 +36,7 @@ const userSchema = new Schema<User>({
   },
   email: {
     type: String,
+    unique: true,
     required: [true, 'Email must be provided'],
     validate: [
       (value: string) => {

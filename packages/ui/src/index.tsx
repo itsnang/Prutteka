@@ -16,3 +16,4 @@ export * from './ItemContainer';
 export * from './RichEditor';
 export * from './RichEditorDisplay';
 export * from './DatePicker';
+export * from './Message';
