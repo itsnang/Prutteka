@@ -9,7 +9,7 @@ interface User {
   uid: string;
   username: string;
   email: string;
-  img_src?: string;
+  image_src?: string;
   followers?: Types.ObjectId[];
   following?: Types.ObjectId[];
   notifications?: Message[];
@@ -46,7 +46,7 @@ const userSchema = new Schema<User>({
       'Please provide a correct email',
     ],
   },
-  img_src: {
+  image_src: {
     type: String,
     default: '',
   },

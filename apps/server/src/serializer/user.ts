@@ -12,6 +12,7 @@ const serializer = (topLevelLinks: { self: string | URL }) => {
       'notifications',
       'image_src',
       'interested_events',
+      'events',
     ],
   });
 };

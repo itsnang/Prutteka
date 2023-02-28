@@ -12,12 +12,14 @@ import { useState } from 'react';
 interface ProfilePageProps {
   userName?: string;
   followers?: string;
-  events?: string;
+  events?: any;
+  user: any;
   img?: string | StaticImageData;
 }
 
 export const ProfilePage: React.FC<ProfilePageProps> = ({
   events,
+  user,
   followers,
   userName,
   img,
@@ -31,18 +33,19 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
       <div className="space-y-6 divide-y">
         <div className="flex gap-4">
           <div className="flex flex-[2] justify-center">
-            <Image
-              src="/profile2.jpg"
-              alt="Picture of the author"
-              width="166"
-              height="166"
-              className="bg-mint text-mint fill-currentp-1 ring-primary rounded-full p-1 ring-4"
-            ></Image>
+            <div className="relative h-32 w-32 md:h-40 md:w-40">
+              <Image
+                src={user.image_src}
+                alt="Picture of the author"
+                fill
+                className="ring-primary rounded-full p-1 ring-4"
+              />
+            </div>
           </div>
-          <div className="flex flex-[4] flex-col items-start gap-4 py-4">
-            <Typography variant="h5">Huot Chhay</Typography>
+          <div className="flex flex-[4] flex-col items-start justify-center gap-2 md:gap-4 md:py-4">
+            <Typography variant="h5">{user.username}</Typography>
             <div className="flexr flex gap-2">
-              <Typography weight="medium">1,204 events</Typography>
+              <Typography weight="medium">{events.length} events</Typography>
               <Typography weight="medium">5k followers</Typography>
             </div>
 
@@ -52,33 +55,43 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           </div>
         </div>
         <div className="flex justify-center">
-          <div className="my-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {EVENTDATA.map((event) => {
-              // const isActive = !!interestedEvents.find(
-              //   (_event) => _event.id === event.id
-              // );
-              const date = translateDate(event.date, i18n.language);
-              const time = translateTime(event.time, i18n.language);
+          <div className="my-6 grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {events.map((event: any) => {
+              const isActive = !!interestedEvents.find(
+                (_event) => _event.id === event.id
+              );
+
+              const date = translateDate(
+                event.date_time.start_date,
+                i18n.language
+              );
+              const time = translateTime(
+                event.date_time.times[0].start_time,
+                i18n.language
+              );
               const location = t(('locations.' + event.location) as any);
 
               return (
                 <EventCard
-                  key={event.id}
-                  img={event.img}
+                  key={event._id}
+                  img={event.image_src}
                   date={date}
                   time={time}
                   location={location}
-                  title={event.title}
-                  href={`/event/${event.id}`}
-                  // isActive={isActive}
-                  // onInterested={() => {
-                  //   setInterestedEvents(event);
-                  // }}
+                  title={event.name.en}
+                  href={`/event/${event._id}`}
+                  isActive={isActive}
+                  onInterested={() => {
+                    setInterestedEvents(event);
+                  }}
                 />
               );
             })}
           </div>
         </div>
+
+        {/* <pre>{JSON.stringify(user, null, 1)}</pre>
+        <pre>{JSON.stringify(events, null, 1)}</pre> */}
       </div>
     </>
   );
