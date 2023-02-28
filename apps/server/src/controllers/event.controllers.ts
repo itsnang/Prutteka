@@ -19,14 +19,16 @@ export const getAllEvents: Controller = async (req, res, next) => {
     const limit = query.page?.limit ? +query.page?.limit : 10;
 
     const currentUrl = getCurrentUrl(req);
-    const nextPage = buildUrl(
-      currentUrl,
-      `page[offset]=${offset + 1}&page[limit]=${limit}`
-    );
-    const previousPage = buildUrl(
-      currentUrl,
-      `page[offset]=${offset - 1}&page[limit]=${limit}`
-    );
+    const nextPage = buildUrl(currentUrl, {
+      'page[offset]': `${offset + 1}`,
+      'page[limit]': `${limit}`,
+    });
+    const previousPage = !!offset
+      ? buildUrl(currentUrl, {
+          'page[offset]': `${offset - 1}`,
+          'page[limit]': `${limit}`,
+        })
+      : null;
 
     const allEvents = serializer({
       self: currentUrl,
