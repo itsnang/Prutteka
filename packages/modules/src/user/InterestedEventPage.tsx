@@ -93,7 +93,7 @@ export const InterestedEventPage: React.FC = () => {
                   i18n.language
                 );
                 const location = t(
-                  ('locations.' + _event.attributes.locations[0].name) as any
+                  ('locations.' + _event.attributes.location) as any
                 );
 
                 return (

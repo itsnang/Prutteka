@@ -1,5 +1,12 @@
 import { useState } from 'react';
-import { AutoCompleteInput, EventCard, SearchBar, SeoMeta, Button } from 'ui';
+import {
+  AutoCompleteInput,
+  EventCard,
+  SearchBar,
+  SeoMeta,
+  Button,
+  EventCardSkeleton,
+} from 'ui';
 import { CategorySelection, FilterModal } from '../shared';
 import {
   MapPinIcon,
@@ -9,16 +16,26 @@ import { LOCATIONS } from '../constants';
 import { useTypeSafeTranslation } from 'shared-utils/hooks';
 import { useLocalInterestedEvent } from '../event';
 import { useRouter } from 'next/router';
-import { translateDate } from '../helpers';
+import { translateDate, fetcher } from '../helpers';
 import { translateTime } from '../helpers/translateTime';
 
 import { APIResponseEvents } from 'custom-types';
+import useSWRInfinite from 'swr/infinite';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 interface SearchPageProps {
-  data: APIResponseEvents;
+  initialData: APIResponseEvents;
 }
 
-export const Search = ({ data }: SearchPageProps) => {
+const PAGE_SIZE = 9;
+
+const getKey =
+  (category: string) => (pageIndex: number, previousPageData: any) => {
+    if (previousPageData && !previousPageData?.data.length) return null; // reached the end
+    return `/events?filter[category]=${category}&page[offset]=${pageIndex}&page[limit]=${PAGE_SIZE}`; // SWR key
+  };
+
+export const Search = ({ initialData }: SearchPageProps) => {
   const { t, i18n } = useTypeSafeTranslation();
 
   const locations = LOCATIONS.map((value, idx) => ({
@@ -32,8 +49,14 @@ export const Search = ({ data }: SearchPageProps) => {
 
   const [interestedEvents, setInterestedEvents] = useLocalInterestedEvent();
   const { query, push } = useRouter();
+  const { data, size, setSize } = useSWRInfinite<APIResponseEvents>(
+    getKey((query.category as string) || 'all'),
+    fetcher
+  );
 
-  const events = data.data;
+  const isEmpty = data?.[0]?.data.length === 0;
+  const isReachingEnd =
+    isEmpty || (data && data[data.length - 1]?.data.length < PAGE_SIZE);
 
   return (
     <>
@@ -93,42 +116,59 @@ export const Search = ({ data }: SearchPageProps) => {
             push({ query: { ...query, category: category } })
           }
         />
-        <div className="flex flex-col gap-[0.625rem]">
-          {events.map((event) => {
-            const isActive = !!interestedEvents.find(
-              (_event) => _event.id === event.id
-            );
+        <InfiniteScroll
+          dataLength={data?.length || 0}
+          next={() => setSize(size + 1)}
+          hasMore={!isReachingEnd}
+          loader={
+            <div className="flex flex-col gap-[0.625rem]">
+              {Array.from({ length: 9 }).map((_, index) => (
+                <EventCardSkeleton isLandscape key={index} />
+              ))}
+            </div>
+          }
+          scrollThreshold={0.6}
+        >
+          <div className="flex flex-col gap-[0.625rem]">
+            {data &&
+              data.map((events) =>
+                events.data.map((event) => {
+                  const isActive = !!interestedEvents.find(
+                    (_event) => _event.id === event.id
+                  );
 
-            const date = translateDate(
-              event.attributes.date_time.start_date,
-              i18n.language
-            );
-            const time = translateTime(
-              event.attributes.date_time.times[0].start_time,
-              i18n.language
-            );
-            const location = t(
-              ('locations.' + event.attributes.location) as any
-            );
+                  const date = translateDate(
+                    event.attributes.date_time.start_date,
+                    i18n.language
+                  );
+                  const time = translateTime(
+                    event.attributes.date_time.times[0].start_time,
+                    i18n.language
+                  );
+                  const location = t(
+                    ('locations.' + event.attributes.location) as any
+                  );
 
-            return (
-              <EventCard
-                isLandscape
-                key={event.id}
-                img={event.attributes.image_src}
-                date={date}
-                time={time}
-                location={location}
-                title={event.attributes.name.en}
-                href={`/event/${event.id}`}
-                isActive={isActive}
-                onInterested={() => {
-                  setInterestedEvents(event);
-                }}
-              />
-            );
-          })}
-        </div>
+                  return (
+                    <EventCard
+                      isLandscape
+                      key={event.id}
+                      img={event.attributes.image_src}
+                      date={date}
+                      time={time}
+                      location={location}
+                      title={event.attributes.name.en}
+                      href={`/event/${event.id}`}
+                      isActive={isActive}
+                      onInterested={() => {
+                        setInterestedEvents(event);
+                      }}
+                    />
+                  );
+                })
+              )}
+          </div>
+        </InfiniteScroll>
       </div>
     </>
   );

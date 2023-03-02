@@ -27,6 +27,7 @@
     "react-draft-wysiwyg": "^1.15.0",
     "react-i18next": "^12.1.1",
     "react-image-crop": "^10.0.9",
+    "react-infinite-scroll-component": "^6.1.0",
     "shared-utils": "*",
     "swiper": "^8.4.5",
     "swr": "^2.0.3",

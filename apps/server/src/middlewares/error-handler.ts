@@ -55,7 +55,7 @@ export default function ErrorHandlerMiddleware(
       },
     ];
 
-    customError.statusCode = StatusCodes.NOT_FOUND;
+    customError.statusCode = StatusCodes.BAD_REQUEST;
   }
 
   if (err.name === 'NotFoundError') {
