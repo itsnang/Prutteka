@@ -1,9 +1,11 @@
 import type { AppProps } from 'next/app';
-import type { ReactElement } from 'react';
+import { ReactElement } from 'react';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 
 import { appWithTranslation } from 'next-i18next';
+
+import 'shared-utils/axios';
 
 import '../styles/globals.css';
 
