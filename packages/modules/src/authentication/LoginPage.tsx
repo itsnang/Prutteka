@@ -25,6 +25,10 @@ import {
 import { AuthError } from '@firebase/auth';
 import { useVerifyLoggedIn } from '../auth/useVerifyLoggedIn';
 
+import axios from 'axios';
+import { useAuth } from '../auth/useAuth';
+import { APIResponseUser } from 'custom-types';
+
 const validationSchema = Yup.object({
   email: Yup.string().email('formik.email.invalid').required('formik.required'),
   password: Yup.string()
@@ -46,6 +50,7 @@ export const LoginPage: NextPageWithLayout = () => {
   const { push } = useRouter();
   const setToken = useTokenStore((state) => state.setToken);
   const hasToken = useVerifyLoggedIn();
+  const setUser = useAuth((state) => state.setUser);
   const [isSubmiting, setIsSubmiting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -63,21 +68,23 @@ export const LoginPage: NextPageWithLayout = () => {
       const token = await firebaseReponse.user.getIdToken();
       setToken(token);
 
-      const API_URL = process.env.NEXT_PUBLIC_API_ENDPOINT || '';
-      const response = await fetch(`${API_URL}/api/v1/login`, {
-        method: 'POST',
-        body: JSON.stringify({
-          username: name,
+      const response = await axios.post(
+        '/login',
+        {
           email: email,
-        }),
-        headers: {
-          authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
+          password: password,
         },
-      });
+        {
+          headers: {
+            Authorization: 'Bearer ' + token,
+          },
+        }
+      );
 
-      const data = await response.json();
-      console.log(data);
+      const user = response.data as APIResponseUser;
+      console.log(user.data);
+
+      setUser(user.data.id, user.data.attributes);
     } catch (error) {
       console.log(error);
       const errorCode = (error as AuthError).code;

@@ -24,6 +24,10 @@ import { useTokenStore } from '../auth/useTokenStore';
 import { useRouter } from 'next/router';
 import { useVerifyLoggedIn } from '../auth/useVerifyLoggedIn';
 
+import axios from 'axios';
+import { useAuth } from '../auth/useAuth';
+import { APIResponseUser } from 'custom-types';
+
 const validationSchema = Yup.object({
   name: Yup.string().required('formik.required'),
   email: Yup.string().email('formik.email.invalid').required('formik.required'),
@@ -46,6 +50,7 @@ export const RegisterPage: NextPageWithLayout = () => {
   const { push } = useRouter();
   const { t } = useTypeSafeTranslation();
   const setToken = useTokenStore((state) => state.setToken);
+  const setUser = useAuth((state) => state.setUser);
   const hasToken = useVerifyLoggedIn();
   const [isSubmiting, setIsSubmiting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -61,21 +66,19 @@ export const RegisterPage: NextPageWithLayout = () => {
 
       const token = await createdUser.user.getIdToken();
 
-      const API_URL = process.env.NEXT_PUBLIC_API_ENDPOINT || '';
-      const response = await fetch(`${API_URL}/api/v1/signup`, {
-        method: 'POST',
-        body: JSON.stringify({
+      const { data } = await axios.post(
+        '/signup',
+        {
           username: name,
           email: email,
-        }),
-        headers: {
-          authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
         },
-      });
+        { headers: { Authorization: 'Bearer ' + token } }
+      );
 
-      const data = await response.json();
-      console.log(data);
+      const user = data as APIResponseUser;
+      setUser(user.data.id, user.data.attributes);
+
+      setToken(token);
     } catch (error) {
       if ((error as AuthError).code === 'auth/email-already-in-use') {
         return setErrorMessage('Email is already existed');
