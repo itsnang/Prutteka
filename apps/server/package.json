@@ -4,7 +4,7 @@
   "description": "",
   "main": "./src/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\"",
+    "build": "tsc",
     "dev": "nodemon"
   },
   "keywords": [],
@@ -27,10 +27,10 @@
     "@types/jsonapi-serializer": "^3.6.5",
     "@types/multer": "^1.4.7",
     "@types/node": "^18.11.18",
-    "dotenv": "^16.0.3",
     "dotenv-flow": "^3.2.0",
     "nodemon": "^2.0.20",
     "ts-node": "^10.9.1",
-    "typescript": "^4.9.4"
+    "typescript": "^4.9.4",
+    "tsconfig": "*"
   }
 }

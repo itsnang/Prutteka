@@ -12,6 +12,7 @@ import {
   ShareIcon,
   ArrowTopRightOnSquareIcon,
   CalendarDaysIcon,
+  QrCodeIcon,
 } from '@heroicons/react/24/outline';
 import {
   Button,
@@ -26,7 +27,7 @@ import {
 } from 'ui';
 import { ShareModal } from '../shared';
 import { AttendModal } from './AttendModal';
-import { EVENTDATA } from '../constants';
+// import { EVENTDATA } from '../constants';
 import { EventHeader } from './EventHeader';
 import { useRouter } from 'next/router';
 import { useTypeSafeTranslation } from 'shared-utils/hooks';
@@ -37,6 +38,7 @@ import { getEventDays } from './form/helper';
 
 import { APIResponseEvent } from 'custom-types';
 import Link from 'next/link';
+import { RegisterEvent } from './RegisterEvent';
 
 interface EventDetailPageProps {
   data: APIResponseEvent;
@@ -62,10 +64,7 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
 
   const isActive = !!interestedEvents.find((_event) => _event.id === event.id);
 
-  const dateRange = getEventDays(
-    event.attributes.date_time.start_date,
-    event.attributes.date_time.end_date
-  );
+  const dateRange = getEventDays(startDate, endDate);
 
   const times = event.attributes.date_time.times;
   const startTime =
@@ -91,6 +90,7 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
         description=""
         img={event.attributes.image_src}
       />
+      <RegisterEvent eventId={event.id} />
       <div className="space-y-8">
         <EventHeader
           isHappening={isHappening}

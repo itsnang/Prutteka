@@ -39,10 +39,7 @@ export const HomePage: NextPage<HomePageProps> = ({ initialData }) => {
   const [category, setCategory] = useState<string>('all');
   const { data, size, setSize } = useSWRInfinite<APIResponseEvents>(
     getKey(category),
-    fetcher,
-    {
-      fallbackData: initialData,
-    }
+    fetcher
   );
 
   const isEmpty = data?.[0]?.data.length === 0;

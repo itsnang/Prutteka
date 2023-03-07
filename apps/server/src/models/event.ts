@@ -1,4 +1,4 @@
-import mongoose, { Model } from 'mongoose';
+import mongoose from 'mongoose';
 
 import {
   Translation,
@@ -8,7 +8,8 @@ import {
   Schedule,
 } from './event.types';
 
-interface Event {
+export interface EventType {
+  _id: mongoose.Types.ObjectId;
   name: Translation;
   type: string;
   category: string[];
@@ -21,7 +22,7 @@ interface Event {
   schedules: Schedule[];
   join_methods: JoinMethod[];
   organizer: mongoose.Types.ObjectId;
-  created_at: Date;
+  attendees: mongoose.Types.ObjectId[];
 }
 
 const translationSchema = new mongoose.Schema<Translation>(
@@ -38,7 +39,7 @@ const translationSchema = new mongoose.Schema<Translation>(
   { _id: false }
 );
 
-const eventSchema = new mongoose.Schema<Event>(
+const eventSchema = new mongoose.Schema<EventType>(
   {
     name: {
       type: translationSchema,
@@ -220,6 +221,11 @@ const eventSchema = new mongoose.Schema<Event>(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: [true, 'Please provide authorize token'],
+    },
+    attendees: {
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: 'User',
+      default: null,
     },
   },
   { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } }

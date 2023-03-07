@@ -4,7 +4,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from 'firebase-config';
 
 export const useVerifyLoggedIn = () => {
-  const hasToken = useTokenStore((s) => !!s.refreshToken);
+  const hasToken = useTokenStore((s) => !!s.token);
   const setToken = useTokenStore((s) => s.setToken);
   const clearToken = useTokenStore((s) => s.clearToken);
 

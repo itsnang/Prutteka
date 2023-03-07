@@ -1,11 +1,11 @@
 import User from '../models/user';
 
 class AuthService {
-  async login(uid: string) {
-    return User.find({ uid });
+  async login(uid: string): Promise<any> {
+    return User.findOne({ uid });
   }
 
-  async signup(uid: string, user: any) {
+  async signup(uid: string, user: any): Promise<any> {
     return User.create({
       ...user,
       uid,

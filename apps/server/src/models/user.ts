@@ -5,7 +5,8 @@ interface Message {
   message: string;
 }
 
-interface User {
+export interface UserType {
+  _id: Types.ObjectId;
   uid: string;
   username: string;
   email: string;
@@ -15,6 +16,7 @@ interface User {
   notifications?: Message[];
   events?: Types.ObjectId[];
   interested_events?: Types.ObjectId[];
+  registered_events?: Types.ObjectId[];
 }
 
 const notificationsSchema = new Schema<Message, Model<Message>>({
@@ -24,7 +26,7 @@ const notificationsSchema = new Schema<Message, Model<Message>>({
   },
 });
 
-const userSchema = new Schema<User>({
+const userSchema = new Schema<UserType>({
   uid: {
     type: String,
     unique: true,
@@ -61,6 +63,12 @@ const userSchema = new Schema<User>({
     },
   ],
   interested_events: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Event',
+    },
+  ],
+  registered_events: [
     {
       type: Schema.Types.ObjectId,
       ref: 'Event',

@@ -3,6 +3,7 @@ import { UserIcon, ArrowRightOnRectangleIcon } from '@heroicons/react/24/solid';
 import Link from 'next/link';
 import { Fragment } from 'react';
 import { useTypeSafeTranslation } from 'shared-utils/hooks';
+import { useAuth } from '../auth';
 
 interface ProfileMenuProps {
   onLogout: () => void;
@@ -10,6 +11,7 @@ interface ProfileMenuProps {
 
 export const ProfileMenu: React.FC<ProfileMenuProps> = ({ onLogout }) => {
   const { t } = useTypeSafeTranslation();
+  const user = useAuth((state) => state);
 
   return (
     <Menu as="div" className="relative">
@@ -27,7 +29,9 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({ onLogout }) => {
         leaveTo="transform opacity-0 scale-95"
       >
         <Menu.Items className="xs:max-w-xs absolute right-0 mt-2 flex w-screen max-w-[calc(100vw-32px)] flex-col space-y-2 rounded-xl border border-gray-100 bg-white p-4 shadow-lg">
-          <div>{t('common.username')}: Huot Chhay</div>
+          <div>
+            {t('common.username')}: {user.username}
+          </div>
           <Menu.Item>
             {({ active }) => (
               <Link

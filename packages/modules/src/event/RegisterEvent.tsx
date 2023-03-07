@@ -1,23 +1,57 @@
 import React, { useState } from 'react';
-import { QrCodeIcon } from '@heroicons/react/24/outline';
+import { QrCodeIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
 
-export const RegisterEvent = () => {
+import axios from 'axios';
+import { useTokenStore } from '../auth';
+
+interface RegisterEventProps {
+  eventId: string;
+}
+
+export const RegisterEvent: React.FC<RegisterEventProps> = ({ eventId }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isRegistered, setIsRegister] = useState(false);
+  const token = useTokenStore((state) => state.token);
+
+  const handleRegisterEvent = async () => {
+    try {
+      setIsLoading(true);
+      const response = await axios.post(
+        `/events/${eventId}/register`,
+        {},
+        { headers: { Authorization: 'Bearer ' + token } }
+      );
+
+      setIsRegister(true);
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="fixed bottom-8 left-1/2 z-10 -translate-x-1/2">
       <button
-        onClick={() => {
-          setIsLoading((prev) => !prev);
-        }}
-        className={`bg-secondary inline-flex h-14 items-center justify-center space-x-2 rounded-2xl text-white shadow-md transition-all duration-500`}
+        disabled={isRegistered}
+        onClick={handleRegisterEvent}
+        className={`${
+          isRegistered
+            ? 'bg-secondary-light text-secondary border-secondary border'
+            : 'bg-secondary'
+        } inline-flex h-14 items-center justify-center space-x-4 rounded-2xl text-white shadow-md transition-all duration-500`}
         style={{ paddingInline: isLoading ? '1rem' : '8rem' }}
       >
         {isLoading ? (
           <LoadingIcon />
         ) : (
           <>
-            <QrCodeIcon className="h-6 w-6" />
+            {isRegistered ? (
+              <CheckCircleIcon className="h-6 w-6" />
+            ) : (
+              <QrCodeIcon className="h-6 w-6" />
+            )}
             <span>Register</span>
           </>
         )}
@@ -40,7 +74,7 @@ const LoadingIcon = () => {
         cy="12"
         r="10"
         stroke="currentColor"
-        stroke-width="4"
+        strokeWidth="4"
       ></circle>
       <path
         className="opacity-75"

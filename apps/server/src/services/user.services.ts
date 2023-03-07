@@ -1,7 +1,7 @@
-import User from '../models/user';
+import User, { UserType } from '../models/user';
 
 class UserService {
-  async getUserByUid(uid: string) {
+  async getUserByUid(uid: string): Promise<UserType | null> {
     return User.findOne({ uid });
   }
 }

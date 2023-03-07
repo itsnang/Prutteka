@@ -1,17 +1,18 @@
 import create from 'zustand';
-import { combine, persist } from 'zustand/middleware';
+import { combine } from 'zustand/middleware';
+import { auth } from 'firebase-config';
 
 export const useTokenStore = create(
   combine(
     {
-      refreshToken: '',
+      token: '',
     },
     (set) => ({
-      setToken: (refreshToken: string) => {
-        set({ refreshToken });
+      setToken: async (token: string) => {
+        set({ token });
       },
       clearToken: () => {
-        set({ refreshToken: '' });
+        set({ token: '' });
       },
     })
   )

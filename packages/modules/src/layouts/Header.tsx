@@ -9,18 +9,19 @@ import { ProfileMenu } from './ProfileMenu';
 import { StarIcon, Bars3Icon } from '@heroicons/react/24/solid';
 import { useTypeSafeTranslation } from 'shared-utils/hooks';
 import { Sidebar } from './Sidebar';
-import { useTokenStore } from '../auth';
+import { useAuth, useProvideAuth, useTokenStore } from '../auth';
 
 import { auth } from 'firebase-config';
-import { signOut, onAuthStateChanged } from 'firebase/auth';
+import { signOut } from 'firebase/auth';
 
 export const Header: React.FC = () => {
   const router = useRouter();
   const { t } = useTypeSafeTranslation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const hasToken = useTokenStore((s) => !!s.refreshToken);
-  const setToken = useTokenStore((state) => state.setToken);
+  const hasToken = useTokenStore((s) => !!s.token);
   const clearToken = useTokenStore((state) => state.clearToken);
+  const resetUser = useAuth((state) => state.reset);
+  useProvideAuth();
 
   useEffect(() => {
     const handleRouteChange = () => {
@@ -33,21 +34,6 @@ export const Header: React.FC = () => {
       router.events.off('routeChangeStart', handleRouteChange);
     };
   }, [router.events]);
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        const token = await user.getIdToken();
-        setToken(token);
-      } else {
-        clearToken();
-      }
-    });
-
-    return () => {
-      unsubscribe();
-    };
-  }, [setToken, clearToken]);
 
   const changeLocale = (newLocale: string) => {
     const { pathname, asPath, query } = router;
@@ -166,8 +152,9 @@ export const Header: React.FC = () => {
             <div className="pl-2 md:pl-4">
               <ProfileMenu
                 onLogout={async () => {
-                  clearToken();
                   await signOut(auth);
+                  clearToken();
+                  resetUser();
                   router.push('/login');
                 }}
               />

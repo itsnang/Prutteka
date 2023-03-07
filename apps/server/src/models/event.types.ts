@@ -26,7 +26,7 @@ export interface Location {
 }
 
 export interface JoinMethod {
-  method: Translation;
+  method: 'link' | 'ticket';
   link: string;
 }
 
