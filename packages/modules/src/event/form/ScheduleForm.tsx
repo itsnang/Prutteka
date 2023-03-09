@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { PlusIcon, MinusIcon } from '@heroicons/react/24/outline';
 import { EventDetail } from '../../type/EventDetailType';
 import { getCurrentTime } from './helper';
-import { t } from './SubmitEventPage';
+import { TRANSLATION as t } from './Constant';
 
 interface ScheduleFormProps {
   scheduleState: EventDetail['schedule'];
@@ -29,8 +29,8 @@ export const ScheduleForm: React.FC<ScheduleFormProps> = ({
       date: date,
       schedules: [
         {
-          startTime: getCurrentTime(),
-          endTime: getCurrentTime(),
+          start_time: getCurrentTime(),
+          end_time: getCurrentTime(),
           activity: { en: '', kh: '' },
         },
       ],
@@ -74,18 +74,18 @@ export const ScheduleForm: React.FC<ScheduleFormProps> = ({
                             ) : null}
                             <div className="flex flex-col gap-2 sm:flex-row md:gap-4">
                               <InputField
-                                name={`schedule.customSchedules.${idx}.schedules.${index}.startTime`}
-                                label={t.startTime[lang]}
-                                placeholder={t.startTime[lang]}
+                                name={`schedule.customSchedules.${idx}.schedules.${index}.start_time`}
+                                label={t.start_time[lang]}
+                                placeholder={t.start_time[lang]}
                                 type="time"
-                                containerClassName="flex-1"
+                                containerClassName="flex-1 md:min-w-[10rem] lg:min-w-[11rem]"
                               />
                               <InputField
-                                name={`schedule.customSchedules.${idx}.schedules.${index}.endTime`}
-                                label={t.endTime[lang]}
-                                placeholder={t.endTime[lang]}
+                                name={`schedule.customSchedules.${idx}.schedules.${index}.end_time`}
+                                label={t.end_time[lang]}
+                                placeholder={t.end_time[lang]}
                                 type="time"
-                                containerClassName="flex-1"
+                                containerClassName="flex-1 md:min-w-[10rem] lg:min-w-[11rem]"
                               />
                             </div>
                             <InputField
@@ -101,8 +101,8 @@ export const ScheduleForm: React.FC<ScheduleFormProps> = ({
                           lang={lang}
                           onClick={() =>
                             arrayHelpers.push({
-                              startTime: getCurrentTime(),
-                              endTime: getCurrentTime(),
+                              start_time: getCurrentTime(),
+                              end_time: getCurrentTime(),
                               activity: { en: '', kh: '' },
                             })
                           }
@@ -135,18 +135,18 @@ export const ScheduleForm: React.FC<ScheduleFormProps> = ({
                   ) : null}
                   <div className="flex flex-col gap-2 sm:flex-row md:gap-4">
                     <InputField
-                      name={`schedule.sharedSchedules.${idx}.startTime`}
-                      label={t.startTime[lang]}
-                      placeholder={t.startTime[lang]}
+                      name={`schedule.sharedSchedules.${idx}.start_time`}
+                      label={t.start_time[lang]}
+                      placeholder={t.start_time[lang]}
                       type="time"
-                      containerClassName="flex-1"
+                      containerClassName="flex-1 md:min-w-[10rem] lg:min-w-[11rem]"
                     />
                     <InputField
-                      name={`schedule.sharedSchedules.${idx}.endTime`}
-                      label={t.endTime[lang]}
-                      placeholder={t.endTime[lang]}
+                      name={`schedule.sharedSchedules.${idx}.end_time`}
+                      label={t.end_time[lang]}
+                      placeholder={t.end_time[lang]}
                       type="time"
-                      containerClassName="flex-1"
+                      containerClassName="flex-1 md:min-w-[10rem] lg:min-w-[11rem]"
                     />
                   </div>
                   <InputField
@@ -162,8 +162,8 @@ export const ScheduleForm: React.FC<ScheduleFormProps> = ({
                 lang={lang}
                 onClick={() =>
                   arrayHelpers.push({
-                    startTime: getCurrentTime(),
-                    endTime: getCurrentTime(),
+                    start_time: getCurrentTime(),
+                    end_time: getCurrentTime(),
                     activity: '',
                   })
                 }

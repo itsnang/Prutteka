@@ -10,6 +10,8 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 
   const data = await response.json();
 
+  console.log(data);
+
   return {
     props: {
       data: data,
