@@ -3,7 +3,8 @@ import Event from '../models/event';
 import User from '../models/user';
 import serializer from '../serializer/user';
 
-import { NotFoundError } from '../errors';
+import { NotFoundError, BadRequestError } from '../errors';
+import imageUpload from '../utils/ImageUpload';
 import getCurrentUrl from '../utils/getCurrentUrl';
 
 export const getUser: Controller = async (req, res, next) => {
@@ -66,6 +67,34 @@ export const updateProfile: Controller = async (req, res, next) => {
     }).serialize(doc);
 
     res.status(200).json(user);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateProfileImage: Controller = async (req, res, next) => {
+  try {
+    // @ts-ignore
+    const image_file = req?.files?.image_src;
+    const old_image_src = req?.body?.old_image_src;
+
+    if (!image_file)
+      throw new BadRequestError('Please provide an image for your profile');
+
+    const image = await imageUpload.sharp(image_file[0]?.path);
+
+    const result = await imageUpload.cloudinary(image, old_image_src);
+
+    const userId = req.params.userId;
+
+    await User.findOneAndUpdate(
+      { _id: userId },
+      { $set: { image_src: result.url } }
+    );
+
+    res.status(200).json({
+      image_src: result.url,
+    });
   } catch (error) {
     next(error);
   }

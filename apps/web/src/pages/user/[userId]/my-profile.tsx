@@ -13,7 +13,7 @@ export const getServerSideProps: GetServerSideProps = async ({
     const res = await fetch(`${API_URL}/api/v1/users/${params?.userId}/events`);
     const { data } = await res.json();
 
-    const user = { ...data?.attributes };
+    const user = { ...data?.attributes, id: data?.id };
 
     delete user.events;
 

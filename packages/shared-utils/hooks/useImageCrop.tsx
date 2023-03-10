@@ -6,9 +6,14 @@ import NextImage from 'next/image';
 interface Options {
   aspect?: number;
   className?: string;
+  onSubmit?: () => void;
 }
 
-export const useImageCrop = ({ aspect = 2, className = '' }: Options = {}) => {
+export const useImageCrop = ({
+  aspect = 2,
+  className = '',
+  onSubmit,
+}: Options = {}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [imgSrc, setImgSrc] = useState('');
   const [percentCrop, setPercentCrop] = useState<Crop>();
@@ -46,6 +51,7 @@ export const useImageCrop = ({ aspect = 2, className = '' }: Options = {}) => {
           setImageFile(img.file);
         }
         setIsOpen(false);
+        onSubmit && onSubmit();
       }
     } catch (error) {
       console.log(error);
@@ -90,7 +96,7 @@ export const useImageCrop = ({ aspect = 2, className = '' }: Options = {}) => {
               Cancel
             </Button>
             <Button type="button" className="px-6" onClick={handleGetCropImage}>
-              Save
+              Select
             </Button>
           </div>
         </Modal>
@@ -98,7 +104,7 @@ export const useImageCrop = ({ aspect = 2, className = '' }: Options = {}) => {
     ),
 
     //@ts-ignore
-    openModal: () => inputRef.current.click(),
+    openCropModal: () => inputRef.current.click(),
     imageFile,
     imageUrl,
   };

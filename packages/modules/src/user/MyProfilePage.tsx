@@ -12,6 +12,7 @@ import { EditProfileModal } from '../shared';
 import { useState } from 'react';
 import ReactCrop, { centerCrop, Crop, makeAspectCrop } from 'react-image-crop';
 import getCroppedImg from '../event/form/cropImage';
+import { objToFormData } from 'shared-utils/form';
 
 interface MyProfilePageProps {
   userName?: string;
@@ -22,6 +23,34 @@ interface MyProfilePageProps {
   aspect?: number;
 }
 
+const API_URL = process.env.NEXT_PUBLIC_API_ENDPOINT || '';
+
+const handleChangeProfileImage = async (
+  newImage: Blob | null,
+  userId: string,
+  oldImageSrc: string
+) => {
+  const formData = objToFormData({
+    image_src: newImage,
+    old_image_src: oldImageSrc,
+  });
+
+  console.log(formData);
+
+  try {
+    const res = await fetch(`${API_URL}/api/v1/users/${userId}/image`, {
+      method: 'PUT',
+      body: formData,
+    });
+
+    const data = await res.json();
+
+    return data.image_src as string;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   events,
   user,
@@ -29,27 +58,82 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
 }) => {
   const { t, i18n } = useTypeSafeTranslation();
   const [editModal, setEditModal] = useState(false);
+  const [profile, setProfile] = useState(user?.image_src);
 
-  const { ImageCropModal, openModal, imageFile, imageUrl } = useImageCrop({
+  const { ImageCropModal, openCropModal, imageFile, imageUrl } = useImageCrop({
     aspect: 1,
+    onSubmit: () => setPreviewModalOpen(true),
   });
   const [interestedEvents, setInterestedEvents] = useLocalInterestedEvent();
+  const [previewModalOpen, setPreviewModalOpen] = useState(false);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
     <>
+      <SeoMeta title={user.username} description="" />
+
       {ImageCropModal}
+
+      {/* Start of preview image modal */}
+
+      <Modal
+        title="Upate Profile"
+        show={previewModalOpen}
+        onClose={() => setPreviewModalOpen(false)}
+      >
+        <div className="flex justify-center">
+          <div className="relative h-60 w-60 md:h-80 md:w-80">
+            <Image
+              className="ring-secondary mt-3 rounded-full p-2 ring-[5px]"
+              src={imageUrl}
+              fill
+              alt="profile"
+            />
+          </div>
+        </div>
+        <div className="mt-6 flex justify-end space-x-4">
+          <Button
+            className="px-6"
+            variant="secondary"
+            onClick={() => setPreviewModalOpen(false)}
+          >
+            Cancel
+          </Button>
+          <Button
+            className="px-6"
+            isLoading={isLoading}
+            onClick={async () => {
+              setIsLoading(true);
+              const image_src = await handleChangeProfileImage(
+                imageFile,
+                user.id,
+                profile
+              );
+
+              setProfile(image_src);
+              setPreviewModalOpen(false);
+              setIsLoading(false);
+            }}
+          >
+            Submit
+          </Button>
+        </div>
+      </Modal>
+      {/* End of preview image modal */}
+
       <div className="space-y-6 divide-y">
         <div className="flex gap-4">
           <div className="flex flex-[2] justify-center">
             <div className="relative h-32 w-32 md:h-40 md:w-40">
               <Image
-                src={user.image_src}
+                src={profile}
                 alt="Picture of the author"
                 fill
                 className="ring-primary rounded-full p-1 ring-[3px]"
               />
               <button
-                onClick={openModal}
+                onClick={openCropModal}
                 className="bg-secondary-light absolute bottom-3 right-0 z-10 flex  h-9 w-9 items-center justify-center rounded-full"
               >
                 {<CameraIcon className="text-secondary h-6 w-6" />}

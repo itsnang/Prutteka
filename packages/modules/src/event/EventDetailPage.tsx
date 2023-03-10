@@ -23,6 +23,7 @@ import {
   Typography,
   ItemContainer,
   EventInfoCard,
+  RichEditorDisplay,
 } from 'ui';
 import { ShareModal } from '../shared';
 import { AttendModal } from './AttendModal';
@@ -198,7 +199,9 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
             <div className="mt-4 space-y-4">
               {event.attributes.locations.map((location) => (
                 <div className="space-y-2">
-                  <Typography>{location.name}</Typography>
+                  <Typography>
+                    {translateTextObject(location.name, i18n.language)}
+                  </Typography>
                   <Link
                     href={location.link}
                     className="inline-flex rounded-lg border border-gray-200 py-2 px-4 font-normal"
@@ -301,9 +304,10 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
                 {t('event-detail-page.event-detail')}
               </Typography>
             </div>
-            <div className="mt-4 overflow-auto break-words text-gray-700">
-              {translateTextObject(event.attributes.detail, i18n.language)}
-            </div>
+            <RichEditorDisplay
+              className="mt-4 overflow-auto break-words text-gray-700"
+              html={translateTextObject(event.attributes.detail, i18n.language)}
+            />
           </ItemContainer>
         </div>
         <Carousel

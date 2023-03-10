@@ -34,6 +34,8 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
     const response = await axios.patch(`/users/${query?.userId}`, {
       username: input,
     });
+    console.log(response);
+
     onClose();
   };
 
