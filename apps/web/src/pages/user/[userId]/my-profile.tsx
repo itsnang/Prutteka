@@ -1,4 +1,4 @@
-import { UserProfilePage } from 'modules';
+import { MyProfilePage } from 'modules';
 
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { GetServerSideProps } from 'next';
@@ -31,4 +31,4 @@ export const getServerSideProps: GetServerSideProps = async ({
   }
 };
 
-export default UserProfilePage;
+export default MyProfilePage;

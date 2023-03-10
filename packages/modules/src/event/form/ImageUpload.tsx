@@ -7,11 +7,19 @@ import { Button, Modal, Typography } from 'ui';
 import { Field } from 'formik';
 import getCroppedImg from './cropImage';
 
-export const ImageUpload = ({ t, lang }: { t: any; lang: 'en' | 'kh' }) => {
+interface ImageUploadProps {
+  t: any;
+  lang: 'en' | 'kh';
+  aspect?: number;
+}
+export const ImageUpload: React.FC<ImageUploadProps> = ({
+  t,
+  lang,
+  aspect = 2 / 1,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [imgSrc, setImgSrc] = useState('');
   const [percentCrop, setPercentCrop] = useState<Crop>();
-  const aspect = 2 / 1;
 
   const [imageUrl, setImageUrl] = useState('');
   const [imageFile, setImageFile] = useState<Blob | null>(null);
