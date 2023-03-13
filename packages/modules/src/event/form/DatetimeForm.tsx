@@ -2,8 +2,7 @@ import { InputField, Typography } from 'ui';
 import { Field, FieldArray, useFormikContext } from 'formik';
 import { useEffect } from 'react';
 import { EventDetail } from '../../type/EventDetailType';
-import { getCurrentTime } from './helper';
-import { t } from './SubmitEventPage';
+import { TRANSLATION as t } from './Constant';
 import { translateDate } from '../../helpers';
 
 interface DatetimeFormProps {
@@ -19,15 +18,15 @@ export const DatetimeForm: React.FC<DatetimeFormProps> = ({
   eventDays,
   lang,
 }) => {
-  const { hasCustomTime, customTimes, startDate, endDate } = dateTimeState;
+  const { hasCustomTime, customTimes, start_time, end_time } = dateTimeState;
   const { setFieldValue } = useFormikContext();
 
   useEffect(() => {
     if (isInvalidInput) return;
     const newCustomTimes = eventDays.map((date) => ({
-      startTime: getCurrentTime(),
-      endTime: getCurrentTime(),
-      date: date,
+      start_time,
+      end_time,
+      date,
     }));
 
     setFieldValue('datetime', {
@@ -48,17 +47,17 @@ export const DatetimeForm: React.FC<DatetimeFormProps> = ({
               </Typography>
               <div className="flex flex-col gap-2 rounded-2xl md:flex-row md:gap-4">
                 <InputField
-                  name={`datetime.customTimes.${idx}.startTime`}
-                  label={t.startTime[lang]}
-                  placeholder={t.startTime[lang]}
+                  name={`datetime.customTimes.${idx}.start_time`}
+                  label={t.start_time[lang]}
+                  placeholder={t.start_time[lang]}
                   containerClassName="flex-1"
                   type="time"
                 />
 
                 <InputField
-                  name={`datetime.customTimes.${idx}.endTime`}
-                  label={t.endTime[lang]}
-                  placeholder={t.endTime[lang]}
+                  name={`datetime.customTimes.${idx}.end_time`}
+                  label={t.end_time[lang]}
+                  placeholder={t.end_time[lang]}
                   containerClassName="flex-1"
                   type="time"
                 />
@@ -71,17 +70,17 @@ export const DatetimeForm: React.FC<DatetimeFormProps> = ({
   ) : (
     <div className="flex flex-col gap-2 rounded-2xl md:flex-row md:gap-4">
       <InputField
-        name="datetime.startTime"
-        label={t.startTime[lang]}
-        placeholder={t.startTime[lang]}
+        name="datetime.start_time"
+        label={t.start_time[lang]}
+        placeholder={t.start_time[lang]}
         containerClassName="flex-1"
         className="w-full"
         type="time"
       />
       <InputField
-        name="datetime.endTime"
-        label={t.endTime[lang]}
-        placeholder={t.endTime[lang]}
+        name="datetime.end_time"
+        label={t.end_time[lang]}
+        placeholder={t.end_time[lang]}
         containerClassName="flex-1"
         className="w-full"
         type="time"
@@ -95,17 +94,17 @@ export const DatetimeForm: React.FC<DatetimeFormProps> = ({
 
       <div className="flex flex-col gap-2 rounded-2xl md:flex-row md:gap-4 md:border-0">
         <InputField
-          name="datetime.startDate"
-          label={t.startDate[lang]}
-          placeholder={t.startDate[lang]}
+          name="datetime.start_date"
+          label={t.start_date[lang]}
+          placeholder={t.start_date[lang]}
           containerClassName="flex-1"
           className="w-full"
           type="date"
         />
         <InputField
-          name="datetime.endDate"
-          label={t.endDate[lang]}
-          placeholder={t.endDate[lang]}
+          name="datetime.end_date"
+          label={t.end_date[lang]}
+          placeholder={t.end_date[lang]}
           containerClassName="flex-1"
           className="w-full"
           type="date"

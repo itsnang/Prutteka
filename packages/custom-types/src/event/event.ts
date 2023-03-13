@@ -42,7 +42,7 @@ export interface Time {
   start_time: string;
   end_time: string;
   _id: string;
-  activity?: Detail;
+  activity: Detail;
 }
 
 export interface Detail {
@@ -57,7 +57,7 @@ export interface JoinMethod {
 }
 
 export interface Location {
-  name: string;
+  name: Detail;
   link: string;
   _id: string;
 }
@@ -69,7 +69,7 @@ export interface Schedule {
 }
 
 export interface DatumRelationships {
-  created_by: CreatedBy;
+  organizer: CreatedBy;
 }
 
 export interface CreatedBy {

@@ -2,7 +2,6 @@ import { SeoMeta, Typography } from 'ui';
 import React from 'react';
 import Image, { StaticImageData } from 'next/image';
 import { Button, EventCard } from 'ui';
-import { EVENTDATA } from '../constants';
 import { useTypeSafeTranslation } from 'shared-utils/hooks';
 import { useLocalInterestedEvent } from '../event';
 import { translateDate } from '../helpers';
@@ -17,14 +16,12 @@ interface ProfilePageProps {
   img?: string | StaticImageData;
 }
 
-export const ProfilePage: React.FC<ProfilePageProps> = ({
+export const UserProfilePage: React.FC<ProfilePageProps> = ({
   events,
   user,
-  followers,
-  userName,
-  img,
 }) => {
   const { t, i18n } = useTypeSafeTranslation();
+  const [isOpen, setIsOpen] = useState(false);
 
   const [interestedEvents, setInterestedEvents] = useLocalInterestedEvent();
 

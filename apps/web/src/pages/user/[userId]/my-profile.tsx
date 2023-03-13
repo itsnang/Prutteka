@@ -1,4 +1,4 @@
-import { UserProfilePage } from 'modules';
+import { MyProfilePage } from 'modules';
 
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { GetServerSideProps } from 'next';
@@ -13,7 +13,7 @@ export const getServerSideProps: GetServerSideProps = async ({
     const res = await fetch(`${API_URL}/api/v1/users/${params?.userId}/events`);
     const { data } = await res.json();
 
-    const user = { ...data?.attributes };
+    const user = { ...data?.attributes, id: data?.id };
 
     delete user.events;
 
@@ -31,4 +31,4 @@ export const getServerSideProps: GetServerSideProps = async ({
   }
 };
 
-export default UserProfilePage;
+export default MyProfilePage;

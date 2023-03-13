@@ -4,17 +4,33 @@ import React, { useState } from 'react';
 import ReactCrop, { centerCrop, Crop, makeAspectCrop } from 'react-image-crop';
 import { Button, Modal, Typography } from 'ui';
 
-import { Field } from 'formik';
+import { useFormikContext, useField } from 'formik';
 import getCroppedImg from './cropImage';
 
-export const ImageUpload = ({ t, lang }: { t: any; lang: 'en' | 'kh' }) => {
+interface ImageUploadProps {
+  t: any;
+  lang: 'en' | 'kh';
+  image_src: string;
+  name: string;
+  aspect?: number;
+}
+
+export const ImageUpload: React.FC<ImageUploadProps> = ({
+  t,
+  lang,
+  image_src,
+  name,
+  aspect = 2 / 1,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [imgSrc, setImgSrc] = useState('');
   const [percentCrop, setPercentCrop] = useState<Crop>();
-  const aspect = 2 / 1;
+  const { setFieldValue, setFieldTouched } = useFormikContext();
 
   const [imageUrl, setImageUrl] = useState('');
-  const [imageFile, setImageFile] = useState<Blob | null>(null);
+  const [field, meta] = useField(name);
+
+  // const [imageFile, setImageFile] = useState<Blob | null>(null);
 
   const handleFileInput = (e: React.SyntheticEvent<HTMLInputElement>) => {
     const reader = new FileReader();
@@ -42,7 +58,8 @@ export const ImageUpload = ({ t, lang }: { t: any; lang: 'en' | 'kh' }) => {
 
         if (img?.url && img?.file) {
           setImageUrl(img.url);
-          setImageFile(img.file);
+          // setImageFile(img.file);
+          setFieldValue(name, img.file);
         }
         setIsOpen(false);
       }
@@ -54,9 +71,9 @@ export const ImageUpload = ({ t, lang }: { t: any; lang: 'en' | 'kh' }) => {
   return (
     <>
       <div className="relative mx-auto flex aspect-[2/1] w-full flex-col items-center justify-center gap-2.5 rounded-2xl border-2 lg:h-96 lg:w-auto lg:py-20">
-        {imageUrl ? (
+        {image_src ? (
           <Image
-            src={imageUrl}
+            src={imageUrl || image_src}
             className="-z-10 rounded-2xl bg-gray-100"
             fill
             alt="upload image"
@@ -64,24 +81,26 @@ export const ImageUpload = ({ t, lang }: { t: any; lang: 'en' | 'kh' }) => {
           />
         ) : null}
         <label
-          htmlFor="details.img"
+          htmlFor="poster"
           className={`flex min-w-[16rem] items-center justify-center space-x-4 rounded-2xl py-4 backdrop-blur-sm sm:flex-col sm:space-x-0 ${
-            imgSrc ? 'bg-gray-900/25 text-white' : 'text-gray-900'
+            image_src ? 'bg-gray-900/25 text-white' : 'text-gray-900'
           }`}
         >
           <div className="hidden flex-col items-center sm:flex">
             <PhotoIcon className="h-20 w-20 stroke-[0.75px]" />
             <Typography
-              className={`text-base ${imgSrc ? 'text-white' : 'text-gray-900'}`}
+              className={`text-base ${
+                image_src ? 'text-white' : 'text-gray-900'
+              }`}
             >
               {t.dragAndDrop[lang]}
             </Typography>
           </div>
 
-          <Field
+          <input
             type="file"
-            name="details.img"
-            id="details.img"
+            id="poster"
+            value=""
             className="hidden"
             onChange={handleFileInput}
           />
@@ -96,7 +115,7 @@ export const ImageUpload = ({ t, lang }: { t: any; lang: 'en' | 'kh' }) => {
             </Button>
             <Typography
               className={`mt-2 text-sm ${
-                imgSrc ? 'text-white' : 'text-gray-900'
+                image_src ? 'text-white' : 'text-gray-900'
               }`}
             >
               {t.upTo10mb[lang]}
@@ -105,10 +124,15 @@ export const ImageUpload = ({ t, lang }: { t: any; lang: 'en' | 'kh' }) => {
         </label>
       </div>
 
+      {meta.error && meta.touched && (
+        <div className="text-red-600">{meta.error}</div>
+      )}
+
       <Modal
         show={isOpen && !!imgSrc}
         onClose={() => {
           setIsOpen(false);
+          setFieldTouched(name, true);
         }}
       >
         <ReactCrop
