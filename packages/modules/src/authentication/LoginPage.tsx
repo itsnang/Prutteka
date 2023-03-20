@@ -70,10 +70,7 @@ export const LoginPage: NextPageWithLayout = () => {
 
       const response = await axios.post(
         '/login',
-        {
-          email: email,
-          password: password,
-        },
+        {},
         {
           headers: {
             Authorization: 'Bearer ' + token,
@@ -104,8 +101,22 @@ export const LoginPage: NextPageWithLayout = () => {
   const handleGoogleSignIn = async () => {
     try {
       setIsSubmiting(true);
-      const response = await signInWithPopup(auth, googleProvider);
-      const token = await response.user.getIdToken();
+      const fbResponse = await signInWithPopup(auth, googleProvider);
+      const token = await fbResponse.user.getIdToken();
+      const serverResponse = await axios.post(
+        '/login',
+        {},
+        {
+          headers: {
+            Authorization: 'Bearer ' + token,
+          },
+        }
+      );
+
+      const user = serverResponse.data as APIResponseUser;
+      console.log(user.data);
+
+      setUser(user.data.id, user.data.attributes);
       setToken(token);
     } catch (error) {
     } finally {

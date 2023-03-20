@@ -43,11 +43,10 @@ export const RichEditor: React.FC<RichEditorProps> = ({
   label,
   className = '',
   containerClassName = '',
+  placeholder = '',
 }) => {
-  const [{ value }, meta] = useField<string>(name);
+  const [{ value }, meta, { setTouched }] = useField<string>(name);
   const { setFieldValue } = useFormikContext();
-
-  //to convert to raw html "draftToHtml(convertToRaw(e.getCurrentContent()))"
 
   const { t } = useTypeSafeTranslation();
 
@@ -57,6 +56,7 @@ export const RichEditor: React.FC<RichEditorProps> = ({
   }, []);
 
   const handleEditorChange = (e: EditorState) => {
+    setTouched(true);
     setFieldValue(name, e);
   };
 
@@ -65,6 +65,7 @@ export const RichEditor: React.FC<RichEditorProps> = ({
       <label className="flex flex-col">
         {label}
         <Editor
+          placeholder={placeholder}
           wrapperClassName={`ring-primary cursor-text rounded-2xl border border-gray-200 text-gray-900 focus-within:ring ${className} ${
             label ? 'mt-2' : ''
           }`}
@@ -109,9 +110,9 @@ export const RichEditor: React.FC<RichEditorProps> = ({
           }}
         />
       </label>
-      {/* {meta.error && meta.touched && (
+      {meta.error && meta.touched && (
         <div className="text-red-600">{t(meta.error as never)}</div>
-      )} */}
+      )}
     </div>
   );
 };

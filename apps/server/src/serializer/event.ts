@@ -29,7 +29,7 @@ const serializer = (topLevelLinks: {
     organizer: {
       ref: 'id',
       included: true,
-      attributes: ['username'],
+      attributes: ['display_name'],
     },
   });
 };

@@ -18,3 +18,5 @@ export * from './RichEditorDisplay';
 export * from './DatePicker';
 export * from './Message';
 export * from './EventCardSkeleton';
+export * from './Table';
+export * from './SelectField';

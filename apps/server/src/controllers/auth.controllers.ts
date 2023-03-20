@@ -1,4 +1,4 @@
-import { BadRequestError } from '../errors';
+import { BadRequestError, UnAuthorizedError } from '../errors';
 import AuthServices from '../services/auth.services';
 import { Controller } from './types';
 import serializer from '../serializer/user';
@@ -9,6 +9,9 @@ export const login: Controller = async (req, res, next) => {
     const uid = req.user?.uid as string;
 
     const doc = await AuthServices.login(uid);
+    if (!doc) {
+      throw new UnAuthorizedError('Log in failed');
+    }
 
     const currentUrl = getCurrentUrl(req);
 
@@ -26,6 +29,10 @@ export const signup: Controller = async (req, res, next) => {
     const user = req.body;
 
     const doc = await AuthServices.signup(uid, user);
+
+    if (!doc) {
+      throw new UnAuthorizedError('Sign up failed');
+    }
 
     const currentUrl = getCurrentUrl(req);
 

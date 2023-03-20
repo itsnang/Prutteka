@@ -2,11 +2,16 @@ import create from 'zustand';
 import { combine } from 'zustand/middleware';
 
 const initialState = {
+  id: '',
   email: '',
-  username: '',
+  image_src: '',
+  display_name: '',
+  last_name: '',
+  first_name: '',
+  gender: '',
+  date_of_birth: '',
   notications: [],
   interested_events: [],
-  id: '',
 };
 
 export const useAuth = create(

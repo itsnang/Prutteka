@@ -15,6 +15,7 @@ const serializer = (topLevelLinks: { self: string | URL }) => {
       'followers',
       'events',
       'interested_events',
+      'events',
     ],
   });
 };

@@ -1,3 +1,5 @@
+import axios from 'axios';
+import { APIResponseUser } from 'custom-types';
 import { auth } from 'firebase-config';
 import { onAuthStateChanged, onIdTokenChanged } from 'firebase/auth';
 import { useEffect } from 'react';
@@ -12,16 +14,34 @@ export function useProvideAuth() {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        const token = await user.getIdToken();
-        setToken(token);
-      } else {
+      try {
+        if (user) {
+          const token = await user.getIdToken();
+          const loggedInUser = await axios.post(
+            '/login',
+            {},
+            { headers: { Authorization: 'Bearer ' + token } }
+          );
+          const userData = loggedInUser.data as APIResponseUser;
+          console.log('user:', userData);
+
+          setToken(token);
+          setUser(userData.data.id, userData.data.attributes);
+        } else {
+          clearToken();
+          resetUser();
+        }
+      } catch (error) {
+        console.log(error);
+
+        // auth.signOut();
         clearToken();
+        resetUser();
       }
     });
 
     return () => unsubscribe();
-  }, [setToken, clearToken]);
+  }, [setToken, clearToken, setUser, resetUser]);
 
   useEffect(() => {
     const unsubscribe = onIdTokenChanged(auth, async (user) => {

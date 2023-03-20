@@ -22,7 +22,9 @@ export interface EventType {
   schedules: Schedule[];
   join_methods: JoinMethod[];
   organizer: mongoose.Types.ObjectId;
-  attendees: mongoose.Types.ObjectId[];
+  sub_events?: mongoose.Types.ObjectId[];
+  main_event?: mongoose.Types.ObjectId;
+  registered_users: mongoose.Types.ObjectId[];
 }
 
 const translationSchema = new mongoose.Schema<Translation>(
@@ -78,6 +80,7 @@ const eventSchema = new mongoose.Schema<EventType>(
             'music',
             'exhibition',
             'technology',
+            'food',
             'charity',
           ],
         },
@@ -222,13 +225,32 @@ const eventSchema = new mongoose.Schema<EventType>(
       ref: 'User',
       required: [true, 'Please provide authorize token'],
     },
-    attendees: {
-      type: [mongoose.Schema.Types.ObjectId],
-      ref: 'User',
-      default: null,
+    registered_users: {
+      type: [
+        {
+          id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+          attend: { type: Boolean, default: false },
+        },
+      ],
+    },
+    main_event: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Event',
+      required: false,
     },
   },
-  { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } }
+  {
+    timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
+    toObject: { virtuals: true },
+    toJSON: { virtuals: true },
+  }
 );
+
+// eventSchema.virtual('sub_events', {
+//   ref: 'Event',
+//   localField: '_id',
+//   foreignField: 'main_event',
+//   justOne: true,
+// });
 
 export default mongoose.model('Event', eventSchema);

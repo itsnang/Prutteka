@@ -30,7 +30,7 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({ onLogout }) => {
       >
         <Menu.Items className="xs:max-w-xs absolute right-0 mt-2 flex w-screen max-w-[calc(100vw-32px)] flex-col space-y-2 rounded-xl border border-gray-100 bg-white p-4 shadow-lg">
           <div>
-            {t('common.username')}: {user.username}
+            {t('common.username')}: {user.display_name}
           </div>
           <Menu.Item>
             {({ active }) => (
@@ -42,6 +42,18 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({ onLogout }) => {
               >
                 <span>{t('common.my-event')}</span>
                 🎉
+              </Link>
+            )}
+          </Menu.Item>
+          <Menu.Item>
+            {({ active }) => (
+              <Link
+                className={`${
+                  active ? 'bg-gray-100' : ''
+                } flex justify-between rounded-xl border bg-white px-4 py-2`}
+                href="/profile"
+              >
+                <span>Profile</span>
               </Link>
             )}
           </Menu.Item>

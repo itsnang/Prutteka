@@ -12,7 +12,8 @@
     "categories": "Categories",
     "submit-event": "Submit Event",
     "my-event": "My Events",
-    "username": "Username"
+    "username": "Username",
+    "confirm": "Confirm"
   },
   "categories": {
     "all": "All",

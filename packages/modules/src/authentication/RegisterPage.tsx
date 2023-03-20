@@ -16,20 +16,17 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
   FacebookAuthProvider,
-  onAuthStateChanged,
 } from 'firebase/auth';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { AuthError } from '@firebase/auth';
 import { useTokenStore } from '../auth/useTokenStore';
 import { useRouter } from 'next/router';
-import { useVerifyLoggedIn } from '../auth/useVerifyLoggedIn';
 
 import axios from 'axios';
 import { useAuth } from '../auth/useAuth';
 import { APIResponseUser } from 'custom-types';
 
 const validationSchema = Yup.object({
-  name: Yup.string().required('formik.required'),
   email: Yup.string().email('formik.email.invalid').required('formik.required'),
   password: Yup.string()
     .min(8, 'formik.password.min')
@@ -38,7 +35,6 @@ const validationSchema = Yup.object({
 });
 
 interface InitialValuesType {
-  name: string;
   email: string;
   password: string;
 }
@@ -51,11 +47,13 @@ export const RegisterPage: NextPageWithLayout = () => {
   const { t } = useTypeSafeTranslation();
   const setToken = useTokenStore((state) => state.setToken);
   const setUser = useAuth((state) => state.setUser);
-  const hasToken = useVerifyLoggedIn();
+  const token = useTokenStore((state) => state.token);
+  const userId = useAuth((state) => state.id);
+
   const [isSubmiting, setIsSubmiting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const handleSubmit = async ({ email, password, name }: InitialValuesType) => {
+  const handleSubmit = async ({ email, password }: InitialValuesType) => {
     try {
       setIsSubmiting(true);
       const createdUser = await createUserWithEmailAndPassword(
@@ -65,25 +63,22 @@ export const RegisterPage: NextPageWithLayout = () => {
       );
 
       const token = await createdUser.user.getIdToken();
-
       const { data } = await axios.post(
         '/signup',
         {
-          username: name,
           email: email,
         },
         { headers: { Authorization: 'Bearer ' + token } }
       );
-
       const user = data as APIResponseUser;
-      setUser(user.data.id, user.data.attributes);
-
       setToken(token);
+      setUser(user.data.id, user.data.attributes);
     } catch (error) {
       if ((error as AuthError).code === 'auth/email-already-in-use') {
         return setErrorMessage('Email is already existed');
       }
       setErrorMessage('Something went wrong');
+      console.log(error);
     } finally {
       setIsSubmiting(false);
     }
@@ -92,8 +87,27 @@ export const RegisterPage: NextPageWithLayout = () => {
   const handleGoogleSignIn = async () => {
     try {
       setIsSubmiting(true);
-      const response = await signInWithPopup(auth, googleProvider);
-      const token = await response.user.getIdToken();
+      const fbResponse = await signInWithPopup(auth, googleProvider);
+      const token = await fbResponse.user.getIdToken();
+      console.log(fbResponse.user);
+
+      const serverResponse = await axios.post(
+        '/signup',
+        {
+          username: fbResponse.user.displayName,
+          email: fbResponse.user.email,
+        },
+        {
+          headers: {
+            Authorization: 'Bearer ' + token,
+          },
+        }
+      );
+
+      const user = serverResponse.data as APIResponseUser;
+      console.log(user.data);
+
+      setUser(user.data.id, user.data.attributes);
       setToken(token);
     } catch (error) {
     } finally {
@@ -113,12 +127,6 @@ export const RegisterPage: NextPageWithLayout = () => {
     }
   };
 
-  useEffect(() => {
-    if (hasToken) {
-      push('/');
-    }
-  }, [push, hasToken]);
-
   return (
     <>
       <SeoMeta title="Register - Prutteka" description="" />
@@ -135,17 +143,12 @@ export const RegisterPage: NextPageWithLayout = () => {
         </Link>
 
         <Formik
-          initialValues={{ email: '', password: '', name: '' }}
+          initialValues={{ email: '', password: '' }}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
           {() => (
             <Form className="flex flex-col gap-4 p-4">
-              <InputField
-                name="name"
-                placeholder={t('register-page.name') || ''}
-                type="text"
-              />
               <InputField
                 name="email"
                 placeholder={t('register-page.email') || ''}

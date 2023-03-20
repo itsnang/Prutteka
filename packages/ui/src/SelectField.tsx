@@ -1,6 +1,7 @@
 import React, { forwardRef } from 'react';
 
 import { useField } from 'formik';
+import { useTypeSafeTranslation } from 'shared-utils/hooks';
 
 interface SelectFieldProps
   extends Partial<React.HTMLAttributes<HTMLSelectElement>> {
@@ -8,8 +9,9 @@ interface SelectFieldProps
   label: string;
   className?: string;
   containerClassName?: string;
-  options: string[];
-  values: string[];
+  options: { [key: string]: { en: string; kh: string } };
+  // values: string[];
+  lang: 'en' | 'kh';
 }
 
 export const SelectField = forwardRef<HTMLSelectElement, SelectFieldProps>(
@@ -21,12 +23,13 @@ export const SelectField = forwardRef<HTMLSelectElement, SelectFieldProps>(
       containerClassName = '',
       options,
       placeholder,
-      values,
+      lang,
       ...props
     },
     ref
   ) => {
     const [field, meta] = useField(name);
+    const { t } = useTypeSafeTranslation();
 
     return (
       <div className={`space-y-2 ${containerClassName}`}>
@@ -44,15 +47,15 @@ export const SelectField = forwardRef<HTMLSelectElement, SelectFieldProps>(
             <option value="" disabled>
               {placeholder}
             </option>
-            {options.map((option, idx) => (
-              <option key={idx} value={values[idx]}>
-                {option}
+            {Object.keys(options).map((option, index) => (
+              <option key={index} value={option}>
+                {options[option][lang]}
               </option>
             ))}
           </select>
         </label>
         {meta.error && meta.touched && (
-          <div className="text-red-600">{meta.error}</div>
+          <div className="text-red-600">{t(meta.error as any)}</div>
         )}
       </div>
     );

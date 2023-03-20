@@ -8,6 +8,7 @@ import cloudinary from '../libs/cloudinary';
 import getCurrentUrl from '../utils/getCurrentUrl';
 import eventServices from '../services/event.services';
 import userServices from '../services/user.services';
+import imageUpload from '../utils/ImageUpload';
 
 export const getAllEvents: Controller = async (req, res, next) => {
   try {
@@ -36,7 +37,6 @@ export const getAllEvents: Controller = async (req, res, next) => {
       prev: previousPage,
     }).serialize(doc);
 
-    // setTimeout(() => {}, 1000);
     res.status(200).json(allEvents);
   } catch (error) {
     next(error);
@@ -46,34 +46,37 @@ export const getAllEvents: Controller = async (req, res, next) => {
 export const createEvent: Controller = async (req, res, next) => {
   try {
     // @ts-ignore
-    // const image_file = req?.files?.image_src;
+    const image_file = req?.files?.image_src;
 
-    // if (!image_file)
-    //   throw new BadRequestError('Please provide an Image for your event');
+    if (!image_file) {
+      throw new BadRequestError('Please provide an Image for your event');
+    }
 
     await Event.validate({
       ...req.body,
-      created_by: '63ec58d01a38a046ed44afda',
+      organizer: '012345678912',
+      image_src: 'https://www.example.com/image.jpeg',
     });
 
-    // const result = await cloudinary.uploader.upload(
-    //   image_file[0].path as string
-    // );
+    const image = await imageUpload.sharp(image_file[0]?.path);
 
-    const newEvent = await Event.create({
+    const result = await imageUpload.cloudinary(image, { folder: 'events' });
+
+    const doc = await Event.create({
       ...req.body,
+      organizer: '012345678912',
+      image_src: result?.secure_url,
     });
 
-    res.json({
-      type: 'events',
-      id: newEvent._id,
-      attributes: {
-        ...newEvent.toJSON(),
-        links: {
-          self: `http://localhost:3000/events/${newEvent._id}`,
-        },
-      },
-    });
+    const currentUrl = new URL(
+      req.protocol + '://' + req.get('host') + req.originalUrl
+    );
+
+    const newEvent = serializer({
+      self: currentUrl,
+    }).serialize(doc);
+
+    res.status(201).json(newEvent);
   } catch (error) {
     next(error);
   }
@@ -125,6 +128,56 @@ export const deleteEvent: Controller = async (req, res, next) => {
   }
 };
 
+export const updateEvent: Controller = async (req, res, next) => {
+  try {
+    // @ts-ignore
+    const image_file = req?.files?.image_src;
+    const eventId = req.params.eventId;
+
+    let image_src: undefined | string;
+
+    if (req.body.image_src) {
+      image_src = req.body.image_src as string;
+    } else {
+      if (!image_file)
+        throw new BadRequestError('Please provide an Image for your event');
+
+      await Event.validate({
+        ...req.body,
+        organizer: '012345678912',
+        image_src: 'https://www.example.com/image.jpeg',
+      });
+
+      const image = await imageUpload.sharp(image_file[0]?.path);
+
+      const result = await imageUpload.cloudinary(
+        image,
+        req.body?.old_image_src
+      );
+
+      image_src = result.secure_url;
+    }
+
+    const doc = await Event.findByIdAndUpdate(eventId, {
+      ...req.body,
+      organizer: '012345678912',
+      image_src,
+    });
+
+    const currentUrl = new URL(
+      req.protocol + '://' + req.get('host') + req.originalUrl
+    );
+
+    const updatedEvent = serializer({
+      self: currentUrl,
+    }).serialize(doc);
+
+    res.status(200).json(updatedEvent);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const registerToAnEvent: Controller = async (req, res, next) => {
   try {
     const eventId = req.params.eventId;
@@ -152,6 +205,35 @@ export const registerToAnEvent: Controller = async (req, res, next) => {
     }
 
     res.status(204).send();
+  } catch (error) {
+    next(error);
+  }
+};
+
+//not done
+export const createNestedEvent: Controller = async (req, res, next) => {
+  try {
+    // @ts-ignore
+    const image_file = req?.files?.image_src;
+    const main_event = req.params.eventId;
+
+    if (!image_file)
+      throw new BadRequestError('Please provide an Image for your event');
+
+    // await Event.validate({
+    //   ...req.body,
+    //   organizer: '012345678912',
+    //   image_src: 'https://www.example.com/image.jpeg',
+    // });
+
+    const doc = await Event.create({
+      ...req.body,
+      main_event,
+      organizer: '012345678912',
+      image_src: 'https://www.example.com/image.jpeg',
+    });
+
+    res.json(doc);
   } catch (error) {
     next(error);
   }

@@ -27,7 +27,7 @@ interface DatumAttributes {
   date_time: DateTime;
   location: string;
   locations: Location[];
-  schedules: Schedule[];
+  schedules: Schedules[];
   join_methods: JoinMethod[];
 }
 
@@ -62,12 +62,12 @@ export interface JoinMethod {
 }
 
 export interface Location {
-  name: string;
+  name: Detail;
   link: string;
   _id: string;
 }
 
-export interface Schedule {
+export interface Schedules {
   date: string;
   schedules: Schedule[];
   _id: string;

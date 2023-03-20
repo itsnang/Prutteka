@@ -1,5 +1,6 @@
 import React from 'react';
 import { Footer } from 'ui';
+import { QR } from '../user/QR';
 import { Header, MainLayout } from './index';
 
 interface DesktopLayoutProps {
@@ -10,6 +11,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = ({ children }) => {
   return (
     <MainLayout top={<Header />} bottom={<Footer />}>
       {children}
+      <QR />
     </MainLayout>
   );
 };

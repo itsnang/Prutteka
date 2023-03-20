@@ -6,8 +6,10 @@ class AuthService {
   }
 
   async signup(uid: string, user: any): Promise<any> {
+    const { email } = user;
+
     return User.create({
-      ...user,
+      email,
       uid,
     });
   }

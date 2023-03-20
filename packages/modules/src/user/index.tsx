@@ -1,3 +1,4 @@
 export * from './InterestedEventPage';
 export * from './MyEventPage';
-export * from './ProfilePage';
+export * from './UserProfilePage';
+export * from './MyProfilePage';
