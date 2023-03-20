@@ -86,23 +86,9 @@ export const RichEditor: React.FC<RichEditorProps> = ({
           }
           onEditorStateChange={handleEditorChange}
           toolbar={{
-            options: [
-              'inline',
-              'fontSize',
-              'fontFamily',
-              'list',
-              'link',
-              'emoji',
-              'history',
-            ],
+            options: ['inline', 'list', 'emoji', 'history'],
             inline: {
-              options: [
-                'bold',
-                'italic',
-                'underline',
-                'strikethrough',
-                'monospace',
-              ],
+              options: ['bold', 'italic', 'underline', 'strikethrough'],
             },
             list: {
               options: ['ordered', 'unordered'],
