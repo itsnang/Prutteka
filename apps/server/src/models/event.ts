@@ -1,39 +1,39 @@
-import mongoose from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 
 import {
-  Translation,
-  DateTime,
+  TranslationStringType,
+  Date,
+  Time,
   JoinMethod,
   Location,
   Schedule,
+  Dynamic_Content,
 } from './event.types';
 
 export interface EventType {
   _id: mongoose.Types.ObjectId;
-  name: Translation;
+  name: TranslationStringType;
   type: string;
-  category: string[];
+  categories: string[];
   image_src: string;
-  detail: Translation;
-  is_nested: boolean;
-  date_time: DateTime;
+  detail: TranslationStringType;
+  date: Date;
+  times: Time;
   location: String;
   locations: Location[];
   schedules: Schedule[];
   join_methods: JoinMethod[];
+  dynamic_contents: Dynamic_Content[];
   organizer: mongoose.Types.ObjectId;
-  sub_events?: mongoose.Types.ObjectId[];
-  main_event?: mongoose.Types.ObjectId;
-  registered_users: mongoose.Types.ObjectId[];
 }
 
-const translationSchema = new mongoose.Schema<Translation>(
+const translationSchema = new mongoose.Schema<TranslationStringType>(
   {
     en: {
       type: String,
       default: '',
     },
-    kh: {
+    km: {
       type: String,
       default: '',
     },
@@ -45,20 +45,21 @@ const eventSchema = new mongoose.Schema<EventType>(
   {
     name: {
       type: translationSchema,
-      required: [true, 'Event name must not be empty'],
+      required: [true, 'Event name must be provided'],
       validate: [
         {
-          validator: (value: Translation) => value.en.trim() || value.kh.trim(),
-          message: 'Please provide at least one event name in either language',
+          validator: (value: TranslationStringType) =>
+            value.en.trim() || value.km.trim(),
+          message: 'Event name must be provided in english or khmer',
         },
         {
-          validator: (value: Translation) =>
-            value.en.trim().length > 5 || value.kh.trim().length > 5,
+          validator: (value: TranslationStringType) =>
+            value.en.trim().length > 5 || value.km.trim().length > 5,
           message: 'Event name must be longer than 5 characters',
         },
         {
-          validator: (value: Translation) =>
-            value.en.trim().length < 100 || value.kh.trim().length < 100,
+          validator: (value: TranslationStringType) =>
+            value.en.trim().length < 100 || value.km.trim().length < 100,
           message: 'Event name must be shorter than 100 characters',
         },
       ],
@@ -68,7 +69,7 @@ const eventSchema = new mongoose.Schema<EventType>(
       enum: ['physical', 'online', 'physical-online'],
       required: [true, 'Please provide event type'],
     },
-    category: {
+    categories: {
       type: [
         {
           type: String,
@@ -87,102 +88,109 @@ const eventSchema = new mongoose.Schema<EventType>(
       ],
       validate: [
         (value: string[]) => value.length > 0,
-        'Please provide at least one event category',
+        'At least one category must be provided',
       ],
     },
     image_src: {
       type: String,
-      required: [true, 'Please provide event image source'],
+      required: [true, 'Event image source must be provided'],
       validate: [
         (value: string) => {
           const imageURLPattern =
-            /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*\.(jpeg|jpg|png|gif|webp)(\?.*)?)$/;
+            /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*\.(jpeg|jpg|png|jfif|webp)(\?.*)?)$/;
           return imageURLPattern.test(value);
         },
-        'Please provide a valid image source url',
+        'Image source must be a valid url',
       ],
     },
     detail: {
       type: translationSchema,
-      required: [true, 'Please provide event detail'],
+      required: [true, 'Event detail must be provided'],
       validate: [
         {
-          validator: (value: Translation) => value.en.trim() || value.kh.trim(),
-          message: 'Please provide at least one event name in either language',
+          validator: (value: TranslationStringType) =>
+            value.en.trim() || value.km.trim(),
+          message: 'Event detail must be provided in english or khmer',
         },
         {
-          validator: (value: Translation) =>
-            value.en.trim().length < 10000 || value.kh.trim().length < 10000,
-          message: 'Event name must be shorter than 100 characters',
+          validator: (value: TranslationStringType) =>
+            value.en.trim().length < 10000 || value.km.trim().length < 10000,
+          message: 'Event detail must be shorter than 10000 characters',
         },
       ],
     },
-    is_nested: {
-      type: Boolean,
-      default: false,
-    },
-    date_time: {
+    date: {
       start_date: {
         type: Date,
-        required: [true, 'Please provide event start date'],
+        required: [true, 'Event start date must be provided'],
       },
       end_date: {
         type: Date,
-        required: [true, 'Please provide event end date'],
+        required: [true, 'Event end date must be provided'],
       },
-      times: [
-        {
-          start_time: {
-            type: Date,
-            required: [true, 'Please provide event start time'],
-          },
-          end_time: {
-            type: Date,
-            required: [true, 'Please provide event end time'],
-          },
+    },
+    times: [
+      {
+        date: {
+          type: Date,
+          required: [true, 'Date of time must be provided'],
         },
-      ],
-    },
-    location: {
-      type: String,
-      enum: [
-        'phnom-penh',
-        'banteay-meanchey',
-        'battambang',
-        'kampong-cham',
-        'kampong-chhnang',
-        'kampong-speu',
-        'kampo',
-        'kandal',
-        'kep',
-        'koh-kong',
-        'kratie',
-        'mondulkiri',
-        'oddor-meanchey',
-        'pailin',
-        'prev-veng',
-        'pursat',
-        'rattanakiri',
-        'siem-reap',
-        'sihanouk-ville',
-        'stung-treng',
-        'svay-rieng',
-        'takeo',
-        'kampong-thom',
-        'preah-vihear',
-        'tbong-khmum',
-      ],
-      required: [true, 'Please provide event location'],
-    },
+        start_time: {
+          type: Date,
+          required: [true, 'Event start time must be provided'],
+        },
+        end_time: {
+          type: Date,
+          required: [true, 'Event end time must be provided'],
+        },
+      },
+    ],
     locations: [
       {
         name: {
           type: String,
-          required: [true, 'Please provide event location name'],
+          required: [true, 'Location name must be provided'],
         },
-        link: {
+        address: {
           type: String,
-          required: [true, 'Please provide event location link'],
+          required: [true, 'Location address must be provided'],
+        },
+        url: {
+          type: String,
+          required: false,
+          match: [
+            /^https:\/\/maps\.google\.com\//,
+            'Location url must be a valid google map link',
+          ],
+        },
+        latlng: {
+          type: new mongoose.Schema(
+            {
+              lat: {
+                type: Number,
+              },
+              lng: { type: Number },
+            },
+            { _id: false }
+          ),
+          required: false,
+        },
+        type: {
+          type: String,
+          required: [true, 'Location type must be provided'],
+          enum: ['google', 'custom'],
+        },
+        place_id: {
+          type: String,
+          required: false,
+        },
+        image_src: {
+          type: String,
+          required: false,
+          match: [
+            /^https:\/\/maps\.googleapis\.com\/maps\/api\/staticmap/,
+            'Location image source must be a valid google map static-map',
+          ],
         },
       },
     ],
@@ -207,7 +215,7 @@ const eventSchema = new mongoose.Schema<EventType>(
     join_methods: {
       type: [
         {
-          name: translationSchema,
+          name: { type: translationSchema },
           link: {
             type: String,
             required: [true, 'Please provide event method link'],
@@ -220,37 +228,41 @@ const eventSchema = new mongoose.Schema<EventType>(
         'Please provide at least one event join method',
       ],
     },
+    dynamic_contents: [
+      {
+        name: { type: translationSchema },
+        items: [
+          {
+            image_src: {
+              type: String,
+              validate: [
+                (value: string) => {
+                  const imageURLPattern =
+                    /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*\.(jpeg|jpg|png|jfif|webp)(\?.*)?)$/;
+                  return imageURLPattern.test(value);
+                },
+                'Image source must be a valid url',
+              ],
+            },
+            name: {
+              type: translationSchema,
+            },
+            detail: {
+              type: translationSchema,
+            },
+          },
+        ],
+      },
+    ],
     organizer: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: [true, 'Please provide authorize token'],
     },
-    registered_users: {
-      type: [
-        {
-          id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-          attend: { type: Boolean, default: false },
-        },
-      ],
-    },
-    main_event: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Event',
-      required: false,
-    },
   },
   {
     timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
-    toObject: { virtuals: true },
-    toJSON: { virtuals: true },
   }
 );
-
-// eventSchema.virtual('sub_events', {
-//   ref: 'Event',
-//   localField: '_id',
-//   foreignField: 'main_event',
-//   justOne: true,
-// });
 
 export default mongoose.model('Event', eventSchema);

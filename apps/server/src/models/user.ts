@@ -18,9 +18,7 @@ export interface UserType {
   followers?: Types.ObjectId[];
   following?: Types.ObjectId[];
   notifications?: Message[];
-  events?: Types.ObjectId[];
   interested_events?: Types.ObjectId[];
-  registered_events?: Types.ObjectId[];
 }
 
 const notificationsSchema = new Schema<Message, Model<Message>>({
@@ -87,19 +85,7 @@ const userSchema = new Schema<UserType>(
     followers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     following: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     notifications: [notificationsSchema],
-    events: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'Event',
-      },
-    ],
     interested_events: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'Event',
-      },
-    ],
-    registered_events: [
       {
         type: Schema.Types.ObjectId,
         ref: 'Event',
