@@ -1,23 +1,56 @@
 import JSONAPISerializer from 'jsonapi-serializer';
 
-const serializer = (topLevelLinks: { self: string | URL }) => {
-  return new JSONAPISerializer.Serializer('user', {
+interface SerializeOption {
+  links: { self: string | URL };
+  populate?: 'events';
+}
+
+const serializer = (option?: SerializeOption) => {
+  let options = {
     keyForAttribute: 'underscore_case',
     topLevelLinks: {
-      self: topLevelLinks.self,
+      self: option?.links.self,
     } as {},
     attributes: [
-      'username',
+      'display_name',
+      'last_name',
+      'first_name',
+      'gender',
+      'date_of_birth',
       'email',
       'image_src',
       'notifications',
       'following',
       'followers',
-      'events',
       'interested_events',
-      'events',
     ],
-  });
+  };
+
+  const eventsRelationship = {
+    ref: 'id',
+    included: true,
+    attributes: [
+      'name',
+      'type',
+      'categories',
+      'image_src',
+      'detail',
+      'date',
+      'times',
+      'locations',
+      'schedules',
+      'join_methods',
+      'dynamic_contents',
+      'organizer',
+      'created_at',
+    ],
+  };
+
+  if (option?.populate && option?.populate.split(' ').includes('events')) {
+    options = Object.assign(options, { events: eventsRelationship });
+  }
+
+  return new JSONAPISerializer.Serializer('user', options);
 };
 
 export default serializer;

@@ -1,37 +1,50 @@
 import JSONAPISerializer from 'jsonapi-serializer';
 
-const serializer = (topLevelLinks: {
-  self: string | URL;
-  prev?: string | URL | null;
-  next?: string | URL | null;
-}) => {
-  return new JSONAPISerializer.Serializer('events', {
+interface SerializeOption {
+  links: {
+    self: string | URL;
+    prev?: string | URL | null;
+    next?: string | URL | null;
+  };
+  populate?: 'organizer';
+}
+
+const serializer = (option: SerializeOption) => {
+  let options = {
     keyForAttribute: 'underscore_case',
     topLevelLinks: {
-      self: topLevelLinks.self,
-      prev: topLevelLinks.prev,
-      next: topLevelLinks.next,
+      self: option.links.self,
+      prev: option.links.prev,
+      next: option.links.next,
     } as {},
     attributes: [
       'name',
       'type',
-      'category',
+      'categories',
       'image_src',
       'detail',
-      'date_time',
-      'location',
+      'date',
+      'times',
       'locations',
       'schedules',
       'join_methods',
+      'dynamic_contents',
       'organizer',
       'created_at',
     ],
-    organizer: {
-      ref: 'id',
-      included: true,
-      attributes: ['display_name'],
-    },
-  });
+  };
+
+  const organizerRelationship = {
+    ref: 'id',
+    included: true,
+    attributes: ['display_name'],
+  };
+
+  if (option?.populate && option?.populate.split(' ').includes('organizer')) {
+    options = Object.assign(options, { organizer: organizerRelationship });
+  }
+
+  return new JSONAPISerializer.Serializer('events', options);
 };
 
 export default serializer;
