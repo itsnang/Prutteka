@@ -10,6 +10,9 @@ node_modules
 # testing
 coverage
 
+# server
+./apps/server/key
+
 # next.js
 .next/
 out/
