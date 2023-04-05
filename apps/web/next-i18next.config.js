@@ -6,7 +6,7 @@ const localePath = path.resolve('./public/locales');
  **/
 module.exports = {
   i18n: {
-    locales: ['en', 'kh'],
+    locales: ['en', 'km'],
     defaultLocale: 'en',
   },
   localePath,
