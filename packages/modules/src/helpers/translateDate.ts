@@ -27,7 +27,7 @@ const monthMapping = {
 
 export function translateDate(
   date: Date | string | number,
-  lang: 'en' | 'kh' = 'en'
+  lang: 'en' | 'km' = 'en'
 ) {
   date = new Date(date);
   const currentYear = new Date().getFullYear();

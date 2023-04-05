@@ -56,7 +56,7 @@ export const Button: React.FC<RequireChildrenOrIcon> = ({
     hasShadow ? 'shadow-inner' : ''
   } ${roundedFull ? 'rounded-full' : 'rounded-xl lg:rounded-2xl'} ${
     icon ? 'gap-4' : ''
-  } disabled:bg-opacity-20`;
+  } disabled:bg-opacity-20 transition-transform duration-75 active:scale-95`;
 
   if (as === 'link') {
     return (

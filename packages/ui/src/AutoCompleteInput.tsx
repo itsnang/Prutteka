@@ -14,6 +14,8 @@ interface AutoCompleteInputProps {
   leftIconClassName?: string;
   selected: ItemType;
   setSelected: (item: ItemType) => ItemType;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  filter?: boolean;
 }
 
 export const AutoCompleteInput: React.FC<AutoCompleteInputProps> = ({
@@ -22,22 +24,25 @@ export const AutoCompleteInput: React.FC<AutoCompleteInputProps> = ({
   leftIconClassName,
   selected,
   setSelected,
+  onChange,
+  filter = true,
 }) => {
   const [query, setQuery] = useState('');
 
-  const filteredItems =
-    query === ''
+  const filteredItems = filter
+    ? query === ''
       ? items
       : items.filter((person) =>
           person.name
             .toLowerCase()
             .replace(/\s+/g, '')
             .includes(query.toLowerCase().replace(/\s+/g, ''))
-        );
+        )
+    : items;
 
   return (
     <Combobox value={selected} onChange={setSelected}>
-      <div className="relative mt-1">
+      <div className="relative w-full">
         <div className="relative flex w-full cursor-default items-center overflow-hidden rounded-2xl border bg-white text-left">
           {leftIcon
             ? React.cloneElement(leftIcon, {
@@ -51,7 +56,10 @@ export const AutoCompleteInput: React.FC<AutoCompleteInputProps> = ({
               leftIcon ? 'pl-2' : 'pl-4'
             }`}
             displayValue={(item: ItemType) => item?.name}
-            onChange={(event) => setQuery(event.target.value)}
+            onChange={(event) => {
+              setQuery(event.target.value);
+              onChange && onChange(event);
+            }}
           />
           <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
             <ChevronUpDownIcon

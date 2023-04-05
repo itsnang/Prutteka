@@ -2,7 +2,7 @@ import { ArrowLongLeftIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useTypeSafeTranslation } from 'shared-utils/hooks';
-import { Button, Table, Typography } from 'ui';
+import { Button, Table } from 'ui';
 
 export const EventRegisterUserPage = () => {
   const { t } = useTypeSafeTranslation();

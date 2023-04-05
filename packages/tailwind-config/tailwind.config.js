@@ -26,6 +26,7 @@ module.exports = {
       black: '#000',
       gray: colors.zinc,
       red: colors.red,
+      transparent: colors.transparent,
     },
     fontSize: {
       sm: '0.875rem', // 14px

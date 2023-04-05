@@ -9,6 +9,7 @@ import { CameraIcon } from '@heroicons/react/24/outline';
 import axios from 'axios';
 import { useAuth } from '../auth/useAuth';
 import { useTokenStore } from '../auth/useTokenStore';
+import { convertDateToInputValue } from '../helpers';
 
 const validationSchema = Yup.object({
   displayName: Yup.string().required('formik.required'),
@@ -43,15 +44,18 @@ interface InitialValues {
 
 export const EditProfilePage: NextPageWithLayout = () => {
   const { t, i18n } = useTypeSafeTranslation();
+  const user = useAuth((state) => state);
   const [isSubmiting, setIsSubmiting] = useState();
   const { ImageCropModal, openCropModal, imageFile, imageUrl } = useImageCrop({
     aspect: 1,
     onSubmit: () => {},
+    image: user.image_src,
   });
 
-  const user = useAuth((state) => state);
   const token = useTokenStore((state) => state.token);
   const setUser = useAuth((state) => state.setUser);
+  // const date = ;
+  console.log(new Date(user.date_of_birth).toLocaleDateString());
 
   const handleSubmit = (values: InitialValues) => {
     console.log('submit:', values);
@@ -88,7 +92,7 @@ export const EditProfilePage: NextPageWithLayout = () => {
           lastName: user.last_name,
           firstName: user.first_name,
           gender: user.gender,
-          dateOfBirth: user.date_of_birth,
+          dateOfBirth: convertDateToInputValue(user.date_of_birth),
         }}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}

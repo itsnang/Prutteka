@@ -17,6 +17,9 @@ import Link, { LinkProps } from 'next/link';
 import { Disclosure } from '@headlessui/react';
 import { useTypeSafeTranslation } from 'shared-utils/hooks';
 import { useRouter } from 'next/router';
+import axios from 'axios';
+import { useTokenStore } from '../auth';
+import { auth } from 'firebase-config';
 
 interface UserEventCardProps {
   id: string;
@@ -28,7 +31,7 @@ interface UserEventCardProps {
   location: string;
   isNested?: boolean;
 
-  onDelete?: Function;
+  onDelete?: () => void;
 }
 
 export const UserEventCard: React.FC<UserEventCardProps> = ({
@@ -40,9 +43,12 @@ export const UserEventCard: React.FC<UserEventCardProps> = ({
   time,
   location,
   isNested = false,
+  onDelete,
 }) => {
   const router = useRouter();
   const [show, setShow] = useState(false);
+
+  const token = useTokenStore((state) => state.token);
 
   return (
     <>
@@ -117,7 +123,7 @@ export const UserEventCard: React.FC<UserEventCardProps> = ({
                   <Button
                     variant="secondary"
                     as="link"
-                    href="/"
+                    href={`/event/${id}/edit`}
                     icon={<PencilIcon />}
                   ></Button>
 
@@ -130,7 +136,11 @@ export const UserEventCard: React.FC<UserEventCardProps> = ({
                 </div>
               </div>
             </Disclosure.Panel>
-            <DeleteModal show={show} onClose={() => setShow(false)} />
+            <DeleteModal
+              show={show}
+              onClose={() => setShow(false)}
+              onDelete={() => onDelete && onDelete()}
+            />
           </div>
         )}
       </Disclosure>

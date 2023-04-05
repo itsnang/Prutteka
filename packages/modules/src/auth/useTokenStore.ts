@@ -8,7 +8,7 @@ export const useTokenStore = create(
       token: '',
     },
     (set) => ({
-      setToken: async (token: string) => {
+      setToken: (token: string) => {
         set({ token });
       },
       clearToken: () => {

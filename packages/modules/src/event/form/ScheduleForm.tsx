@@ -1,215 +1,223 @@
-import { InputField, Typography } from 'ui';
-import { Field, FieldArray, useFormikContext } from 'formik';
-import { useEffect } from 'react';
-import { PlusIcon, MinusIcon } from '@heroicons/react/24/outline';
-import { EventDetail } from '../../type/EventDetailType';
-import { getCurrentTime } from './helper';
-import { TRANSLATION as t } from './Constant';
+import React, { useEffect } from 'react';
 
-interface ScheduleFormProps {
-  scheduleState: EventDetail['schedule'];
-  isInvalidInput: boolean;
-  eventDays: Date[];
-  lang: 'en' | 'kh';
+import { FieldArray, useFormikContext } from 'formik';
+import { format } from 'date-fns';
+
+import { InitialValueType } from './form.types';
+import { CheckboxField, TranslationField, Field } from 'ui';
+import {
+  CalendarDaysIcon,
+  MinusIcon,
+  PlusIcon,
+} from '@heroicons/react/24/solid';
+
+interface DateTimeFormProps {
+  date: Date[];
 }
 
-export const ScheduleForm: React.FC<ScheduleFormProps> = ({
-  scheduleState,
-  eventDays,
-  isInvalidInput,
-  lang,
-}) => {
-  const { hasCustomSchedule, customSchedules, sharedSchedules } = scheduleState;
-
-  const { setFieldValue } = useFormikContext();
+export const ScheduleForm: React.FC<DateTimeFormProps> = ({ date }) => {
+  const { setFieldValue, values } = useFormikContext<InitialValueType>();
+  const { errors } = useFormikContext<InitialValueType>();
 
   useEffect(() => {
-    if (isInvalidInput) return;
-    const newCustomSchedules = eventDays.map((date) => ({
-      date: date,
-      schedules: [
-        {
-          start_time: getCurrentTime(),
-          end_time: getCurrentTime(),
-          activity: { en: '', kh: '' },
-        },
-      ],
-    }));
+    if (date.length <= 0) return;
 
-    setFieldValue('schedule', {
-      ...scheduleState,
-      customSchedules: newCustomSchedules,
+    const newSchedules = date.map((_date) => {
+      const schedule = values.schedules.find(
+        (schedule) =>
+          new Date(schedule.date).toISOString() === _date.toISOString()
+      );
+
+      if (schedule) {
+        return {
+          date: schedule.date,
+          schedules: schedule.schedules,
+        };
+      }
+
+      return {
+        date: _date,
+        schedules: [
+          {
+            start_time: '07:00',
+            end_time: '17:00',
+            activity: {
+              en: '',
+              km: '',
+            },
+          },
+        ],
+      };
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isInvalidInput, eventDays]);
-  return (
-    <div className="flex flex-col gap-4">
-      {hasCustomSchedule ? (
-        <FieldArray name="schedule.customSchedules">
-          {() => (
-            <div className="flex flex-col gap-4">
-              {customSchedules?.map((customSchedule, idx) => (
-                <div key={idx}>
-                  <Typography size="xl" weight="bold">
-                    {customSchedule?.date?.toDateString()}
-                  </Typography>
-                  <FieldArray
-                    name={`schedule.customSchedules.${idx}.schedules`}
-                  >
-                    {(arrayHelpers) => (
-                      <div className="flex flex-col gap-2">
-                        {customSchedule?.schedules?.map((_schedule, index) => (
-                          <div
-                            className="flex flex-col gap-2 rounded-2xl border border-gray-100 bg-white p-2 first:border-white/0 first:bg-white/0 md:flex-row md:gap-4 md:border-0 md:bg-gray-50 md:p-0"
-                            key={index}
-                          >
-                            {index > 0 ? (
-                              <button
-                                type="button"
-                                className="text-primary md:self-center"
-                                onClick={() => arrayHelpers.remove(index)}
-                              >
-                                <MinusIcon className="h-6 w-6" />
-                              </button>
-                            ) : null}
-                            <div className="flex flex-col gap-2 sm:flex-row md:gap-4">
-                              <InputField
-                                name={`schedule.customSchedules.${idx}.schedules.${index}.start_time`}
-                                label={t.start_time[lang]}
-                                placeholder={t.start_time[lang]}
-                                type="time"
-                                containerClassName="flex-1 md:min-w-[10rem] lg:min-w-[11rem]"
-                              />
-                              <InputField
-                                name={`schedule.customSchedules.${idx}.schedules.${index}.end_time`}
-                                label={t.end_time[lang]}
-                                placeholder={t.end_time[lang]}
-                                type="time"
-                                containerClassName="flex-1 md:min-w-[10rem] lg:min-w-[11rem]"
-                              />
-                            </div>
-                            <InputField
-                              name={`schedule.customSchedules.${idx}.schedules.${index}.activity.${lang}`}
-                              label={t.activity[lang]}
-                              placeholder={t.activity[lang]}
-                              containerClassName="flex-1"
-                            />
-                          </div>
-                        ))}
 
-                        <AddMoreScheduleBtn
-                          lang={lang}
-                          onClick={() =>
-                            arrayHelpers.push({
-                              start_time: getCurrentTime(),
-                              end_time: getCurrentTime(),
-                              activity: { en: '', kh: '' },
-                            })
-                          }
+    if (values.custom_schedule) {
+      setFieldValue('schedules', newSchedules);
+    } else {
+      setFieldValue('schedules', newSchedules.slice(0, 1));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setFieldValue, date, values.custom_schedule]);
+
+  return (
+    <div className="space-y-6 py-6">
+      <h2 className="flex items-center space-x-4 text-3xl font-semibold">
+        <span className="bg-primary-light rounded-full p-3">
+          <CalendarDaysIcon className="text-primary h-8 w-8" />
+        </span>
+        <span>Schedule</span>
+      </h2>
+
+      {/* Custom Schedule */}
+      {values.custom_schedule ? (
+        values.schedules.map((schedule, dateIndex) => (
+          <div key={dateIndex} className="space-y-6">
+            <span className="border-primary-light shadow-primary-light sticky top-16 rounded-full border bg-white py-3 px-4 text-xl font-semibold text-gray-900 shadow">
+              {format(new Date(schedule.date), 'PPPP')}
+            </span>
+
+            <FieldArray name={`schedules.${dateIndex}.schedules`}>
+              {({ push, remove }) => (
+                <>
+                  {schedule.schedules.map((_, scheduleIndex) => (
+                    <div
+                      key={scheduleIndex}
+                      className={`flex flex-col space-y-2 ${
+                        scheduleIndex !== 0
+                          ? 'rounded-xl border bg-white p-4'
+                          : ''
+                      }`}
+                    >
+                      {scheduleIndex !== 0 ? (
+                        <button
+                          type="button"
+                          onClick={() => remove(scheduleIndex)}
+                        >
+                          <MinusIcon className="text-primary h-6 w-6" />
+                        </button>
+                      ) : null}
+                      <div className="flex flex-col gap-4 md:flex-row">
+                        <div className="flex flex-1 space-x-4">
+                          <Field
+                            label="Start time"
+                            type="time"
+                            name={`schedules.${dateIndex}.schedules.${scheduleIndex}.start_time`}
+                          />
+                          <Field
+                            label="End time"
+                            type="time"
+                            name={`schedules.${dateIndex}.schedules.${scheduleIndex}.end_time`}
+                          />
+                        </div>
+                        <div className="flex-1">
+                          <TranslationField
+                            label="Activity"
+                            km={{
+                              name: `schedules.${dateIndex}.schedules.${scheduleIndex}.activity.km`,
+                              placeholder: 'សកម្មភាព',
+                            }}
+                            en={{
+                              name: `schedules.${dateIndex}.schedules.${scheduleIndex}.activity.en`,
+                              placeholder: 'Activity',
+                            }}
+                            error={errors.schedules as string}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  <button
+                    className="text-primary active:text-primary-dark flex items-center space-x-2 transition-colors duration-150"
+                    type="button"
+                    onClick={() => {
+                      push({
+                        start_time: '07:00',
+                        end_time: '17:00',
+                        activity: {
+                          en: '',
+                          km: '',
+                        },
+                      });
+                    }}
+                  >
+                    <PlusIcon className="h-5 w-5" />
+                    <span>Add more schedule</span>
+                  </button>
+                </>
+              )}
+            </FieldArray>
+          </div>
+        ))
+      ) : (
+        <div className="space-y-2">
+          <FieldArray name="schedules.0.schedules">
+            {({ push, remove }) => (
+              <>
+                {values.schedules[0].schedules.map((_, index) => (
+                  <div
+                    key={index}
+                    className={`flex flex-col space-y-2 ${
+                      index !== 0 ? 'rounded-xl border bg-white p-4' : ''
+                    }`}
+                  >
+                    {index !== 0 ? (
+                      <button type="button" onClick={() => remove(index)}>
+                        <MinusIcon className="text-primary h-6 w-6" />
+                      </button>
+                    ) : null}
+                    <div className="flex flex-col gap-4 sm:flex-row">
+                      <div className="flex flex-1 space-x-4">
+                        <Field
+                          label="Start time"
+                          type="time"
+                          name={`schedules.0.schedules.${index}.start_time`}
+                        />
+                        <Field
+                          label="End time"
+                          type="time"
+                          name={`schedules.0.schedules.${index}.end_time`}
                         />
                       </div>
-                    )}
-                  </FieldArray>
-                </div>
-              ))}
-            </div>
-          )}
-        </FieldArray>
-      ) : (
-        <FieldArray name="schedule.sharedSchedules">
-          {(arrayHelpers) => (
-            <div className="flex flex-col gap-4">
-              {sharedSchedules?.map((_schedule, idx) => (
-                <div
-                  className="flex flex-col gap-2 rounded-2xl border border-gray-100 bg-white p-2 first:border-white/0 first:bg-white/0 first:p-0 md:flex-row md:gap-4 md:border-0 md:bg-gray-50 md:p-0"
-                  key={idx}
-                >
-                  {idx > 0 ? (
-                    <button
-                      type="button"
-                      className="text-primary md:self-center"
-                      onClick={() => arrayHelpers.remove(idx)}
-                    >
-                      <MinusIcon className="h-6 w-6" />
-                    </button>
-                  ) : null}
-                  <div className="flex flex-col gap-2 sm:flex-row md:gap-4">
-                    <InputField
-                      name={`schedule.sharedSchedules.${idx}.start_time`}
-                      label={t.start_time[lang]}
-                      placeholder={t.start_time[lang]}
-                      type="time"
-                      containerClassName="flex-1 md:min-w-[10rem] lg:min-w-[11rem]"
-                    />
-                    <InputField
-                      name={`schedule.sharedSchedules.${idx}.end_time`}
-                      label={t.end_time[lang]}
-                      placeholder={t.end_time[lang]}
-                      type="time"
-                      containerClassName="flex-1 md:min-w-[10rem] lg:min-w-[11rem]"
-                    />
+                      <div className="flex-1">
+                        <TranslationField
+                          label="Activity"
+                          km={{
+                            name: `schedules.0.schedules.${index}.activity.km`,
+                            placeholder: 'សកម្មភាព',
+                          }}
+                          en={{
+                            name: `schedules.0.schedules.${index}.activity.en`,
+                            placeholder: 'Activity',
+                          }}
+                        />
+                      </div>
+                    </div>
                   </div>
-                  <InputField
-                    name={`schedule.sharedSchedules.${idx}.activity.${lang}`}
-                    label={t.activity[lang]}
-                    placeholder={t.activity[lang]}
-                    containerClassName="flex-1"
-                  />
-                </div>
-              ))}
-
-              <AddMoreScheduleBtn
-                lang={lang}
-                onClick={() =>
-                  arrayHelpers.push({
-                    start_time: getCurrentTime(),
-                    end_time: getCurrentTime(),
-                    activity: '',
-                  })
-                }
-              />
-            </div>
-          )}
-        </FieldArray>
+                ))}
+                <button
+                  className="text-primary active:text-primary-dark flex items-center space-x-2 transition-colors duration-150"
+                  type="button"
+                  onClick={() =>
+                    push({
+                      start_time: '07:00',
+                      end_time: '17:00',
+                      activity: {
+                        en: '',
+                        km: '',
+                      },
+                    })
+                  }
+                >
+                  <PlusIcon className="h-5 w-5" />
+                  <span>Add more schedule</span>
+                </button>
+              </>
+            )}
+          </FieldArray>
+        </div>
       )}
 
-      <label
-        className={`group relative flex items-center gap-2 ${
-          isInvalidInput ? 'cursor-not-allowed' : 'cursor-pointer'
-        }`}
-      >
-        <Field
-          disabled={isInvalidInput}
-          type="checkbox"
-          name="schedule.hasCustomSchedule"
-          className={`form-checkbox text-primary h-6 w-6 cursor-pointer overflow-hidden rounded-md border border-gray-300 outline-none focus:ring-0 ${
-            isInvalidInput ? 'cursor-not-allowed' : ''
-          }`}
-        />
-        <Typography color="base">{t.customSchedule[lang]}</Typography>
-        {isInvalidInput ? (
-          <Typography
-            size="sm"
-            style={{ whiteSpace: 'nowrap' }}
-            className="pointer-events-none absolute -top-8 rounded-md bg-red-600 py-1 px-2 text-center text-white opacity-0 transition-all group-hover:opacity-100"
-          >
-            {t.invalidDateTime[lang]}
-          </Typography>
-        ) : null}
-      </label>
+      {/* Checkbox Custom Date */}
+      <CheckboxField label="Custom schedule" name="custom_schedule" />
     </div>
   );
 };
-
-const AddMoreScheduleBtn = ({
-  onClick,
-  lang,
-}: {
-  onClick: () => void;
-  lang: 'en' | 'kh';
-}) => (
-  <button type="button" className="text-primary flex gap-1.5" onClick={onClick}>
-    <PlusIcon className="h-6 w-6" />
-    <Typography className="text-primary">{t.addMoreSchedule[lang]}</Typography>
-  </button>
-);

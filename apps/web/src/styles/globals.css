@@ -10,10 +10,6 @@
     -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
     @apply focus:outline-none;
   }
-  button,
-  a {
-    @apply transition-transform duration-75 active:scale-95;
-  }
 }
 
 @layer utilities {
@@ -56,20 +52,20 @@
   background-color: #ff006e !important;
 }
 
-.rich_editor_display,
-.rich_editor_display ul,
-.rich_editor_display ol {
-  @apply space-y-4;
+.gradient-text {
+  animation: scroll 5s linear infinite;
+  -moz-animation: scroll 5s linear infinite;
+  -webkit-animation: scroll 5s linear infinite;
 }
 
-.rich_editor_display ul {
-  @apply list-disc pl-6;
-}
-
-.rich_editor_display ol {
-  @apply list-decimal pl-6;
-}
-
-.rich_editor_display a {
-  @apply text-secondary underline;
+@keyframes scroll {
+  0% {
+    background-position: 0 0;
+  }
+  50% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
 }

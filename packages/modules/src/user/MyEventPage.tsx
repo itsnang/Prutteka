@@ -8,24 +8,47 @@ import { APIResponseEvents } from 'custom-types';
 import { fetcher, translateDate } from '../helpers';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { translateTime } from '../helpers/translateTime';
+import axios from 'axios';
+import { auth } from 'firebase-config';
+import { useAuth } from '../auth';
 
 const PAGE_SIZE = 12;
 
-const getKey = (pageIndex: number, previousPageData: any) => {
-  if (previousPageData && !previousPageData?.data.length) return null; // reached the end
-  return `/events?page[offset]=${pageIndex}&page[limit]=${PAGE_SIZE}`; // SWR key
-};
+const getKey =
+  (userId: string) => (pageIndex: number, previousPageData: any) => {
+    if (previousPageData && !previousPageData?.data.length) return null; // reached the end
+    return `/events?filter[organizer]=${userId}&page[offset]=${pageIndex}&page[limit]=${PAGE_SIZE}`; // SWR key
+  };
 
 export const MyEventPage = () => {
   const { t, i18n } = useTypeSafeTranslation();
-  const { data, size, setSize } = useSWRInfinite<APIResponseEvents>(
-    getKey,
+  const userId = useAuth((state) => state.id);
+  console.log(userId);
+
+  const { data, size, setSize, mutate } = useSWRInfinite<APIResponseEvents>(
+    getKey(userId),
     fetcher
   );
+
+  console.log(data);
 
   const isEmpty = data?.[0]?.data.length === 0;
   const isReachingEnd =
     isEmpty || (data && data[data.length - 1]?.data.length < PAGE_SIZE);
+
+  const handleDeleteEvent = async (id: string) => {
+    try {
+      await axios.delete(`/events/${id}`, {
+        headers: {
+          Authorization: 'Bearer ' + (await auth.currentUser?.getIdToken()),
+        },
+      });
+
+      mutate();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>
@@ -39,7 +62,7 @@ export const MyEventPage = () => {
           next={() => setSize(size + 1)}
           hasMore={!isReachingEnd}
           loader={
-            <div className="mt-4 grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-4 grid w-full grid-cols-1 gap-4">
               {Array.from({ length: 9 }).map((_, index) => (
                 <EventCardSkeleton key={index} isLandscape />
               ))}
@@ -72,6 +95,7 @@ export const MyEventPage = () => {
                       date={date}
                       time={time}
                       href=""
+                      onDelete={() => handleDeleteEvent(event.id)}
                     />
                   );
                 })

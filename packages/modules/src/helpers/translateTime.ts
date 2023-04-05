@@ -1,11 +1,11 @@
 import { translateNumber } from './translateNumber';
 
-export const translateTime = (time: string, lang: 'en' | 'kh' = 'en') => {
+export const translateTime = (time: string, lang: 'en' | 'km' = 'en') => {
   const [hour, minute] = time.split(':');
   const twelveHours = Number(hour) % 12 || 12;
 
   let meridien;
-  if (lang === 'kh') {
+  if (lang === 'km') {
     if (Number(hour) > 12) {
       meridien = Number(hour) > 18 ? 'យប់' : 'រសៀល';
     } else {

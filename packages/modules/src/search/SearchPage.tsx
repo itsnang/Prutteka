@@ -138,15 +138,12 @@ export const Search = ({ initialData }: SearchPageProps) => {
                   );
 
                   const date = translateDate(
-                    event.attributes.date_time.start_date,
+                    event.attributes.date.start_date,
                     i18n.language
                   );
                   const time = translateTime(
-                    event.attributes.date_time.times[0].start_time,
+                    event.attributes.times[0].start_time,
                     i18n.language
-                  );
-                  const location = t(
-                    ('locations.' + event.attributes.location) as any
                   );
 
                   return (
@@ -156,7 +153,7 @@ export const Search = ({ initialData }: SearchPageProps) => {
                       img={event.attributes.image_src}
                       date={date}
                       time={time}
-                      location={location}
+                      location={''}
                       title={event.attributes.name.en}
                       href={`/event/${event.id}`}
                       isActive={isActive}

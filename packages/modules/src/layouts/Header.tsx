@@ -23,6 +23,7 @@ export const Header: React.FC = () => {
   const resetUser = useAuth((state) => state.reset);
   useProvideAuth();
 
+  // handle sidebar close when route change
   useEffect(() => {
     const handleRouteChange = () => {
       setIsSidebarOpen(false);
@@ -50,7 +51,7 @@ export const Header: React.FC = () => {
     });
   };
 
-  const changeTo = router.locale === 'en' ? 'kh' : 'en';
+  const changeTo = router.locale === 'en' ? 'km' : 'en';
   const isSearchPage = router.pathname === '/search';
   const isInterestedPage = router.asPath === '/user/interested';
   const isEventSubmitPage = router.asPath === '/event/submit';
@@ -89,7 +90,7 @@ export const Header: React.FC = () => {
   );
 
   return (
-    <nav className=" fixed top-0 z-20 w-screen border-b border-gray-100 bg-white">
+    <nav className="fixed top-0 z-20 w-screen border-b border-gray-100 bg-white">
       <div className="mx-auto flex max-w-5xl justify-between py-2 px-4">
         <div className="flex items-center gap-4">
           <Link href="/">

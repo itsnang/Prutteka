@@ -11,7 +11,6 @@ import { CameraIcon } from '@heroicons/react/24/solid';
 import { EditProfileModal } from '../shared';
 import { useState } from 'react';
 import ReactCrop, { centerCrop, Crop, makeAspectCrop } from 'react-image-crop';
-import getCroppedImg from '../event/form/cropImage';
 import { objToFormData } from 'shared-utils/form';
 import { useAuth } from '../auth';
 import { useRouter } from 'next/router';

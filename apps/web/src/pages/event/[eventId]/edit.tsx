@@ -1,23 +1,23 @@
-import { EditEventPage } from 'modules';
+// import { EditEventPage } from 'modules';
 
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { GetServerSideProps } from 'next';
 
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-
-const API_URL = process.env.API_ENDPOINT || '';
+import axios from 'axios';
+import { APIResponseEvent } from 'custom-types';
 
 export const getServerSideProps: GetServerSideProps = async ({
   locale,
   params,
 }) => {
   try {
-    const url = `${API_URL}/api/v1/events/${params?.eventId}`;
-    const res = await fetch(url);
-    const data = await res.json();
+    const response = await axios.get(`/events/${params?.eventId}`);
+    const event = response.data as APIResponseEvent;
+
     return {
       props: {
-        event: data?.data,
+        event: event.data,
         ...(await serverSideTranslations(locale ?? 'en')),
       },
     };
@@ -26,4 +26,4 @@ export const getServerSideProps: GetServerSideProps = async ({
   }
 };
 
-export default EditEventPage;
+export default null;

@@ -3,14 +3,6 @@ import { NextPage } from 'next';
 import { CategorySelection } from '../shared';
 import { EventCard, EventCardSkeleton, SeoMeta } from 'ui';
 
-// mock data
-// will be removed
-// import { EVENTDATA } from '../constants';
-// const CAROUSEL = [
-//   { title: '32nd SEA Games', img: '/seagame-2023.jpg' },
-//   { title: 'HSC - Final 2022', img: '/football-cup.jpg' },
-// ];
-
 import { useTypeSafeTranslation } from 'shared-utils/hooks';
 import { useLocalInterestedEvent } from '../event';
 import { translateDate } from '../helpers';
@@ -48,7 +40,7 @@ export const HomePage: NextPage<HomePageProps> = ({ initialData }) => {
 
   return (
     <>
-      <SeoMeta title="Prutteka" description="" />
+      <SeoMeta title="ព្រឹត្តិការណ៍ - Prutteka" description="" />
       <div className="mb-8 space-y-4 lg:space-y-8">
         <CategorySelection
           title={t('home-page.explore')}
@@ -77,15 +69,12 @@ export const HomePage: NextPage<HomePageProps> = ({ initialData }) => {
                     );
 
                     const date = translateDate(
-                      event.attributes.date_time.start_date,
+                      event.attributes.date.start_date,
                       i18n.language
                     );
                     const time = translateTime(
-                      event.attributes.date_time.times[0].start_time,
+                      event.attributes.times[0].start_time,
                       i18n.language
-                    );
-                    const location = t(
-                      ('locations.' + event.attributes.location) as any
                     );
 
                     return (
@@ -94,7 +83,7 @@ export const HomePage: NextPage<HomePageProps> = ({ initialData }) => {
                         img={event.attributes.image_src}
                         date={date}
                         time={time}
-                        location={location}
+                        location={''}
                         title={event.attributes.name.en}
                         href={`/event/${event.id}`}
                         isActive={isActive}

@@ -1,100 +1,126 @@
-import { Links } from '../common';
 export interface APIResponseEvents {
   links: Links;
-  data: Event[];
+  data: Data[];
   included: Included[];
 }
-
 export interface APIResponseEvent {
   links: Links;
-  data: Event;
+  data: Data;
   included: Included[];
 }
 
-export interface Event {
+interface Data {
   type: string;
   id: string;
-  attributes: DatumAttributes;
-  relationships: DatumRelationships;
+  attributes: EventType;
+  relationships: Relationships;
 }
 
-interface DatumAttributes {
+interface EventType {
   name: Detail;
-  type: string;
-  category: string[];
+  type: 'online' | 'physical' | 'physical-online';
+  categories: string[];
   image_src: string;
   detail: Detail;
-  date_time: DateTime;
-  location: string;
+  date: Date;
+  times: Time[];
   locations: Location[];
-  schedules: Schedules[];
+  schedules: AllSchedules[];
   join_methods: JoinMethod[];
+  dynamic_contents: DynamicContent[];
+  created_at: string;
 }
 
-export interface DateTime {
+interface Date {
   start_date: string;
   end_date: string;
-  times: Time[];
 }
 
 interface Time {
-  start_time: string;
-  end_time: string;
-  _id: string;
-}
-
-export interface Schedule {
-  start_time: string;
-  end_time: string;
-  _id: string;
-  activity: Detail;
-}
-
-export interface Detail {
-  en: string;
-  kh: string;
-}
-
-export interface JoinMethod {
-  name: Detail;
-  link: string;
-  _id: string;
-}
-
-export interface Location {
-  name: Detail;
-  link: string;
-  _id: string;
-}
-
-export interface Schedules {
   date: string;
-  schedules: Schedule[];
+  start_time: string;
+  end_time: string;
   _id: string;
 }
 
-export interface DatumRelationships {
+interface Detail {
+  en: string;
+  km: string;
+}
+
+interface DynamicContent {
+  name: Detail;
+  items: Item[];
+  _id: string;
+}
+
+interface Item {
+  image_src: string;
+  name: Detail;
+  detail: Detail;
+  _id: string;
+}
+
+interface JoinMethod {
+  name: Detail;
+  link: string;
+  _id: string;
+}
+
+interface Location {
+  name: string;
+  address: string;
+  url?: URL;
+  latlng?: Latlng;
+  type: 'google' | 'custom';
+  place_id?: string;
+  image_src?: string;
+  _id: string;
+}
+
+interface Latlng {
+  lat: number;
+  lng: number;
+}
+
+interface AllSchedules {
+  date: string;
+  schedules: ScheduleSchedule[];
+  _id: string;
+}
+
+interface ScheduleSchedule {
+  start_time: string;
+  end_time: string;
+  activity: Detail;
+  _id: string;
+}
+
+interface Relationships {
   organizer: Organizer;
 }
 
-export interface Organizer {
+interface Organizer {
   data: Data;
 }
 
-export interface Data {
+interface Data {
   type: string;
   id: string;
 }
 
-export interface Included {
+interface Included {
   type: string;
   id: string;
   attributes: IncludedAttributes;
-  relationships: IncludedRelationships;
 }
 
-export interface IncludedAttributes {
-  username: string;
+interface IncludedAttributes {
+  display_name: string;
 }
 
-export interface IncludedRelationships {}
+interface Links {
+  self: string;
+  prev: string | null;
+  next: string | null;
+}

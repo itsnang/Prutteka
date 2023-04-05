@@ -6,24 +6,26 @@ import { useLocalInterestedEvent } from '../event';
 import { translateDate, translateNumber } from '../helpers';
 import { useTranslation } from 'next-i18next';
 import { translateTime } from '../helpers/translateTime';
-import { DateTime, Event } from 'custom-types';
+// import {  } from 'custom-types';
 
-interface interestedEventType {
-  date: DateTime['start_date'];
-  events: Event[];
-}
+// interface interestedEventType {
+//   date: DateTime['start_date'];
+//   events: Event[];
+// }
 
 export const InterestedEventPage: React.FC = () => {
   const { t, i18n } = useTypeSafeTranslation();
   const [localInterestedEvents, setLocalInterestedEvents] =
     useLocalInterestedEvent();
-  const [interestedEvents, setInterestedEvents] = useState<
-    interestedEventType[]
-  >([]);
+  const [interestedEvents, setInterestedEvents] = useState<any>([]);
+  // const [interestedEvents, setInterestedEvents] = useState<
+  //   interestedEventType[]
+  // >([]);
 
   useEffect(() => {
     // empty array
-    const newEvents: interestedEventType[] = [];
+    const newEvents: any = [];
+    // const newEvents: interestedEventType[] = [];
     // loop through local events
     for (const event of localInterestedEvents) {
       // find existing date

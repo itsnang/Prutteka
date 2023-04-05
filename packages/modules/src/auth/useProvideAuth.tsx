@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { APIResponseUser } from 'custom-types';
 import { auth } from 'firebase-config';
-import { onAuthStateChanged, onIdTokenChanged } from 'firebase/auth';
+import { onAuthStateChanged } from 'firebase/auth';
 import { useEffect } from 'react';
 import { useAuth } from './useAuth';
 import { useTokenStore } from './useTokenStore';
@@ -23,7 +23,6 @@ export function useProvideAuth() {
             { headers: { Authorization: 'Bearer ' + token } }
           );
           const userData = loggedInUser.data as APIResponseUser;
-          console.log('user:', userData);
 
           setToken(token);
           setUser(userData.data.id, userData.data.attributes);
@@ -32,9 +31,9 @@ export function useProvideAuth() {
           resetUser();
         }
       } catch (error) {
-        console.log(error);
+        // console.log(error);
 
-        // auth.signOut();
+        auth.signOut();
         clearToken();
         resetUser();
       }
@@ -42,18 +41,6 @@ export function useProvideAuth() {
 
     return () => unsubscribe();
   }, [setToken, clearToken, setUser, resetUser]);
-
-  useEffect(() => {
-    const unsubscribe = onIdTokenChanged(auth, async (user) => {
-      if (user) {
-        const token = await user.getIdToken();
-        setToken(token);
-      } else {
-        clearToken();
-      }
-    });
-    return () => unsubscribe();
-  }, [setToken, clearToken]);
 
   return { setToken, clearToken } as const;
 }

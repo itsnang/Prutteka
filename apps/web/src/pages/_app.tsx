@@ -8,6 +8,7 @@ import { appWithTranslation } from 'next-i18next';
 import 'shared-utils/axios';
 
 import '../styles/globals.css';
+import '../styles/custom-react-quill.css';
 
 import 'swiper/swiper-bundle.min.css';
 import { DesktopLayout } from 'modules';

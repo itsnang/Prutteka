@@ -1,9 +1,11 @@
-import { SubmitEventPage } from 'modules';
+import { EventFormPage } from 'modules';
 
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { GetStaticProps } from 'next';
 
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import 'flag-icons/css/flag-icons.min.css';
+import 'react-quill/dist/quill.snow.css';
+// import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
   return {
@@ -13,4 +15,4 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
   };
 };
 
-export default SubmitEventPage;
+export default EventFormPage;

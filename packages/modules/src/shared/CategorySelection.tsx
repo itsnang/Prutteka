@@ -1,4 +1,3 @@
-import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { ButtonCategory, Modal, Typography } from 'ui';
 import { CATEGORIES } from '../constants';
@@ -17,7 +16,6 @@ export const CategorySelection: React.FC<CategorySelectionProps> = ({
   const { t } = useTypeSafeTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [category, setCategory] = useState<string>('all');
-  const { push, query } = useRouter();
 
   return (
     <div className="space-y-2">

@@ -4,8 +4,7 @@ import { AutoCompleteInput, Button, Typography } from 'ui';
 import { useTypeSafeTranslation } from 'shared-utils/hooks';
 import { FILTERDATE } from '../constants';
 import { useState } from 'react';
-import { SelectField } from 'ui/src/SelectField';
-import { getToday } from '../event/form/helper';
+import { SelectField } from 'ui';
 
 interface FilterModalProps {
   show: boolean;
@@ -57,7 +56,7 @@ export const FilterModal: React.FC<FilterModalProps> = ({ show, onClose }) => {
                 containerClassName="flex-1"
                 className="w-full"
                 type="date"
-                value={getToday()}
+                value={''}
               />
               <DatePicker
                 name="Start Date"
@@ -65,7 +64,7 @@ export const FilterModal: React.FC<FilterModalProps> = ({ show, onClose }) => {
                 containerClassName="flex-1"
                 className="w-full"
                 type="date"
-                value={getToday()}
+                value={''}
               />
             </>
           )}

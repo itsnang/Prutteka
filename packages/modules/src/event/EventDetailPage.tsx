@@ -12,19 +12,16 @@ import {
   ShareIcon,
   ArrowTopRightOnSquareIcon,
   CalendarDaysIcon,
-  QrCodeIcon,
 } from '@heroicons/react/24/outline';
 import {
   Button,
   ButtonCategory,
   ButtonInterested,
-  Carousel,
-  EventCard,
   SeoMeta,
   Typography,
   ItemContainer,
   EventInfoCard,
-  RichEditorDisplay,
+  TextDisplay,
 } from 'ui';
 import { ShareModal } from '../shared';
 import { AttendModal } from './AttendModal';
@@ -35,11 +32,11 @@ import { useTypeSafeTranslation } from 'shared-utils/hooks';
 import { useLocalInterestedEvent } from './useLocalInterestedEvent';
 import { translateTime } from '../helpers/translateTime';
 import { getDuration, translateDate, convertTime } from '../helpers';
-import { getEventDays } from './form/helper';
 
 import { APIResponseEvent } from 'custom-types';
 import Link from 'next/link';
-import { RegisterEvent } from './RegisterEvent';
+import Image from 'next/image';
+import { eachDayOfInterval } from 'date-fns';
 
 interface EventDetailPageProps {
   data: APIResponseEvent;
@@ -58,16 +55,21 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
   const [interestedEvents, setInterestedEvents] = useLocalInterestedEvent();
 
   const event = data.data;
+
   const currentDate = new Date();
-  const startDate = new Date(event.attributes.date_time.start_date);
-  const endDate = new Date(event.attributes.date_time.end_date);
+  const startDate = new Date(event.attributes.date.start_date);
+  const endDate = new Date(event.attributes.date.end_date);
   const isHappening = startDate <= currentDate && endDate >= currentDate;
 
   const isActive = !!interestedEvents.find((_event) => _event.id === event.id);
 
-  const dateRange = getEventDays(startDate, endDate);
+  // const dateRange = getEventDays(startDate, endDate);
+  const dateRange = eachDayOfInterval({
+    start: startDate,
+    end: endDate,
+  });
 
-  const times = event.attributes.date_time.times;
+  const times = event.attributes.times;
   const startTime =
     selectedIndex >= times.length
       ? convertTime(times[0].start_time)
@@ -81,6 +83,19 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
     (u) => u.id === event.relationships.organizer.data.id
   );
 
+  let locationPhrase;
+  const eventType = event.attributes.type;
+  if (eventType === 'physical-online') {
+    locationPhrase = 'Physical & Online';
+  }
+  if (eventType === 'physical') {
+    locationPhrase = 'Physical';
+  }
+  if (eventType === 'online') {
+    locationPhrase = 'Online';
+  }
+  console.log(eventType);
+
   return (
     <>
       <SeoMeta
@@ -91,15 +106,15 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
         description=""
         img={event.attributes.image_src}
       />
-      <RegisterEvent eventId={event.id} />
       <div className="space-y-8">
         <EventHeader
           isHappening={isHappening}
           img={event.attributes.image_src}
           title={event.attributes.name.en}
-          date={event.attributes.date_time.start_date}
-          organizer={user?.attributes.username}
+          date={event.attributes.date.start_date}
+          organizer={user?.attributes.display_name}
         />
+
         <div className="space-y-4">
           <ItemContainer className="flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-x-4">
             <Button
@@ -142,6 +157,8 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
               img={event.attributes.image_src}
             />
           </ItemContainer>
+
+          {/* Date Range */}
           <div className="custom-scrollbar flex space-x-4 overflow-x-auto">
             {dateRange.map((date, index) => (
               <ButtonCategory
@@ -153,6 +170,7 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
               </ButtonCategory>
             ))}
           </div>
+
           <ItemContainer className="grid grid-cols-12 gap-2">
             <EventInfoCard
               className="col-span-full sm:col-span-6 md:col-span-4"
@@ -204,7 +222,7 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
               >
                 {t('event-detail-page.location')}
               </Typography>
-              <Typography>On-site (Phnom Penh) & Online</Typography>
+              <Typography>{locationPhrase}</Typography>
             </EventInfoCard>
           </ItemContainer>
           <ItemContainer>
@@ -222,18 +240,35 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
               </Typography>
             </div>
             <div className="mt-4 space-y-4">
-              {event.attributes.locations.map((location) => (
-                <div className="space-y-2">
-                  <Typography>
-                    {translateTextObject(location.name, i18n.language)}
-                  </Typography>
-                  <Link
-                    href={location.link}
-                    className="inline-flex rounded-lg border border-gray-200 py-2 px-4 font-normal"
-                  >
-                    {t('event-detail-page.view-on-map')}
-                    <ArrowTopRightOnSquareIcon className="ml-2 h-5 w-5" />
-                  </Link>
+              {event.attributes.locations.map((location, index) => (
+                <div className="space-y-2" key={index}>
+                  <Typography variant="h4">{location.name}</Typography>
+                  <Typography>{location.address}</Typography>
+                  {location.type === 'google' &&
+                  location.image_src &&
+                  location.url ? (
+                    <>
+                      <div className="relative mx-auto aspect-[2/1] max-w-5xl overflow-hidden rounded-2xl">
+                        <Image
+                          src={location.image_src}
+                          alt="Map"
+                          fill
+                          className="object-cover"
+                          // onLoad={() => {
+                          //   setIsLoading(false);
+                          // }}
+                          quality={100}
+                        />
+                      </div>
+                      <Link
+                        href={location.url}
+                        className="inline-flex rounded-lg border border-gray-200 py-2 px-4 font-normal"
+                      >
+                        {t('event-detail-page.view-on-map')}
+                        <ArrowTopRightOnSquareIcon className="ml-2 h-5 w-5" />
+                      </Link>
+                    </>
+                  ) : null}
                 </div>
               ))}
             </div>
@@ -253,7 +288,7 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
                 {t('event-detail-page.schedule')}
               </Typography>
             </div>
-            <div className="mt-6 flex w-full flex-col items-stretch space-y-2">
+            <div className="mt-6 flex w-full flex-col items-stretch space-y-4">
               {event.attributes.schedules.map((_schedule) =>
                 _schedule.schedules.map((schedule) => {
                   const startTime = convertTime(schedule.start_time);
@@ -263,15 +298,12 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
                       key={schedule._id}
                       className="relative flex-1 rounded-xl border border-gray-200 px-4 py-4 text-gray-700"
                     >
-                      <div className="absolute -top-4 left-6 rounded-lg border border-gray-200 bg-white px-2 py-1 text-sm">
+                      <div className="border-primary-light shadow-primary-light absolute -top-4 left-6 rounded-lg border bg-white px-2 py-1 text-sm shadow">
                         {translateTime(startTime, i18n.language)} -{' '}
                         {translateTime(endTime, i18n.language)}
                       </div>
                       <div>
-                        {translateTextObject(
-                          schedule.activity as any,
-                          i18n.language
-                        )}
+                        {translateTextObject(schedule.activity, i18n.language)}
                       </div>
                     </div>
                   );
@@ -279,41 +311,6 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
               )}
             </div>
           </ItemContainer>
-
-          <div className="space-y-4">
-            <div className="flex justify-center">
-              <div className="my-3 mx-2 w-20 border-b-2 border-gray-200" />
-              <Typography className="uppercase">
-                {t('event-detail-page.in-this-event')}
-              </Typography>
-              <div className="my-3 mx-2 w-20 border-b-2 border-gray-200" />
-            </div>
-            {/* {EVENTDATA.slice(3).map((event) => (
-              <EventCard
-                isLandscape
-                key={event.id}
-                img={event.img}
-                date={event.date}
-                time={event.time}
-                location={event.location}
-                title={event.title}
-                href="/event"
-              />
-            ))} */}
-            <div className="flex space-x-4">
-              <Button
-                as="link"
-                href={`/event/${query?.eventId}/nested`}
-                variant="secondary"
-                className="flex-1"
-              >
-                {t('common.view-all')}
-              </Button>
-              <Button className="flex-1" hasShadow>
-                {t('event-detail-page.add-event')}
-              </Button>
-            </div>
-          </div>
 
           <ItemContainer>
             <div className="flex items-center space-x-4">
@@ -329,71 +326,28 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
                 {t('event-detail-page.event-detail')}
               </Typography>
             </div>
-            <RichEditorDisplay
-              className="mt-4 overflow-auto break-words text-gray-700"
-              html={translateTextObject(event.attributes.detail, i18n.language)}
-            />
+            <div className="mt-6 flex w-full flex-col items-stretch space-y-4">
+              <TextDisplay value={event.attributes.detail.en} />
+            </div>
           </ItemContainer>
         </div>
-        {/* <Carousel
-          autoplay
-          breakpoints={{
-            460: {
-              slidesPerView: 1.75,
-            },
-            640: {
-              slidesPerView: 2,
-            },
-            768: {
-              slidesPerView: 2.25,
-            },
-            1024: {
-              slidesPerView: 3,
-            },
-          }}
-          slidesPerView={1}
-          title={t('event-detail-page.other-events')}
-          navigation
-          pagination
-          titleClassName="text-lg md:text-xl lg:text-3xl font-bold"
-        >
-          {(Slide) =>
-            EVENTDATA.map((event) => {
-              // const isActive = !!interestedEvents.find(
-              //   (_event) => _event.id === event.id
-              // );
-              return (
-                <Slide key={event.id} className="pb-8">
-                  <EventCard
-                    img={event.img}
-                    date={event.date}
-                    time={event.time}
-                    title={event.title}
-                    location={event.location}
-                    href={`/event/${event.id}`}
-                    // isActive={isActive}
-                    // onInterested={() => {
-                    //   setInterestedEvents(event);
-                    // }}
-                  />
-                </Slide>
-              );
-            })
-          }
-        </Carousel> */}
       </div>
     </>
   );
 };
 
 const translateTextObject = (
-  textObj: { en: string; kh: string },
-  lang: 'en' | 'kh'
+  textObj: { en: string; km: string },
+  lang: 'en' | 'km'
 ) => {
+  if (!textObj) {
+    return '';
+  }
   const isEN = lang === 'en';
   if (textObj?.[lang].trim() === '') {
-    return textObj?.[isEN ? 'kh' : 'en'];
+    return textObj?.[isEN ? 'km' : 'en'];
   }
+
   return textObj?.[lang];
 };
 

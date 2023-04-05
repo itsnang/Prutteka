@@ -12,7 +12,7 @@ module.exports = {
     outputFileTracingRoot: path.join(__dirname, '../../'),
   },
   images: {
-    domains: ['res.cloudinary.com'],
+    domains: ['res.cloudinary.com', 'maps.googleapis.com'],
   },
   i18n,
 };
