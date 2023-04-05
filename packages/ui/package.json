@@ -29,6 +29,7 @@
     "html-to-draftjs": "^1.5.0",
     "react-draft-wysiwyg": "^1.15.0",
     "@tanstack/react-table": "^8.7.9",
-    "date-fns": "^2.29.3"
+    "date-fns": "^2.29.3",
+    "react-google-autocomplete": "^2.7.3"
   }
 }
