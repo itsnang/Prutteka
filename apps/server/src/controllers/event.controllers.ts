@@ -1,6 +1,6 @@
 import { Controller } from './types';
 
-import Event from '../models/event';
+import Event, { EventType } from '../models/event';
 import serializer from '../serializer/event';
 import buildUrl from '../utils/build-url';
 import { BadRequestError, NotFoundError, UnAuthorizedError } from '../errors';
@@ -32,9 +32,12 @@ export const getAllEvents: Controller = async (req, res, next) => {
       : null;
 
     const allEvents = serializer({
-      self: currentUrl,
-      next: nextPage,
-      prev: previousPage,
+      links: {
+        self: currentUrl,
+        next: nextPage,
+        prev: previousPage,
+      },
+      populate: 'organizer',
     }).serialize(doc);
 
     res.status(200).json(allEvents);
@@ -45,11 +48,19 @@ export const getAllEvents: Controller = async (req, res, next) => {
 
 export const createEvent: Controller = async (req, res, next) => {
   try {
-    // @ts-ignore
-    const image_file = req?.files?.image_src;
+    const uid = req.user?.uid;
+    const user = await userServices.getUserByUid(uid as string);
+    if (!user) {
+      throw new UnAuthorizedError('User does not exist');
+    }
 
-    if (!image_file) {
-      throw new BadRequestError('Please provide an Image for your event');
+    // @ts-ignore
+    const mainImage = req?.files?.image[0];
+    // @ts-ignore
+    const dynamicContentImage = req?.files?.dynamic_content_images ?? [];
+
+    if (!mainImage) {
+      throw new BadRequestError('Event image must be provided');
     }
 
     await Event.validate({
@@ -58,22 +69,39 @@ export const createEvent: Controller = async (req, res, next) => {
       image_src: 'https://www.example.com/image.jpeg',
     });
 
-    const image = await imageUpload.sharp(image_file[0]?.path);
+    const uncompressImagePromises = [mainImage, ...dynamicContentImage].map(
+      (image) => imageUpload.sharp(image.path)
+    );
 
-    const result = await imageUpload.cloudinary(image, { folder: 'events' });
+    const compressImages = await Promise.all(uncompressImagePromises);
+
+    const cloudinaryImagePromises = compressImages.map((image) =>
+      imageUpload.cloudinary(image, { folder: 'events' })
+    );
+
+    const result = await Promise.all(cloudinaryImagePromises);
+
+    const body = req.body as EventType;
 
     const doc = await Event.create({
       ...req.body,
-      organizer: '012345678912',
-      image_src: result?.secure_url,
+      dynamic_contents: body.dynamic_contents.map((content, contentIndex) => ({
+        ...content,
+        items: content.items.map((item, itemIndex) => ({
+          ...item,
+          image_src: result[itemIndex + 1 + 1 * contentIndex].secure_url,
+        })),
+      })),
+      organizer: '64128f460736edafdee37e9f',
+      image_src: result[0].secure_url,
     });
 
-    const currentUrl = new URL(
-      req.protocol + '://' + req.get('host') + req.originalUrl
-    );
+    const currentUrl = getCurrentUrl(req);
 
     const newEvent = serializer({
-      self: currentUrl,
+      links: {
+        self: currentUrl,
+      },
     }).serialize(doc);
 
     res.status(201).json(newEvent);
@@ -95,7 +123,10 @@ export const getEvent: Controller = async (req, res, next) => {
     const currentUrl = getCurrentUrl(req);
 
     const event = serializer({
-      self: currentUrl,
+      links: {
+        self: currentUrl,
+      },
+      populate: 'organizer',
     }).serialize(doc);
 
     res.status(200).json(event);
@@ -107,17 +138,15 @@ export const getEvent: Controller = async (req, res, next) => {
 export const deleteEvent: Controller = async (req, res, next) => {
   try {
     const eventId = req.params.eventId;
-    const uid = req.user?.uid;
-    if (!uid) {
-      throw new UnAuthorizedError('Please provide token');
-    }
 
-    const user = await userServices.getUserByUid(uid);
+    const uid = req.user?.uid;
+    const user = await userServices.getUserByUid(uid as string);
     if (!user) {
       throw new UnAuthorizedError('User does not exist');
     }
 
     const doc = await eventServices.deleteEvent(eventId, user._id);
+    await userServices.removeEventsFromUser(user._id, eventId);
     if (!doc) {
       throw new NotFoundError('Event is not found');
     }
@@ -150,10 +179,10 @@ export const updateEvent: Controller = async (req, res, next) => {
 
       const image = await imageUpload.sharp(image_file[0]?.path);
 
-      const result = await imageUpload.cloudinary(
-        image,
-        req.body?.old_image_src
-      );
+      const result = await imageUpload.cloudinary(image, {
+        file_name: req.body?.old_image_src as string,
+        folder: 'events',
+      });
 
       image_src = result.secure_url;
     }
@@ -169,7 +198,9 @@ export const updateEvent: Controller = async (req, res, next) => {
     );
 
     const updatedEvent = serializer({
-      self: currentUrl,
+      links: {
+        self: currentUrl,
+      },
     }).serialize(doc);
 
     res.status(200).json(updatedEvent);
@@ -205,35 +236,6 @@ export const registerToAnEvent: Controller = async (req, res, next) => {
     }
 
     res.status(204).send();
-  } catch (error) {
-    next(error);
-  }
-};
-
-//not done
-export const createNestedEvent: Controller = async (req, res, next) => {
-  try {
-    // @ts-ignore
-    const image_file = req?.files?.image_src;
-    const main_event = req.params.eventId;
-
-    if (!image_file)
-      throw new BadRequestError('Please provide an Image for your event');
-
-    // await Event.validate({
-    //   ...req.body,
-    //   organizer: '012345678912',
-    //   image_src: 'https://www.example.com/image.jpeg',
-    // });
-
-    const doc = await Event.create({
-      ...req.body,
-      main_event,
-      organizer: '012345678912',
-      image_src: 'https://www.example.com/image.jpeg',
-    });
-
-    res.json(doc);
   } catch (error) {
     next(error);
   }

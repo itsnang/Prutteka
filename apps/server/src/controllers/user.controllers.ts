@@ -5,6 +5,7 @@ import { Controller } from './types';
 import { NotFoundError, BadRequestError } from '../errors';
 import imageUpload from '../utils/ImageUpload';
 import getCurrentUrl from '../utils/getCurrentUrl';
+import userServices from '../services/user.services';
 
 export const updateUser: Controller = async (req, res, next) => {
   try {
@@ -42,9 +43,31 @@ export const updateUser: Controller = async (req, res, next) => {
     );
 
     const currentUrl = getCurrentUrl(req);
-    const user = serializer({ self: currentUrl }).serialize(doc);
+    const user = serializer({ links: { self: currentUrl } }).serialize(doc);
 
     res.status(200).json(user);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getEventsByUser: Controller = async (req, res, next) => {
+  try {
+    const userId = req.params.userId;
+    const doc = await userServices.getEventsByUser(userId);
+
+    if (!doc) {
+      throw new NotFoundError('User is not found');
+    }
+
+    const currentUrl = getCurrentUrl(req);
+
+    const events = serializer({
+      links: { self: currentUrl },
+      populate: 'events',
+    }).serialize(doc);
+
+    res.status(200).json(events);
   } catch (error) {
     next(error);
   }

@@ -7,30 +7,23 @@ import {
   getEvent,
   createEvent,
   deleteEvent,
-  registerToAnEvent,
   updateEvent,
-  createNestedEvent,
 } from '../controllers/event.controllers';
-import FirebaseAuth from '../middlewares/firebase-auth';
-import multer from '../utils/multer';
+import firebaseMiddleware from '../middlewares/firebase-auth';
 
 const router = express.Router();
 
 router
   .route('/')
   .get(getAllEvents)
-  .post(imageUpload.eventFormMulter, createEvent);
+  .post(firebaseMiddleware, imageUpload.eventFormMulter, createEvent);
 
 router
   .route('/:eventId')
   .get(getEvent)
   .put(imageUpload.eventFormMulter, updateEvent)
-  .delete(deleteEvent);
+  .delete(firebaseMiddleware, deleteEvent);
 
-router.route('/:eventId/register').post(FirebaseAuth, registerToAnEvent);
-
-router
-  .route('/:eventId/nested')
-  .post(imageUpload.eventFormMulter, createNestedEvent);
+// router.route('/:eventId/register').post(firebaseMiddleware, registerToAnEvent);
 
 export default router;

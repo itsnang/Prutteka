@@ -15,7 +15,7 @@ export const login: Controller = async (req, res, next) => {
 
     const currentUrl = getCurrentUrl(req);
 
-    const user = serializer({ self: currentUrl }).serialize(doc);
+    const user = serializer({ links: { self: currentUrl } }).serialize(doc);
 
     res.status(200).json(user);
   } catch (error) {
@@ -36,7 +36,9 @@ export const signup: Controller = async (req, res, next) => {
 
     const currentUrl = getCurrentUrl(req);
 
-    const registeredUser = serializer({ self: currentUrl }).serialize(doc);
+    const registeredUser = serializer({
+      links: { self: currentUrl },
+    }).serialize(doc);
 
     res.status(201).json(registeredUser);
   } catch (error) {

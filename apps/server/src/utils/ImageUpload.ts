@@ -78,7 +78,7 @@ class ImageUpload {
 
   sharp(image_path: string) {
     return sharp(image_path)
-      .resize({ width: 500 })
+      .resize({ width: 1080 })
       .webp({ quality: 80 })
       .toBuffer();
   }
@@ -88,26 +88,15 @@ class ImageUpload {
     { folder, file_name }: { folder: string; file_name?: string }
   ) {
     // cloudinary.v2.uploader.destroy()
+    let publicId;
     if (file_name) {
-      const publicId = file_name?.split('/')?.at(-1)?.split('.')[0];
+      publicId = file_name?.split('/')?.at(-1)?.split('.')[0];
       if (publicId) await cloudinary.v2.uploader.destroy(publicId);
     }
-    return bufferUpload(buffer, { folder, file_name });
+    return bufferUpload(buffer, { folder, file_name: publicId });
   }
 
-  eventFormFields = [
-    'name',
-    'type',
-    'category',
-    'detail',
-    'is_nested',
-    'date_time',
-    'locations',
-    'schedules',
-    'join_methods',
-    'image_src',
-    'old_image_src',
-  ];
+  eventFormFields = ['image', 'old_image_src', 'dynamic_content_images'];
 
   eventFormMulter = this.multer(this.eventFormFields);
 }
