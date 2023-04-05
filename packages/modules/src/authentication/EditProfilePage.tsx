@@ -28,11 +28,11 @@ const validationSchema = Yup.object({
     ),
 });
 
-const GENDERS = {
-  male: { en: 'Male', kh: 'ប្រុស' },
-  female: { en: 'Female', kh: 'ស្រី' },
-  other: { en: 'Other', kh: 'ផ្សេង' },
-};
+const GENDERS = [
+  { value: 'male', text: 'Male' },
+  { value: 'female', text: 'Female' },
+  { value: 'non-binary', text: 'Other' },
+];
 
 interface InitialValues {
   displayName: string;
@@ -46,38 +46,32 @@ export const EditProfilePage: NextPageWithLayout = () => {
   const { t, i18n } = useTypeSafeTranslation();
   const user = useAuth((state) => state);
   const [isSubmiting, setIsSubmiting] = useState();
-  const { ImageCropModal, openCropModal, imageFile, imageUrl } = useImageCrop({
-    aspect: 1,
-    onSubmit: () => {},
-    image: user.image_src,
-  });
+  const { ImageCropModal, cropImageFile, cropImageSrc, openImageCropModal } =
+    useImageCrop('', () => {});
 
   const token = useTokenStore((state) => state.token);
   const setUser = useAuth((state) => state.setUser);
-  // const date = ;
-  console.log(new Date(user.date_of_birth).toLocaleDateString());
 
   const handleSubmit = (values: InitialValues) => {
     console.log('submit:', values);
     try {
-      const {} = axios.patch(
-        `/users/${user.id}`,
-        {
-          image: imageFile,
-          display_name: values.displayName,
-          last_name: values.lastName,
-          first_name: values.firstName,
-          gender: values.gender,
-          date_of_birth: values.dateOfBirth,
-        },
-        {
-          headers: {
-            Authorization: 'Bearer ' + token,
-            'Content-Type': 'multipart/form-data',
-          },
-        }
-      );
-
+      // const {} = axios.patch(
+      //   `/users/${user.id}`,
+      //   {
+      //     image: cropImageFile,
+      //     display_name: values.displayName,
+      //     last_name: values.lastName,
+      //     first_name: values.firstName,
+      //     gender: values.gender,
+      //     date_of_birth: values.dateOfBirth,
+      //   },
+      //   {
+      //     headers: {
+      //       Authorization: 'Bearer ' + token,
+      //       'Content-Type': 'multipart/form-data',
+      //     },
+      //   }
+      // );
       // setUser()
     } catch (error) {
       console.log(error);
@@ -103,13 +97,13 @@ export const EditProfilePage: NextPageWithLayout = () => {
               <div className="ring-primary group relative h-36 w-36 overflow-hidden rounded-full ring ring-offset-4">
                 <Image
                   className="ring-secondary rounded-full"
-                  src={imageUrl}
+                  src={user.image_src || ''}
                   fill
                   alt="profile"
                 />
                 <div
                   className="absolute inset-0 bg-black/25 opacity-0 transition-all duration-150 group-hover:opacity-100"
-                  onClick={openCropModal}
+                  onClick={openImageCropModal}
                 >
                   <CameraIcon className="absolute left-1/2 top-1/2 h-16 w-16 -translate-x-1/2 -translate-y-1/2 text-white" />
                 </div>
@@ -118,7 +112,10 @@ export const EditProfilePage: NextPageWithLayout = () => {
                 className="px-6"
                 variant="primary"
                 type="button"
-                onClick={openCropModal}
+                onClick={() => {
+                  console.log('here');
+                  openImageCropModal();
+                }}
               >
                 Change
               </Button>
@@ -151,14 +148,7 @@ export const EditProfilePage: NextPageWithLayout = () => {
                 type="text"
               />
             </div>
-            <SelectField
-              name="gender"
-              label={'Gender'}
-              placeholder={'Gender'}
-              containerClassName="flex-1"
-              options={GENDERS}
-              lang={i18n.language}
-            />
+            <SelectField name="gender" label={'Gender'} options={GENDERS} />
             <div className="space-y-2">
               <label htmlFor="dateOfBirth">Date of Birth</label>
               <InputField
