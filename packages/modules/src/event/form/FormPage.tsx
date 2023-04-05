@@ -1,24 +1,24 @@
+import { useEffect, useState } from 'react';
 import { Formik, Form } from 'formik';
 
-import { InitialValueType } from './form.types';
-
-// date
-import { eachDayOfInterval, format } from 'date-fns';
-import { DateTimeForm } from './DateTimeForm';
-import { ScheduleForm } from './ScheduleForm';
-import { LocationForm } from './LocationForm';
-import { useEffect, useState } from 'react';
-import { JoinMethodForm } from './JoinMethodForm';
-import { DynamicContentForm } from './DynamicContentForm';
-import { FloatingNavigation } from './FloatingNavigation';
+import axios from 'axios';
 import {
   ArrowLongRightIcon,
   ArrowLongLeftIcon,
 } from '@heroicons/react/20/solid';
-import { validationSchema } from './yup-validation';
+import { InitialValueType } from './form.types';
+
+import { eachDayOfInterval, format } from 'date-fns';
+
+// import { DateTimeForm } from './DateTimeForm';
+import { ScheduleForm } from './ScheduleForm';
+import { LocationForm } from './LocationForm';
+import { JoinMethodForm } from './JoinMethodForm';
+import { DynamicContentForm } from './DynamicContentForm';
+import { FloatingNavigation } from './FloatingNavigation';
 import { DetailForm } from './DetailForm';
+import { validationSchema } from './yup-validation';
 import { buildEventForm } from './event-form';
-import axios from 'axios';
 
 const defaultValues = {
   image: { src: '', file: null },
@@ -270,7 +270,7 @@ const InnerForm: React.FC<{ values: InitialValueType }> = ({ values }) => {
       {selectedPage === 0 ? <DetailForm /> : null}
 
       {/* Date & Time */}
-      {selectedPage === 1 ? <DateTimeForm date={eventDate} /> : null}
+      {/* {selectedPage === 1 ? <DateTimeForm date={eventDate} /> : null} */}
 
       {/* Location */}
       {selectedPage === 2 ? <LocationForm /> : null}

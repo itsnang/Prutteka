@@ -6,26 +6,24 @@ import { useLocalInterestedEvent } from '../event';
 import { translateDate, translateNumber } from '../helpers';
 import { useTranslation } from 'next-i18next';
 import { translateTime } from '../helpers/translateTime';
-// import {  } from 'custom-types';
+import { APIResponseEvent } from 'custom-types';
 
-// interface interestedEventType {
-//   date: DateTime['start_date'];
-//   events: Event[];
-// }
+interface interestedEventType {
+  date: string;
+  events: APIResponseEvent['data'][];
+}
 
 export const InterestedEventPage: React.FC = () => {
   const { t, i18n } = useTypeSafeTranslation();
   const [localInterestedEvents, setLocalInterestedEvents] =
     useLocalInterestedEvent();
-  const [interestedEvents, setInterestedEvents] = useState<any>([]);
-  // const [interestedEvents, setInterestedEvents] = useState<
-  //   interestedEventType[]
-  // >([]);
+  const [interestedEvents, setInterestedEvents] = useState<
+    interestedEventType[]
+  >([]);
 
   useEffect(() => {
     // empty array
-    const newEvents: any = [];
-    // const newEvents: interestedEventType[] = [];
+    const newEvents: interestedEventType[] = [];
     // loop through local events
     for (const event of localInterestedEvents) {
       // find existing date
@@ -87,15 +85,12 @@ export const InterestedEventPage: React.FC = () => {
             <div className="mt-4 grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {event.events.map((_event) => {
                 const date = translateDate(
-                  _event.attributes.date_time.start_date,
+                  _event.attributes.date.start_date,
                   i18n.language
                 );
                 const time = translateTime(
-                  _event.attributes.date_time.start_date,
+                  _event.attributes.date.start_date,
                   i18n.language
-                );
-                const location = t(
-                  ('locations.' + _event.attributes.location) as any
                 );
 
                 return (
@@ -105,7 +100,7 @@ export const InterestedEventPage: React.FC = () => {
                     date={date}
                     img={_event.attributes.image_src}
                     href={`/event/${_event.id}`}
-                    location={location}
+                    location={''}
                     title={_event.attributes.name.en}
                     isActive
                     onInterested={() => {

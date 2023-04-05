@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { NextPage } from 'next';
+import Link from 'next/link';
+import Image from 'next/image';
 
 import {
   ClockIcon,
@@ -13,6 +15,7 @@ import {
   ArrowTopRightOnSquareIcon,
   CalendarDaysIcon,
 } from '@heroicons/react/24/outline';
+
 import {
   Button,
   ButtonCategory,
@@ -25,7 +28,6 @@ import {
 } from 'ui';
 import { ShareModal } from '../shared';
 import { AttendModal } from './AttendModal';
-// import { EVENTDATA } from '../constants';
 import { EventHeader } from './EventHeader';
 import { useRouter } from 'next/router';
 import { useTypeSafeTranslation } from 'shared-utils/hooks';
@@ -34,8 +36,6 @@ import { translateTime } from '../helpers/translateTime';
 import { getDuration, translateDate, convertTime } from '../helpers';
 
 import { APIResponseEvent } from 'custom-types';
-import Link from 'next/link';
-import Image from 'next/image';
 import { eachDayOfInterval } from 'date-fns';
 
 interface EventDetailPageProps {

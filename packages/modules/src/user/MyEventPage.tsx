@@ -1,7 +1,5 @@
-import React from 'react';
 import { EventCardSkeleton, SeoMeta, Typography } from 'ui';
 import { UserEventCard } from './UserEventCard';
-import { EVENTDATA } from '../constants';
 import { useTypeSafeTranslation } from 'shared-utils/hooks';
 import useSWRInfinite from 'swr/infinite';
 import { APIResponseEvents } from 'custom-types';
@@ -23,7 +21,6 @@ const getKey =
 export const MyEventPage = () => {
   const { t, i18n } = useTypeSafeTranslation();
   const userId = useAuth((state) => state.id);
-  console.log(userId);
 
   const { data, size, setSize, mutate } = useSWRInfinite<APIResponseEvents>(
     getKey(userId),
@@ -75,23 +72,21 @@ export const MyEventPage = () => {
               data.map((events) =>
                 events.data.map((event) => {
                   const date = translateDate(
-                    event.attributes.date_time.start_date,
+                    event.attributes.date.start_date,
                     i18n.language
                   );
                   const time = translateTime(
-                    event.attributes.date_time.times[0].start_time,
+                    event.attributes.times[0].start_time,
                     i18n.language
                   );
-                  const location = t(
-                    ('locations.' + event.attributes.location) as any
-                  );
+
                   return (
                     <UserEventCard
                       id={event.id}
                       key={event.id}
                       img={event.attributes.image_src}
                       title={event.attributes.name.en}
-                      location={location}
+                      location={''}
                       date={date}
                       time={time}
                       href=""
