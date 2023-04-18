@@ -21,7 +21,7 @@ router
 router
   .route('/:eventId')
   .get(getEvent)
-  .put(imageUpload.eventFormMulter, updateEvent)
+  .put(firebaseMiddleware, imageUpload.eventFormMulter, updateEvent)
   .delete(firebaseMiddleware, deleteEvent);
 
 // router.route('/:eventId/register').post(firebaseMiddleware, registerToAnEvent);

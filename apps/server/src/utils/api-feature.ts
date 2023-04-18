@@ -44,6 +44,28 @@ class QueryBuilder<
       );
       query = Object.assign(query, JSON.parse(filterQuery));
 
+      if (this.queryObj.filter.start_date) {
+        const date = query.start_date;
+        for (let key in date) {
+          query = Object.assign(query, {
+            'date.start_date': { [key]: new Date(query.start_date[key]) },
+          });
+          break;
+        }
+        delete query.start_date;
+      }
+
+      if (this.queryObj.filter.end_date) {
+        const date = query.end_date;
+        for (let key in date) {
+          query = Object.assign(query, {
+            'date.end_date': { [key]: new Date(query.end_date[key]) },
+          });
+          break;
+        }
+        delete query.end_date;
+      }
+
       if (this.queryObj.filter.category) {
         const categoryQuery = this.queryObj.filter.category;
 

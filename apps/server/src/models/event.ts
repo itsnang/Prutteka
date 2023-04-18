@@ -235,12 +235,9 @@ const eventSchema = new mongoose.Schema<EventType>(
           {
             image_src: {
               type: String,
-              validate: [
-                (value: string) => {
-                  const imageURLPattern =
-                    /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*\.(jpeg|jpg|png|jfif|webp)(\?.*)?)$/;
-                  return imageURLPattern.test(value);
-                },
+              required: false,
+              match: [
+                /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*\.(jpeg|jpg|png|jfif|webp)(\?.*)?)$/,
                 'Image source must be a valid url',
               ],
             },

@@ -65,7 +65,7 @@ export const createEvent: Controller = async (req, res, next) => {
 
     await Event.validate({
       ...req.body,
-      organizer: '012345678912',
+      organizer: user._id,
       image_src: 'https://www.example.com/image.jpeg',
     });
 
@@ -87,12 +87,18 @@ export const createEvent: Controller = async (req, res, next) => {
       ...req.body,
       dynamic_contents: body.dynamic_contents.map((content, contentIndex) => ({
         ...content,
-        items: content.items.map((item, itemIndex) => ({
-          ...item,
-          image_src: result[itemIndex + 1 + 1 * contentIndex].secure_url,
-        })),
+        items: content.items.map((item, itemIndex) => {
+          const itemImageIndex = itemIndex + 1 + 1 * contentIndex;
+          if (itemImageIndex < result.length) {
+            return {
+              ...item,
+              image_src: result[itemIndex + 1 + 1 * contentIndex].secure_url,
+            };
+          }
+          return { ...item, image_src: '' };
+        }),
       })),
-      organizer: '64128f460736edafdee37e9f',
+      organizer: user._id,
       image_src: result[0].secure_url,
     });
 
@@ -159,51 +165,88 @@ export const deleteEvent: Controller = async (req, res, next) => {
 
 export const updateEvent: Controller = async (req, res, next) => {
   try {
-    // @ts-ignore
-    const image_file = req?.files?.image_src;
-    const eventId = req.params.eventId;
-
-    let image_src: undefined | string;
-
-    if (req.body.image_src) {
-      image_src = req.body.image_src as string;
-    } else {
-      if (!image_file)
-        throw new BadRequestError('Please provide an Image for your event');
-
-      await Event.validate({
-        ...req.body,
-        organizer: '012345678912',
-        image_src: 'https://www.example.com/image.jpeg',
-      });
-
-      const image = await imageUpload.sharp(image_file[0]?.path);
-
-      const result = await imageUpload.cloudinary(image, {
-        file_name: req.body?.old_image_src as string,
-        folder: 'events',
-      });
-
-      image_src = result.secure_url;
+    const uid = req.user?.uid;
+    const user = await userServices.getUserByUid(uid as string);
+    const body = req.body as EventType;
+    if (!user) {
+      throw new UnAuthorizedError('User does not exist');
     }
 
-    const doc = await Event.findByIdAndUpdate(eventId, {
+    const isEventOrganizer = Event.findOne({
+      _id: req.params.eventId,
+      organizer: user._id,
+    });
+    if (!isEventOrganizer) {
+      throw new UnAuthorizedError('User is not an event organizer');
+    }
+
+    await Event.validate({
       ...req.body,
-      organizer: '012345678912',
-      image_src,
+      organizer: user._id,
+      image_src: 'https://www.example.com/image.jpeg',
     });
 
-    const currentUrl = new URL(
-      req.protocol + '://' + req.get('host') + req.originalUrl
-    );
+    // @ts-ignore
+    const mainImage = req?.files?.image[0];
+    // @ts-ignore
+    const dynamicContentImage = req?.files?.dynamic_content_images ?? [];
 
-    const updatedEvent = serializer({
-      links: {
-        self: currentUrl,
-      },
-    }).serialize(doc);
+    const providedFileImages = [];
 
-    res.status(200).json(updatedEvent);
+    if (mainImage) providedFileImages.push(mainImage);
+    if (Array.isArray(dynamicContentImage) && dynamicContentImage.length > 0)
+      providedFileImages.push(...dynamicContentImage);
+
+    // if provide image
+    if (providedFileImages.length > 0) {
+      const uncompressImagePromises = providedFileImages.map((image) =>
+        imageUpload.sharp(image.path)
+      );
+
+      const compressImages = await Promise.all(uncompressImagePromises);
+
+      const cloudinaryImagePromises = compressImages.map((image) =>
+        imageUpload.cloudinary(image, { folder: 'events' })
+      );
+
+      const result = await Promise.all(cloudinaryImagePromises);
+
+      await Event.updateOne(
+        { _id: req.params.eventId, organizer: user._id },
+        {
+          ...req.body,
+          dynamic_contents: body.dynamic_contents.map(
+            (content, contentIndex) => ({
+              ...content,
+              items: content.items.map((item, itemIndex) => {
+                const itemImageIndex = itemIndex + 1 + 1 * contentIndex;
+                if (itemImageIndex < result.length) {
+                  return {
+                    ...item,
+                    image_src:
+                      result[itemIndex + 1 + 1 * contentIndex].secure_url,
+                  };
+                }
+                return { ...item, image_src: '' };
+              }),
+            })
+          ),
+          image_src: result[0].secure_url,
+        }
+      );
+    } else {
+      await Event.updateOne(
+        { _id: req.params.eventId, organizer: user._id },
+        {
+          $set: {
+            ...body,
+          },
+          $unset: { image_src: 1 },
+        }
+      );
+    }
+
+    res.status(204).send();
   } catch (error) {
     next(error);
   }
