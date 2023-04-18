@@ -9,6 +9,7 @@ import {
   TicketIcon,
   MapIcon,
   InformationCircleIcon,
+  PhotoIcon,
 } from '@heroicons/react/24/solid';
 import {
   ShareIcon,
@@ -37,6 +38,7 @@ import { getDuration, translateDate, convertTime } from '../helpers';
 
 import { APIResponseEvent } from 'custom-types';
 import { eachDayOfInterval } from 'date-fns';
+import { Disclosure, Transition } from '@headlessui/react';
 
 interface EventDetailPageProps {
   data: APIResponseEvent;
@@ -94,7 +96,6 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
   if (eventType === 'online') {
     locationPhrase = 'Online';
   }
-  console.log(eventType);
 
   return (
     <>
@@ -102,11 +103,11 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
         title={`${translateTextObject(
           event.attributes.name,
           i18n.language
-        )} - Prutteka`}
+        )} | ព្រឹត្តិការណ៍​ - Prutteka`}
         description=""
         img={event.attributes.image_src}
       />
-      <div className="space-y-8">
+      <div className="mx-auto max-w-6xl space-y-8">
         <EventHeader
           isHappening={isHappening}
           img={event.attributes.image_src}
@@ -248,7 +249,10 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
                   location.image_src &&
                   location.url ? (
                     <>
-                      <div className="relative mx-auto aspect-[2/1] max-w-5xl overflow-hidden rounded-2xl">
+                      <Link
+                        href={location.url}
+                        className="relative mx-auto block aspect-[2/1] max-w-2xl overflow-hidden rounded-2xl"
+                      >
                         <Image
                           src={location.image_src}
                           alt="Map"
@@ -259,7 +263,7 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
                           // }}
                           quality={100}
                         />
-                      </div>
+                      </Link>
                       <Link
                         href={location.url}
                         className="inline-flex rounded-lg border border-gray-200 py-2 px-4 font-normal"
@@ -329,6 +333,66 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
             <div className="mt-6 flex w-full flex-col items-stretch space-y-4">
               <TextDisplay value={event.attributes.detail.en} />
             </div>
+          </ItemContainer>
+
+          {/* Dynamic Contents */}
+          <ItemContainer>
+            <div className="flex items-center space-x-4">
+              <div className="gradient-text from-primary-light to-secondary-light rounded-xl bg-gradient-to-r bg-[length:200%] p-2">
+                <PhotoIcon className="text-primary h-7 w-7" />
+              </div>
+              <Typography
+                color="dark"
+                weight="semibold"
+                size="lg"
+                className="gradient-text from-primary to-secondary bg-gradient-to-r bg-[length:200%] bg-clip-text font-bold text-transparent md:text-xl lg:text-2xl"
+              >
+                Dynamic Contents
+              </Typography>
+            </div>
+            {event.attributes.dynamic_contents.length > 0 &&
+              event.attributes.dynamic_contents.map((content, index) => (
+                <Disclosure key={index} defaultOpen={index === 0}>
+                  {({ open }) => (
+                    <div className="mt-4">
+                      <Disclosure.Button className="gradient-text from-primary to-secondary border-primary-light flex w-full justify-between rounded-2xl border bg-gradient-to-r bg-[length:200%] bg-clip-text px-4 py-2 text-xl font-bold text-transparent">
+                        <span>{content.name.en}</span>
+                      </Disclosure.Button>
+                      <Transition
+                        enter="transition duration-100 ease-out"
+                        enterFrom="transform scale-95 opacity-0"
+                        enterTo="transform scale-100 opacity-100"
+                        leave="transition duration-75 ease-out"
+                        leaveFrom="transform scale-100 opacity-100"
+                        leaveTo="transform scale-95 opacity-0"
+                      >
+                        <Disclosure.Panel className="flex justify-start gap-4 overflow-x-auto py-2 text-gray-700">
+                          {content.items.map((item, index) => (
+                            <div key={index}>
+                              {item.image_src ? (
+                                <div className="relative z-0 aspect-[2/1] h-32 w-full md:h-64">
+                                  <Image
+                                    src={item.image_src}
+                                    className="rounded-2xl object-cover"
+                                    fill
+                                    alt=""
+                                  />
+                                </div>
+                              ) : null}
+                              <div className="relative -mt-6 space-y-2 rounded-2xl bg-white px-4 py-2 shadow">
+                                <div className="text-lg font-medium">
+                                  {item.name.en}
+                                </div>
+                                <div>{item.detail.en}</div>
+                              </div>
+                            </div>
+                          ))}
+                        </Disclosure.Panel>
+                      </Transition>
+                    </div>
+                  )}
+                </Disclosure>
+              ))}
           </ItemContainer>
         </div>
       </div>
