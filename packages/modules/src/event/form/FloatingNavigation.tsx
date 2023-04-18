@@ -94,7 +94,7 @@ export const FloatingNavigation = ({
 }) => {
   return (
     <div className="flex justify-end">
-      <Menu as="div" className="fixed bottom-4 z-20 flex items-end justify-end">
+      <Menu as="div" className="fixed bottom-4 z-10 flex items-end justify-end">
         <Menu.Button
           type="button"
           className="border-primary-light bg-primary-light/50 text-primary flex h-14 w-14 items-center justify-center rounded-full border-2 font-medium shadow backdrop-blur-sm focus:outline-none"

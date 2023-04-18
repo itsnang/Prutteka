@@ -18,74 +18,11 @@ import { DynamicContentForm } from './DynamicContentForm';
 import { FloatingNavigation } from './FloatingNavigation';
 import { DetailForm } from './DetailForm';
 import { validationSchema } from './yup-validation';
-import { buildEventForm } from './event-form';
+import { buildEventForm, transformEventForm } from './event-form';
 import { auth } from 'firebase-config';
 import { useRouter } from 'next/router';
 import { APIResponseEvent } from 'custom-types';
-import { SeoMeta } from 'ui';
-
-const defaultValues = {
-  image: { src: '', file: null },
-  name: { en: '', km: '' },
-  type: '',
-  categories: [],
-  detail: '',
-  date: {
-    start_date: format(new Date(new Date().setHours(0, 0, 0, 0)), 'yyyy-MM-dd'),
-    end_date: format(new Date(new Date().setHours(0, 0, 0, 0)), 'yyyy-MM-dd'),
-  },
-  times: [
-    {
-      date: new Date(new Date().setHours(0, 0, 0, 0)).toISOString(),
-      start_time: format(new Date(new Date().setHours(6, 0, 0, 0)), 'HH:mm'),
-      end_time: format(new Date(new Date().setHours(17, 0, 0, 0)), 'HH:mm'),
-    },
-  ],
-  custom_date: false,
-  locations: [
-    {
-      name: '',
-      address: '',
-      url: '',
-      latlng: { lat: 0, lng: 0 },
-      place_id: '',
-      image_src: '',
-      type: 'google',
-    },
-  ],
-  schedules: [
-    {
-      date: new Date(new Date().setHours(0, 0, 0, 0)).toISOString(),
-      schedules: [
-        {
-          start_time: format(
-            new Date(new Date().setHours(6, 0, 0, 0)),
-            'HH:mm'
-          ),
-          end_time: format(new Date(new Date().setHours(17, 0, 0, 0)), 'HH:mm'),
-          activity: {
-            en: '',
-            km: '',
-          },
-        },
-      ],
-    },
-  ],
-  custom_schedule: false,
-  join_methods: [{ name: { en: '', km: '' }, link: '' }],
-  dynamic_contents: [
-    {
-      name: { en: '', km: '' },
-      items: [
-        {
-          image: { src: '', file: null },
-          name: { en: '', km: '' },
-          detail: { en: '', km: '' },
-        },
-      ],
-    },
-  ],
-};
+import { NextPage } from 'next';
 
 const initialValues = {
   image: { src: '', file: null },
@@ -224,46 +161,42 @@ const initialValues = {
   ],
 };
 
-export function EventFormPage() {
-  const { push } = useRouter();
+interface EditEventFormPageProps {
+  data: APIResponseEvent;
+}
+
+export const EditEventFormPage: NextPage<EditEventFormPageProps> = ({
+  data,
+}) => {
+  const { reload, query } = useRouter();
+
+  const event = transformEventForm(data.data.attributes);
+  console.log(data.data.attributes);
 
   return (
-    <>
-      <SeoMeta
-        title={`Submit Event | ព្រឹត្តិការណ៍​ - Prutteka`}
-        description=""
-      />
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={async (values) => {
-          try {
-            console.log('submit', values);
-            const formData = buildEventForm(values);
-            // log
-            // formData.forEach((data, key) => {
-            //   console.log(key, ':', data);
-            // });
-            const response = await axios.post('/events', formData, {
-              headers: {
-                Authorization:
-                  'Bearer ' + (await auth.currentUser?.getIdToken()),
-              },
-            });
-            const { data } = response.data as APIResponseEvent;
-            console.log(data);
+    <Formik
+      initialValues={event}
+      validationSchema={validationSchema}
+      onSubmit={async (values) => {
+        try {
+          console.log('submit', values);
+          const formData = buildEventForm(values);
 
-            push('/event/' + data.id);
-          } catch (error) {
-            console.error(error);
-          }
-        }}
-      >
-        {({ values }) => <InnerForm values={values} />}
-      </Formik>
-    </>
+          await axios.put(`/events/${query.eventId}`, formData, {
+            headers: {
+              Authorization: 'Bearer ' + (await auth.currentUser?.getIdToken()),
+            },
+          });
+          reload();
+        } catch (error) {
+          console.error(error);
+        }
+      }}
+    >
+      {({ values }) => <InnerForm values={values} />}
+    </Formik>
   );
-}
+};
 
 const InnerForm: React.FC<{ values: InitialValueType }> = ({ values }) => {
   const [eventDate, setEventDate] = useState<Date[]>([]);
@@ -284,7 +217,7 @@ const InnerForm: React.FC<{ values: InitialValueType }> = ({ values }) => {
   }, [date.start_date, date.end_date]);
 
   return (
-    <Form className="mx-auto max-w-6xl space-y-4 pb-16">
+    <Form className="space-y-4 pb-16">
       <FloatingNavigation setPage={(page) => setSelectedPage(page)} />
 
       {selectedPage === 0 ? <DetailForm /> : null}

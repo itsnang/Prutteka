@@ -1,5 +1,7 @@
 import { parse } from 'date-fns';
 import { InitialValueType } from './form.types';
+import { APIResponseEvent } from 'custom-types';
+import { format } from 'date-fns';
 
 export const buildEventForm = (data: InitialValueType) => {
   const formData = new FormData();
@@ -7,6 +9,8 @@ export const buildEventForm = (data: InitialValueType) => {
   // detail
   if (data.image.file) {
     formData.append('image', data.image.file);
+  } else {
+    formData.append('image_src', data.image.src);
   }
   formData.append('name[en]', data.name.en);
   formData.append('name[km]', data.name.km);
@@ -22,7 +26,7 @@ export const buildEventForm = (data: InitialValueType) => {
   formData.append('date[end_date]', data.date.end_date);
 
   // times
-  data.times.forEach((time) => {
+  data.times.forEach((time, index) => {
     const startTime = parse(
       time.start_time,
       'HH:mm',
@@ -34,9 +38,9 @@ export const buildEventForm = (data: InitialValueType) => {
       new Date(time.date)
     ).toISOString();
 
-    formData.append('times[0][date]', time.date);
-    formData.append('times[0][start_time]', startTime);
-    formData.append('times[0][end_time]', endTime);
+    formData.append(`times[${index}][date]`, time.date);
+    formData.append(`times[${index}][start_time]`, startTime);
+    formData.append(`times[${index}][end_time]`, endTime);
   });
 
   // location
@@ -118,7 +122,14 @@ export const buildEventForm = (data: InitialValueType) => {
       content.name.km
     );
     content.items.forEach((item, itemIndex) => {
-      formData.append(`dynamic_content_images`, item.image.file as Blob);
+      if (item.image.file) {
+        formData.append(`dynamic_content_images`, item.image.file as Blob);
+      } else {
+        formData.append(
+          `dynamic_contents[${contentIndex}][items][${itemIndex}][image_src]`,
+          item.image.src
+        );
+      }
 
       formData.append(
         `dynamic_contents[${contentIndex}][items][${itemIndex}][name][en]`,
@@ -141,4 +152,48 @@ export const buildEventForm = (data: InitialValueType) => {
   });
 
   return formData;
+};
+
+export const transformEventForm = (
+  data: APIResponseEvent['data']['attributes']
+) => {
+  return {
+    image: { src: data.image_src, file: null },
+    name: { en: data.name.en, km: data.name.km },
+    type: data.type,
+    categories: data.categories,
+    detail: data.detail.en,
+    date: {
+      start_date: format(new Date(data.date.start_date), 'yyyy-MM-dd'),
+      end_date: format(new Date(data.date.end_date), 'yyyy-MM-dd'),
+    },
+    times: data.times.map((time) => ({
+      date: new Date(time.date).toISOString(),
+      start_time: format(new Date(time.start_time), 'HH:mm'),
+      end_time: format(new Date(time.end_time), 'HH:mm'),
+    })),
+    custom_date: data.times.length > 1,
+    locations: data.locations as any,
+    schedules: data.schedules.map((schedule) => ({
+      date: new Date(schedule.date).toISOString(),
+      schedules: schedule.schedules.map((_schedule) => ({
+        start_time: format(new Date(_schedule.start_time), 'HH:mm'),
+        end_time: format(new Date(_schedule.end_time), 'HH:mm'),
+        activity: {
+          en: _schedule.activity.en,
+          km: _schedule.activity.km,
+        },
+      })),
+    })),
+    custom_schedule: data.schedules.length > 1,
+    join_methods: data.join_methods as any,
+    dynamic_contents: data.dynamic_contents.map((content) => ({
+      name: { en: content.name.en, km: content.name.km },
+      items: content.items.map((item) => ({
+        image: { src: item.image_src, file: null },
+        name: { en: item.name.en, km: item.name.km },
+        detail: { en: item.detail.en, km: item.detail.km },
+      })),
+    })),
+  };
 };

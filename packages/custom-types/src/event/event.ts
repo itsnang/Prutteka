@@ -70,7 +70,7 @@ interface JoinMethod {
 interface Location {
   name: string;
   address: string;
-  url?: URL;
+  url?: string;
   latlng?: Latlng;
   type: 'google' | 'custom';
   place_id?: string;

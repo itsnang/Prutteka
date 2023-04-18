@@ -12,7 +12,7 @@ import { InitialValueType } from './form.types';
 const TYPES = [
   { value: 'physical', text: 'Physical' },
   { value: 'online', text: 'Online' },
-  { value: 'hybrid', text: 'Physical-Online' },
+  { value: 'physical-online', text: 'Physical-Online' },
 ];
 
 // types

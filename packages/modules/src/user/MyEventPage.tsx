@@ -8,7 +8,9 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { translateTime } from '../helpers/translateTime';
 import axios from 'axios';
 import { auth } from 'firebase-config';
-import { useAuth } from '../auth';
+import { useAuth, useProvideAuth } from '../auth';
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 
 const PAGE_SIZE = 12;
 
@@ -22,12 +24,20 @@ export const MyEventPage = () => {
   const { t, i18n } = useTypeSafeTranslation();
   const userId = useAuth((state) => state.id);
 
+  // check if user is loggedIn
+  // if not redirect user to homepage
+  const { push } = useRouter();
+  const { isLoggedIn } = useProvideAuth();
+  useEffect(() => {
+    if (!isLoggedIn) {
+      push('/');
+    }
+  }, [push, isLoggedIn]);
+
   const { data, size, setSize, mutate } = useSWRInfinite<APIResponseEvents>(
     getKey(userId),
     fetcher
   );
-
-  console.log(data);
 
   const isEmpty = data?.[0]?.data.length === 0;
   const isReachingEnd =
@@ -49,7 +59,7 @@ export const MyEventPage = () => {
 
   return (
     <>
-      <SeoMeta title="My Events - Prutteka" description="" />
+      <SeoMeta title="My Events | ព្រឹត្តិការណ៍ - Prutteka" description="" />
       <div className="flex flex-col gap-6">
         <Typography className="md:text-xl lg:text-3xl" variant="h1" size="lg">
           {t('my-event-page.my-event')}

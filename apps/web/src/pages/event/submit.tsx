@@ -5,7 +5,6 @@ import { GetStaticProps } from 'next';
 
 import 'flag-icons/css/flag-icons.min.css';
 import 'react-quill/dist/quill.snow.css';
-// import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
   return {

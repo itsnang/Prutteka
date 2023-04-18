@@ -29,7 +29,6 @@ interface UserEventCardProps {
   date: string;
   time: string;
   location: string;
-  isNested?: boolean;
 
   onDelete?: () => void;
 }
@@ -42,7 +41,6 @@ export const UserEventCard: React.FC<UserEventCardProps> = ({
   title,
   time,
   location,
-  isNested = false,
   onDelete,
 }) => {
   const router = useRouter();
@@ -108,22 +106,16 @@ export const UserEventCard: React.FC<UserEventCardProps> = ({
             <Disclosure.Panel className="-mt-1 rounded-b-2xl bg-gray-100 p-1 text-gray-500 lg:p-2">
               <div className="flex items-center py-2 px-2">
                 <div className="flex w-full justify-end gap-2 lg:gap-4">
-                  <Button
+                  {/* <Button
                     variant="secondary"
                     icon={<UsersIcon />}
                     onClick={() => router.push('/user/my-event/' + id)}
                   ></Button>
-                  <Button variant="secondary" icon={<QrCodeIcon />}></Button>
-                  {isNested ? (
-                    <Button
-                      variant="secondary"
-                      icon={<RectangleStackIcon />}
-                    ></Button>
-                  ) : null}
+                  <Button variant="secondary" icon={<QrCodeIcon />}></Button> */}
                   <Button
                     variant="secondary"
                     as="link"
-                    href={`/event/${id}/edit`}
+                    href={`/user/my-event/${id}/edit`}
                     icon={<PencilIcon />}
                   ></Button>
 
