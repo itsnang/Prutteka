@@ -63,6 +63,9 @@ module.exports = {
           '70%': { transform: 'scale(1)' },
         },
       },
+      maxWidth: {
+        laptop: '90rem',
+      },
     },
   },
   plugins: [

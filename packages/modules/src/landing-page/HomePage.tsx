@@ -22,7 +22,7 @@ const PAGE_SIZE = 9;
 const getKey =
   (category: string) => (pageIndex: number, previousPageData: any) => {
     if (previousPageData && !previousPageData?.data.length) return null; // reached the end
-    return `/events?filter[category]=${category}&page[offset]=${pageIndex}&page[limit]=${PAGE_SIZE}`; // SWR key
+    return `/events?filter[category]=${category}&filter[start_date][gte]=2023-04-18&filter[end_date][gte]=2023-04-18&page[offset]=${pageIndex}&page[limit]=${PAGE_SIZE}`; // SWR key
   };
 
 export const HomePage: NextPage<HomePageProps> = ({ initialData }) => {
@@ -52,7 +52,7 @@ export const HomePage: NextPage<HomePageProps> = ({ initialData }) => {
             next={() => setSize(size + 1)}
             hasMore={!isReachingEnd}
             loader={
-              <div className="mt-4 grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="mt-4 grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {Array.from({ length: 9 }).map((_, index) => (
                   <EventCardSkeleton key={index} />
                 ))}
@@ -60,7 +60,7 @@ export const HomePage: NextPage<HomePageProps> = ({ initialData }) => {
             }
             scrollThreshold={0.6}
           >
-            <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {data &&
                 data.map((events) =>
                   events.data.map((event) => {

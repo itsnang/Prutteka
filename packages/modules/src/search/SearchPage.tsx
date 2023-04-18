@@ -38,14 +38,14 @@ const getKey =
 export const Search = ({ initialData }: SearchPageProps) => {
   const { t, i18n } = useTypeSafeTranslation();
 
-  const locations = LOCATIONS.map((value, idx) => ({
-    name: t(value),
-    value: value as string,
-    id: idx,
-  }));
+  // const locations = LOCATIONS.map((value, idx) => ({
+  //   name: t(value),
+  //   value: value as string,
+  //   id: idx,
+  // }));
 
-  const [selected, setSelected] = useState(locations[0]);
-  const [filterModal, setFilterModal] = useState(false);
+  // const [selected, setSelected] = useState(locations[0]);
+  // const [filterModal, setFilterModal] = useState(false);
 
   const [interestedEvents, setInterestedEvents] = useLocalInterestedEvent();
   const { query, push } = useRouter();
@@ -60,7 +60,7 @@ export const Search = ({ initialData }: SearchPageProps) => {
 
   return (
     <>
-      <SeoMeta title="Search - Prutteka" description="" />
+      <SeoMeta title="Search | ព្រឹត្តិការណ៍​ - Prutteka" description="" />
 
       <div className="space-y-4">
         <div className="mx-auto max-w-[31.25rem]">
@@ -76,7 +76,7 @@ export const Search = ({ initialData }: SearchPageProps) => {
             }}
             value={(query?.search as string) ?? ''}
           />
-          <div className="flex">
+          {/* <div className="flex">
             <div className="mx-1 flex-1">
               <AutoCompleteInput
                 items={locations}
@@ -108,64 +108,66 @@ export const Search = ({ initialData }: SearchPageProps) => {
               show={filterModal}
               onClose={() => setFilterModal(false)}
             />
-          </div>
+          </div> */}
         </div>
-        <CategorySelection
-          title={t('search-page.search-results')}
-          onSelect={(category) =>
-            push({ query: { ...query, category: category } })
-          }
-        />
-        <InfiniteScroll
-          dataLength={data?.length || 0}
-          next={() => setSize(size + 1)}
-          hasMore={!isReachingEnd}
-          loader={
+        <div className="mx-auto max-w-5xl">
+          <CategorySelection
+            title={t('search-page.search-results')}
+            onSelect={(category) =>
+              push({ query: { ...query, category: category } })
+            }
+          />
+          <InfiniteScroll
+            dataLength={data?.length || 0}
+            next={() => setSize(size + 1)}
+            hasMore={!isReachingEnd}
+            loader={
+              <div className="flex flex-col gap-[0.625rem]">
+                {Array.from({ length: 9 }).map((_, index) => (
+                  <EventCardSkeleton isLandscape key={index} />
+                ))}
+              </div>
+            }
+            scrollThreshold={0.6}
+          >
             <div className="flex flex-col gap-[0.625rem]">
-              {Array.from({ length: 9 }).map((_, index) => (
-                <EventCardSkeleton isLandscape key={index} />
-              ))}
+              {data &&
+                data.map((events) =>
+                  events.data.map((event) => {
+                    const isActive = !!interestedEvents.find(
+                      (_event) => _event.id === event.id
+                    );
+
+                    const date = translateDate(
+                      event.attributes.date.start_date,
+                      i18n.language
+                    );
+                    const time = translateTime(
+                      event.attributes.times[0].start_time,
+                      i18n.language
+                    );
+
+                    return (
+                      <EventCard
+                        isLandscape
+                        key={event.id}
+                        img={event.attributes.image_src}
+                        date={date}
+                        time={time}
+                        location={''}
+                        title={event.attributes.name.en}
+                        href={`/event/${event.id}`}
+                        isActive={isActive}
+                        onInterested={() => {
+                          setInterestedEvents(event);
+                        }}
+                      />
+                    );
+                  })
+                )}
             </div>
-          }
-          scrollThreshold={0.6}
-        >
-          <div className="flex flex-col gap-[0.625rem]">
-            {data &&
-              data.map((events) =>
-                events.data.map((event) => {
-                  const isActive = !!interestedEvents.find(
-                    (_event) => _event.id === event.id
-                  );
-
-                  const date = translateDate(
-                    event.attributes.date.start_date,
-                    i18n.language
-                  );
-                  const time = translateTime(
-                    event.attributes.times[0].start_time,
-                    i18n.language
-                  );
-
-                  return (
-                    <EventCard
-                      isLandscape
-                      key={event.id}
-                      img={event.attributes.image_src}
-                      date={date}
-                      time={time}
-                      location={''}
-                      title={event.attributes.name.en}
-                      href={`/event/${event.id}`}
-                      isActive={isActive}
-                      onInterested={() => {
-                        setInterestedEvents(event);
-                      }}
-                    />
-                  );
-                })
-              )}
-          </div>
-        </InfiniteScroll>
+          </InfiniteScroll>
+        </div>
       </div>
     </>
   );

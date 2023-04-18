@@ -13,9 +13,10 @@ interface TextDisplay {
 export const TextDisplay: React.FC<TextDisplay> = ({ value }) => {
   return (
     <QuillNoSSRWrapper
-      className="w-full !p-0 text-gray-700"
+      className="w-full !p-0 text-base text-gray-700"
       value={value}
       theme=""
+      readOnly
     />
   );
 };
