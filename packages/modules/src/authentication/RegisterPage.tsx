@@ -35,6 +35,7 @@ const validationSchema = Yup.object({
 });
 
 interface InitialValuesType {
+  display_name: string;
   email: string;
   password: string;
 }
@@ -45,15 +46,17 @@ const facebookProvider = new FacebookAuthProvider();
 export const RegisterPage: NextPageWithLayout = () => {
   const { push } = useRouter();
   const { t } = useTypeSafeTranslation();
-  const setToken = useTokenStore((state) => state.setToken);
   const setUser = useAuth((state) => state.setUser);
-  const token = useTokenStore((state) => state.token);
   const userId = useAuth((state) => state.id);
 
   const [isSubmiting, setIsSubmiting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const handleSubmit = async ({ email, password }: InitialValuesType) => {
+  const handleSubmit = async ({
+    display_name,
+    email,
+    password,
+  }: InitialValuesType) => {
     try {
       setIsSubmiting(true);
       const createdUser = await createUserWithEmailAndPassword(
@@ -66,13 +69,14 @@ export const RegisterPage: NextPageWithLayout = () => {
       const { data } = await axios.post(
         '/signup',
         {
-          email: email,
+          display_name,
+          email,
         },
         { headers: { Authorization: 'Bearer ' + token } }
       );
       const user = data as APIResponseUser;
-      setToken(token);
       setUser(user.data.id, user.data.attributes);
+      push('/');
     } catch (error) {
       if ((error as AuthError).code === 'auth/email-already-in-use') {
         return setErrorMessage('Email is already existed');
@@ -108,7 +112,7 @@ export const RegisterPage: NextPageWithLayout = () => {
       console.log(user.data);
 
       setUser(user.data.id, user.data.attributes);
-      setToken(token);
+      push('/');
     } catch (error) {
     } finally {
       setIsSubmiting(false);
@@ -120,7 +124,6 @@ export const RegisterPage: NextPageWithLayout = () => {
       setIsSubmiting(true);
       const response = await signInWithPopup(auth, facebookProvider);
       const token = await response.user.getIdToken();
-      setToken(token);
     } catch (error) {
     } finally {
       setIsSubmiting(false);
@@ -143,15 +146,20 @@ export const RegisterPage: NextPageWithLayout = () => {
         </Link>
 
         <Formik
-          initialValues={{ email: '', password: '' }}
+          initialValues={{ display_name: '', email: '', password: '' }}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
           {() => (
             <Form className="flex flex-col gap-4 p-4">
               <InputField
+                name="display_name"
+                placeholder={'Display Name'}
+                type="text"
+              />
+              <InputField
                 name="email"
-                placeholder={t('register-page.email') || ''}
+                placeholder={t('register-page.email')}
                 type="email"
               />
               <InputField

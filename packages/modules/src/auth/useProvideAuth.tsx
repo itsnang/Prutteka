@@ -6,11 +6,31 @@ import { useEffect } from 'react';
 import { useAuth } from './useAuth';
 import { useTokenStore } from './useTokenStore';
 
+import create from 'zustand';
+import { combine } from 'zustand/middleware';
+
+interface IsLoggedInState {
+  isLoggedIn: boolean | null;
+  loggedIn: () => void;
+  clear: () => void;
+}
+
+const useIsLoggedIn = create<IsLoggedInState>((set) => ({
+  isLoggedIn: null,
+  loggedIn: () => {
+    set({ isLoggedIn: true });
+  },
+  clear: () => {
+    set({ isLoggedIn: false });
+  },
+}));
+
 export function useProvideAuth() {
-  const setToken = useTokenStore((state) => state.setToken);
-  const clearToken = useTokenStore((state) => state.clearToken);
   const setUser = useAuth((state) => state.setUser);
   const resetUser = useAuth((state) => state.reset);
+  const isLoggedIn = useIsLoggedIn((s) => s.isLoggedIn);
+  const loggedIn = useIsLoggedIn((s) => s.loggedIn);
+  const clear = useIsLoggedIn((s) => s.clear);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -24,23 +44,23 @@ export function useProvideAuth() {
           );
           const userData = loggedInUser.data as APIResponseUser;
 
-          setToken(token);
           setUser(userData.data.id, userData.data.attributes);
+          loggedIn();
         } else {
-          clearToken();
           resetUser();
+          clear();
         }
       } catch (error) {
         // console.log(error);
 
         auth.signOut();
-        clearToken();
+        clear();
         resetUser();
       }
     });
 
     return () => unsubscribe();
-  }, [setToken, clearToken, setUser, resetUser]);
+  }, [setUser, resetUser, loggedIn, clear]);
 
-  return { setToken, clearToken } as const;
+  return { isLoggedIn } as const;
 }

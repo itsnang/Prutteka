@@ -45,7 +45,7 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({ onLogout }) => {
               </Link>
             )}
           </Menu.Item>
-          <Menu.Item>
+          {/* <Menu.Item>
             {({ active }) => (
               <Link
                 className={`${
@@ -56,7 +56,7 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({ onLogout }) => {
                 <span>Profile</span>
               </Link>
             )}
-          </Menu.Item>
+          </Menu.Item> */}
           <Menu.Item>
             {({ active }) => (
               <button

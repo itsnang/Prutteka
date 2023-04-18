@@ -20,14 +20,13 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
   FacebookAuthProvider,
-  onAuthStateChanged,
 } from 'firebase/auth';
 import { AuthError } from '@firebase/auth';
-import { useVerifyLoggedIn } from '../auth/useVerifyLoggedIn';
 
 import axios from 'axios';
 import { useAuth } from '../auth/useAuth';
 import { APIResponseUser } from 'custom-types';
+import { useProvideAuth } from '../auth/useProvideAuth';
 
 const validationSchema = Yup.object({
   email: Yup.string().email('formik.email.invalid').required('formik.required'),
@@ -49,7 +48,7 @@ export const LoginPage: NextPageWithLayout = () => {
   const { t } = useTypeSafeTranslation();
   const { push } = useRouter();
   const setToken = useTokenStore((state) => state.setToken);
-  const hasToken = useVerifyLoggedIn();
+  const { isLoggedIn } = useProvideAuth();
   const setUser = useAuth((state) => state.setUser);
   const [isSubmiting, setIsSubmiting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -79,8 +78,6 @@ export const LoginPage: NextPageWithLayout = () => {
       );
 
       const user = response.data as APIResponseUser;
-      console.log(user.data);
-
       setUser(user.data.id, user.data.attributes);
     } catch (error) {
       console.log(error);
@@ -138,10 +135,10 @@ export const LoginPage: NextPageWithLayout = () => {
   };
 
   useEffect(() => {
-    if (hasToken) {
+    if (isLoggedIn) {
       push('/');
     }
-  }, [push, hasToken]);
+  }, [push, isLoggedIn]);
 
   return (
     <>

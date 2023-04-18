@@ -27,7 +27,7 @@ export const EventHeader: React.FC<EventHeader> = ({
   return (
     <div className="space-y-4">
       <div className="flex justify-center overflow-hidden rounded-2xl bg-gray-100">
-        <div className="relative aspect-[2/1] w-full md:h-96 md:w-auto">
+        <div className="relative aspect-[2/1] w-full md:h-[28rem] md:w-auto">
           <Image
             src={img}
             className="rounded-2xl object-cover"
@@ -57,9 +57,9 @@ export const EventHeader: React.FC<EventHeader> = ({
         <Typography variant="span" size="base" color="dark" weight="medium">
           From
         </Typography>
-        <Link href={source} className="text-secondary ml-2">
+        <Typography className="text-secondary ml-2 inline-block">
           {organizer}
-        </Link>
+        </Typography>
       </div>
     </div>
   );

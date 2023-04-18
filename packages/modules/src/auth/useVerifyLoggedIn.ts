@@ -1,27 +1,44 @@
 import { useEffect } from 'react';
-import { useTokenStore } from './useTokenStore';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from 'firebase-config';
 
+import create from 'zustand';
+import { combine } from 'zustand/middleware';
+
+const useIsLoggedIn = create(
+  combine(
+    {
+      isLoggedIn: false,
+    },
+    (set) => ({
+      loggedIn: () => {
+        set({ isLoggedIn: true });
+      },
+      clear: () => {
+        set({ isLoggedIn: false });
+      },
+    })
+  )
+);
+
 export const useVerifyLoggedIn = () => {
-  const hasToken = useTokenStore((s) => !!s.token);
-  const setToken = useTokenStore((s) => s.setToken);
-  const clearToken = useTokenStore((s) => s.clearToken);
+  const isLoggedIn = useIsLoggedIn((s) => s.isLoggedIn);
+  const loggedIn = useIsLoggedIn((s) => s.loggedIn);
+  const clear = useIsLoggedIn((s) => s.clear);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        const token = await user.getIdToken();
-        setToken(token);
+        loggedIn();
       } else {
-        clearToken();
+        clear();
       }
     });
 
     return () => {
       unsubscribe();
     };
-  }, [setToken, clearToken]);
+  }, [loggedIn, clear]);
 
-  return hasToken;
+  return isLoggedIn;
 };
