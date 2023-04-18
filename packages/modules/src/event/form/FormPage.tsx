@@ -11,7 +11,7 @@ import { InitialValueType } from './form.types';
 import { eachDayOfInterval, format } from 'date-fns';
 
 import { ScheduleForm } from './ScheduleForm';
-import { DateTimeForm } from './DateTimeForm';
+import { DateTimeForm } from './DatetimeForm';
 import { LocationForm } from './LocationForm';
 import { JoinMethodForm } from './JoinMethodForm';
 import { DynamicContentForm } from './DynamicContentForm';
