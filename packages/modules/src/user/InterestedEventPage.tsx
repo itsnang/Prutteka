@@ -28,12 +28,12 @@ export const InterestedEventPage: React.FC = () => {
     for (const event of localInterestedEvents) {
       // find existing date
       let i = newEvents.findIndex(
-        (x) => x.date === event.attributes.date_time.start_date
+        (x) => x.date === event.attributes.date.start_date
       );
       if (i <= -1) {
         // add new date with event
         newEvents.push({
-          date: event.attributes.date_time.start_date,
+          date: event.attributes.date.start_date,
           events: [event],
         });
       } else {
@@ -52,7 +52,7 @@ export const InterestedEventPage: React.FC = () => {
 
   return (
     <>
-      <SeoMeta title="Interested - Prutteka" description="" />
+      <SeoMeta title="Interested | ព្រឹត្តិការណ៍ - Prutteka" description="" />
 
       <div className="space-y-3">
         <Typography
@@ -82,7 +82,7 @@ export const InterestedEventPage: React.FC = () => {
                 {translateDate(event.date, i18n.language)}
               </Typography>
             </div>
-            <div className="mt-4 grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-4 grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {event.events.map((_event) => {
                 const date = translateDate(
                   _event.attributes.date.start_date,
