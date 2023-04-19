@@ -114,25 +114,24 @@ export const LoginPage: NextPageWithLayout = () => {
       console.log(user.data);
 
       setUser(user.data.id, user.data.attributes);
-      setToken(token);
     } catch (error) {
     } finally {
       setIsSubmiting(false);
     }
   };
 
-  const handleFacebookSignIn = async () => {
-    try {
-      setIsSubmiting(true);
-      const response = await signInWithPopup(auth, facebookProvider);
-      const token = await response.user.getIdToken();
-      setToken(token);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsSubmiting(false);
-    }
-  };
+  // const handleFacebookSignIn = async () => {
+  //   try {
+  //     setIsSubmiting(true);
+  //     const response = await signInWithPopup(auth, facebookProvider);
+  //     const token = await response.user.getIdToken();
+  //     setToken(token);
+  //   } catch (error) {
+  //     console.log(error);
+  //   } finally {
+  //     setIsSubmiting(false);
+  //   }
+  // };
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -142,7 +141,10 @@ export const LoginPage: NextPageWithLayout = () => {
 
   return (
     <>
-      <SeoMeta title="Login - Prutteka" description="" />
+      <SeoMeta
+        title="Login | ព្រឹត្តិការណ៍ - Prutteka"
+        description="Experience the ultimate solution for events, venues, and attractions in Cambodia with ព្រឹត្តិការណ៍ - Prutteka. Revel in the our system, offering dynamic content to provide more information for your events, whether it is sports, concerts or conventions."
+      />
       <div className="w-auto">
         <Link href="/">
           <Image
@@ -209,7 +211,7 @@ export const LoginPage: NextPageWithLayout = () => {
               >
                 {t('register-page.continue-with-google')}
               </Button>
-              <Button
+              {/* <Button
                 variant="secondary"
                 icon={<FacebookIcon />}
                 type="button"
@@ -217,7 +219,7 @@ export const LoginPage: NextPageWithLayout = () => {
                 isLoading={isSubmiting}
               >
                 {t('register-page.continue-with-facebook')}
-              </Button>
+              </Button> */}
             </Form>
           )}
         </Formik>
