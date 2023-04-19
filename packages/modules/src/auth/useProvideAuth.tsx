@@ -4,10 +4,8 @@ import { auth } from 'firebase-config';
 import { onAuthStateChanged } from 'firebase/auth';
 import { useEffect } from 'react';
 import { useAuth } from './useAuth';
-import { useTokenStore } from './useTokenStore';
 
-import create from 'zustand';
-import { combine } from 'zustand/middleware';
+import { create } from 'zustand';
 
 interface IsLoggedInState {
   isLoggedIn: boolean | null;

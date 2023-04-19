@@ -26,7 +26,7 @@
     "next-i18next": "^13.0.2",
     "shared-utils": "*",
     "react-image-crop": "^10.0.9",
-    "zustand": "^4.2.0",
+    "zustand": "^4.3.7",
     "firebase-config": "*",
     "firebase": "^9.17.1",
     "custom-types": "*",
