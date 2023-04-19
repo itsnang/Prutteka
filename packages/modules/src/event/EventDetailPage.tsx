@@ -272,16 +272,22 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
             </div>
             <div className="mt-4 space-y-4">
               {event.attributes.locations.map((location, index) => (
-                <div className="space-y-2" key={index}>
-                  <Typography variant="h4">{location.name}</Typography>
-                  <Typography>{location.address}</Typography>
+                <div
+                  className="flex flex-col justify-between gap-4 md:flex-row"
+                  key={index}
+                >
+                  <div className="flex-1">
+                    <Typography variant="h4">{location.name}</Typography>
+                    <Typography>{location.address}</Typography>
+                  </div>
                   {location.type === 'google' &&
                   location.image_src &&
                   location.url ? (
-                    <>
+                    <div className="flex flex-1 flex-col items-center gap-4">
                       <Link
+                        target="_blank"
                         href={location.url}
-                        className="relative mx-auto block aspect-[2/1] max-w-2xl overflow-hidden rounded-2xl"
+                        className="relative mx-auto inline-flex aspect-[2/1] w-full max-w-2xl overflow-hidden rounded-2xl"
                       >
                         <Image
                           src={location.image_src}
@@ -295,13 +301,14 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
                         />
                       </Link>
                       <Link
+                        target="_blank"
                         href={location.url}
                         className="inline-flex rounded-lg border border-gray-200 py-2 px-4 font-normal"
                       >
                         {t('event-detail-page.view-on-map')}
                         <ArrowTopRightOnSquareIcon className="ml-2 h-5 w-5" />
                       </Link>
-                    </>
+                    </div>
                   ) : null}
                 </div>
               ))}
