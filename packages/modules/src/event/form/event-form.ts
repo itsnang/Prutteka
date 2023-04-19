@@ -9,9 +9,8 @@ export const buildEventForm = (data: InitialValueType) => {
   // detail
   if (data.image.file) {
     formData.append('image', data.image.file);
-  } else {
-    formData.append('image_src', data.image.src);
   }
+
   formData.append('name[en]', data.name.en);
   formData.append('name[km]', data.name.km);
   formData.append('type', data.type);

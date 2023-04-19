@@ -172,11 +172,11 @@ export const updateEvent: Controller = async (req, res, next) => {
       throw new UnAuthorizedError('User does not exist');
     }
 
-    const isEventOrganizer = Event.findOne({
+    const event = await Event.findOne({
       _id: req.params.eventId,
       organizer: user._id,
     });
-    if (!isEventOrganizer) {
+    if (!event) {
       throw new UnAuthorizedError('User is not an event organizer');
     }
 
@@ -187,7 +187,7 @@ export const updateEvent: Controller = async (req, res, next) => {
     });
 
     // @ts-ignore
-    const mainImage = req?.files?.image[0];
+    const mainImage = req?.files?.image ? req?.files?.image[0] : '';
     // @ts-ignore
     const dynamicContentImage = req?.files?.dynamic_content_images ?? [];
 
@@ -240,8 +240,8 @@ export const updateEvent: Controller = async (req, res, next) => {
         {
           $set: {
             ...body,
+            image_src: event.image_src,
           },
-          $unset: { image_src: 1 },
         }
       );
     }
