@@ -171,7 +171,6 @@ export const EditEventFormPage: NextPage<EditEventFormPageProps> = ({
   const { reload, query } = useRouter();
 
   const event = transformEventForm(data.data.attributes);
-  console.log(data.data.attributes);
 
   return (
     <Formik

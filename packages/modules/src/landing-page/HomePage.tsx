@@ -47,7 +47,10 @@ export const HomePage: NextPage<HomePageProps> = ({ initialData }) => {
 
   return (
     <>
-      <SeoMeta title="ព្រឹត្តិការណ៍ - Prutteka" description="" />
+      <SeoMeta
+        title="ព្រឹត្តិការណ៍ - Prutteka"
+        description="Experience the ultimate solution for events, venues, and attractions in Cambodia with ព្រឹត្តិការណ៍ - Prutteka. Revel in the our system, offering dynamic content to provide more information for your events, whether it is sports, concerts or conventions."
+      />
       <div className="mb-8 space-y-4 lg:space-y-8">
         <CategorySelection
           title={t('home-page.explore')}

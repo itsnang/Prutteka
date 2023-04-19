@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import Image from 'next/image';
 import ReactCrop, { centerCrop, Crop, makeAspectCrop } from 'react-image-crop';
 
-import { Modal } from 'ui';
+import { Button, Modal } from 'ui';
 import getCroppedImg from '../form/crop-image';
 
 export const useImageCrop = (
@@ -64,16 +64,17 @@ export const useImageCrop = (
           />
         </ReactCrop>
         <div className="mt-6 flex justify-end space-x-4">
-          <button
+          <Button
+            variant="secondary"
             type="button"
             className="px-6"
             onClick={() => setIsOpen(false)}
           >
             Cancel
-          </button>
-          <button type="button" className="px-6" onClick={handleGetCropImage}>
+          </Button>
+          <Button type="button" className="px-6" onClick={handleGetCropImage}>
             Crop
-          </button>
+          </Button>
         </div>
       </Modal>
     ),

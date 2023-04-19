@@ -63,7 +63,10 @@ export const Search = () => {
 
   return (
     <>
-      <SeoMeta title="Search | ព្រឹត្តិការណ៍​ - Prutteka" description="" />
+      <SeoMeta
+        title="Search | ព្រឹត្តិការណ៍​ - Prutteka"
+        description="Experience the ultimate solution for events, venues, and attractions in Cambodia with ព្រឹត្តិការណ៍ - Prutteka. Revel in the our system, offering dynamic content to provide more information for your events, whether it is sports, concerts or conventions."
+      />
 
       <div className="space-y-4">
         <div className="mx-auto max-w-[31.25rem]">

@@ -226,6 +226,7 @@ const initialValues = {
 
 export function EventFormPage() {
   const { push } = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   return (
     <>
@@ -234,11 +235,11 @@ export function EventFormPage() {
         description=""
       />
       <Formik
-        initialValues={defaultValues}
+        initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={async (values) => {
           try {
-            console.log('submit', values);
+            setIsSubmitting(true);
             const formData = buildEventForm(values);
             // log
             // formData.forEach((data, key) => {
@@ -251,23 +252,28 @@ export function EventFormPage() {
               },
             });
             const { data } = response.data as APIResponseEvent;
-            console.log(data);
 
             push('/event/' + data.id);
           } catch (error) {
-            console.error(error);
+            setIsSubmitting(false);
           }
         }}
       >
-        {({ values }) => <InnerForm values={values} />}
+        {({ values }) => (
+          <InnerForm values={values} isSubmitting={isSubmitting} />
+        )}
       </Formik>
     </>
   );
 }
 
-const InnerForm: React.FC<{ values: InitialValueType }> = ({ values }) => {
+const InnerForm: React.FC<{
+  values: InitialValueType;
+  isSubmitting: boolean;
+}> = ({ values, isSubmitting }) => {
   const [eventDate, setEventDate] = useState<Date[]>([]);
   const [selectedPage, setSelectedPage] = useState(0);
+  const [isValidated, setIsValidated] = useState(false);
 
   const date = values.date;
 
@@ -282,6 +288,20 @@ const InnerForm: React.FC<{ values: InitialValueType }> = ({ values }) => {
     });
     setEventDate(dateRange);
   }, [date.start_date, date.end_date]);
+
+  useEffect(() => {
+    const validateValue = async () => {
+      try {
+        await validationSchema.validate(values);
+
+        setIsValidated(true);
+      } catch (error) {
+        setIsValidated(false);
+      }
+    };
+
+    validateValue();
+  }, [values]);
 
   return (
     <Form className="mx-auto max-w-6xl space-y-4 pb-16">
@@ -326,14 +346,37 @@ const InnerForm: React.FC<{ values: InitialValueType }> = ({ values }) => {
         ) : null}
       </div>
 
-      {/* {selectedPage === 5 ? ( */}
-      <button
-        type="submit"
-        className="gradient-text from-primary to-secondary h-14 rounded-2xl bg-gradient-to-r bg-[length:200%] px-12 font-medium text-white shadow-md"
-      >
-        Submit
-      </button>
-      {/* ) : null} */}
+      {isValidated ? (
+        <button
+          type="submit"
+          className="gradient-text from-primary to-secondary h-14 rounded-2xl bg-gradient-to-r bg-[length:200%] px-12 font-medium text-white shadow-md transition-all duration-200"
+        >
+          {isSubmitting ? (
+            <svg
+              className={`h-5 w-5 animate-spin text-white`}
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              ></circle>
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
+            </svg>
+          ) : (
+            'Submit'
+          )}
+        </button>
+      ) : null}
     </Form>
   );
 };

@@ -13,8 +13,6 @@ import { Field, GoogleMapField, Message } from 'ui';
 export const LocationForm = () => {
   const { values } = useFormikContext<InitialValueType>();
 
-  console.log(values);
-
   return (
     <div className="space-y-4 py-6">
       <h2 className="flex items-center space-x-4 text-3xl font-semibold">

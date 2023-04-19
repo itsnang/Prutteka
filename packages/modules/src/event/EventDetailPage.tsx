@@ -123,7 +123,9 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
           event.attributes.name,
           i18n.language
         )} | ព្រឹត្តិការណ៍​ - Prutteka`}
-        description=""
+        description={getTextFromQuill(
+          getTranslatedText(event.attributes.detail, 'en')
+        )}
         img={event.attributes.image_src}
       />
       <div className="mx-auto max-w-6xl space-y-8">
