@@ -40,7 +40,7 @@ export const EventHeader: React.FC<EventHeader> = ({
         {isHappening ? (
           <Typography
             variant="span"
-            size="sm"
+            size="lg"
             color="white"
             weight="medium"
             className="bg-primary rounded-md py-1 px-2"
@@ -52,10 +52,10 @@ export const EventHeader: React.FC<EventHeader> = ({
           {title}
         </Typography>
         <Typography size="lg" color="primary" className="">
-          {translateDate(date, i18n.language)}
+          {date}
         </Typography>
         <Typography variant="span" size="base" color="dark" weight="medium">
-          From
+          {t('event-detail-page.from')}
         </Typography>
         <Typography className="text-secondary ml-2 inline-block">
           {organizer}

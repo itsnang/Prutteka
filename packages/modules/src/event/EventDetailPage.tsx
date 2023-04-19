@@ -132,8 +132,11 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
         <EventHeader
           isHappening={isHappening}
           img={event.attributes.image_src}
-          title={event.attributes.name.en}
-          date={event.attributes.date.start_date}
+          title={getTranslatedText(event.attributes.name, i18n.language)}
+          date={`${translateDate(
+            event.attributes.date.start_date,
+            i18n.language
+          )} - ${translateDate(event.attributes.date.end_date, i18n.language)}`}
           organizer={user?.attributes.display_name}
         />
 
@@ -277,7 +280,9 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
                   key={index}
                 >
                   <div className="flex-1">
-                    <Typography variant="h4">{location.name}</Typography>
+                    <Typography size="lg" weight="semibold">
+                      {location.name}
+                    </Typography>
                     <Typography>{location.address}</Typography>
                   </div>
                   {location.type === 'google' &&
@@ -381,7 +386,7 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
                   i18n.language
                 ),
               }}
-              className="mt-6 flex w-full flex-col items-stretch space-y-4"
+              className="mt-6 flex w-full flex-col items-stretch"
             ></div>
           </ItemContainer>
 
