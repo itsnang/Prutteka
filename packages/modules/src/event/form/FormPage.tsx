@@ -235,7 +235,7 @@ export function EventFormPage() {
         description=""
       />
       <Formik
-        initialValues={initialValues}
+        initialValues={defaultValues}
         validationSchema={validationSchema}
         onSubmit={async (values) => {
           try {
