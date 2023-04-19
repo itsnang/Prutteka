@@ -16,26 +16,29 @@ import { LOCATIONS } from '../constants';
 import { useTypeSafeTranslation } from 'shared-utils/hooks';
 import { useLocalInterestedEvent } from '../event';
 import { useRouter } from 'next/router';
-import { translateDate, fetcher } from '../helpers';
+import { translateDate, fetcher, getTranslatedText } from '../helpers';
 import { translateTime } from '../helpers/translateTime';
 
 import { APIResponseEvents } from 'custom-types';
 import useSWRInfinite from 'swr/infinite';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { format } from 'date-fns';
 
-interface SearchPageProps {
-  initialData: APIResponseEvents;
-}
-
-const PAGE_SIZE = 9;
+const PAGE_SIZE = 8;
 
 const getKey =
   (category: string) => (pageIndex: number, previousPageData: any) => {
+    // date format as 2023-12-31
+    const today = format(
+      new Date(new Date().setHours(0, 0, 0, 0)),
+      'yyyy-MM-dd'
+    );
+
     if (previousPageData && !previousPageData?.data.length) return null; // reached the end
-    return `/events?filter[category]=${category}&page[offset]=${pageIndex}&page[limit]=${PAGE_SIZE}`; // SWR key
+    return `/events?filter[category]=${category}&filter[start_date][gte]=${today}&filter[end_date][gte]=${today}&page[offset]=${pageIndex}&page[limit]=${PAGE_SIZE}`; // SWR key
   };
 
-export const Search = ({ initialData }: SearchPageProps) => {
+export const Search = () => {
   const { t, i18n } = useTypeSafeTranslation();
 
   // const locations = LOCATIONS.map((value, idx) => ({
@@ -118,12 +121,13 @@ export const Search = ({ initialData }: SearchPageProps) => {
             }
           />
           <InfiniteScroll
+            className="mt-4"
             dataLength={data?.length || 0}
             next={() => setSize(size + 1)}
             hasMore={!isReachingEnd}
             loader={
               <div className="flex flex-col gap-[0.625rem]">
-                {Array.from({ length: 9 }).map((_, index) => (
+                {Array.from({ length: 8 }).map((_, index) => (
                   <EventCardSkeleton isLandscape key={index} />
                 ))}
               </div>
@@ -155,7 +159,10 @@ export const Search = ({ initialData }: SearchPageProps) => {
                         date={date}
                         time={time}
                         location={''}
-                        title={event.attributes.name.en}
+                        title={getTranslatedText(
+                          event.attributes.name,
+                          i18n.language
+                        )}
                         href={`/event/${event.id}`}
                         isActive={isActive}
                         onInterested={() => {

@@ -34,11 +34,17 @@ import { useRouter } from 'next/router';
 import { useTypeSafeTranslation } from 'shared-utils/hooks';
 import { useLocalInterestedEvent } from './useLocalInterestedEvent';
 import { translateTime } from '../helpers/translateTime';
-import { getDuration, translateDate, convertTime } from '../helpers';
+import {
+  getDuration,
+  translateDate,
+  convertTime,
+  getTranslatedText,
+} from '../helpers';
 
 import { APIResponseEvent } from 'custom-types';
 import { eachDayOfInterval } from 'date-fns';
 import { Disclosure, Transition } from '@headlessui/react';
+import { Quill } from 'react-quill';
 
 interface EventDetailPageProps {
   data: APIResponseEvent;
@@ -97,10 +103,23 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
     locationPhrase = 'Online';
   }
 
+  const getTextFromQuill = (html: string): string => {
+    // Create a temporary element to hold the HTML string
+    if (typeof window === 'undefined') {
+      return '';
+    }
+    const tempElement = document.createElement('div');
+    tempElement.innerHTML = html;
+
+    // Extract the plain text using the innerText property
+    const plainText = tempElement.innerText;
+    return plainText;
+  };
+
   return (
     <>
       <SeoMeta
-        title={`${translateTextObject(
+        title={`${getTranslatedText(
           event.attributes.name,
           i18n.language
         )} | ព្រឹត្តិការណ៍​ - Prutteka`}
@@ -138,19 +157,24 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
               <Button
                 variant="secondary"
                 className="flex-1 justify-between px-4"
-                onClick={() => setShareModal(true)}
+                onClick={() => {
+                  setShareModal(true);
+                }}
               >
                 {t('event-detail-page.share')} <ShareIcon className="h-6 w-6" />
               </Button>
             </div>
             <AttendModal
+              methods={event.attributes.join_methods}
               show={attendModal}
               onClose={() => setAttendModal(false)}
             />
             <ShareModal
               shareData={{
-                title: event.attributes.name.en,
-                text: event.attributes.name.en,
+                title: getTranslatedText(event.attributes.name, 'en'),
+                text: getTextFromQuill(
+                  getTranslatedText(event.attributes.detail, 'en')
+                ),
                 url: `https://${host}/event/${event.id}`,
               }}
               show={shareModal}
@@ -172,46 +196,48 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
             ))}
           </div>
 
-          <ItemContainer className="grid grid-cols-12 gap-2">
-            <EventInfoCard
-              className="col-span-full sm:col-span-6 md:col-span-4"
-              icon={<ClockIcon />}
-              iconClassName="bg-tertiary-light text-tertiary"
-            >
-              <Typography
-                color="dark"
-                weight="semibold"
-                size="base"
-                className="md:text-xl"
+          <ItemContainer className="flex flex-col gap-4 md:flex-row">
+            <div className="flex flex-[2]">
+              <EventInfoCard
+                className="flex-1"
+                icon={<ClockIcon />}
+                iconClassName="bg-tertiary-light text-tertiary"
               >
-                {t('event-detail-page.time')}
-              </Typography>
-              <Typography>
-                {translateTime(startTime, i18n.language)} -{' '}
-                {translateTime(endTime, i18n.language)}
-              </Typography>
-            </EventInfoCard>
+                <Typography
+                  color="dark"
+                  weight="semibold"
+                  size="base"
+                  className="md:text-xl"
+                >
+                  {t('event-detail-page.time')}
+                </Typography>
+                <Typography>
+                  {translateTime(startTime, i18n.language)} -{' '}
+                  {translateTime(endTime, i18n.language)}
+                </Typography>
+              </EventInfoCard>
+
+              <EventInfoCard
+                className="flex-1"
+                icon={<TimeIcon />}
+                iconClassName="bg-primary-light"
+              >
+                <Typography
+                  color="dark"
+                  weight="semibold"
+                  size="base"
+                  className="md:text-xl"
+                >
+                  {t('event-detail-page.duration')}
+                </Typography>
+                <Typography>
+                  {getDuration(startTime, endTime, i18n.language)}
+                </Typography>
+              </EventInfoCard>
+            </div>
 
             <EventInfoCard
-              className="col-span-full sm:col-span-6 md:col-span-3"
-              icon={<TimeIcon />}
-              iconClassName="bg-primary-light"
-            >
-              <Typography
-                color="dark"
-                weight="semibold"
-                size="base"
-                className="md:text-xl"
-              >
-                {t('event-detail-page.duration')}
-              </Typography>
-              <Typography>
-                {getDuration(startTime, endTime, i18n.language)}
-              </Typography>
-            </EventInfoCard>
-
-            <EventInfoCard
-              className="col-span-full md:col-span-5"
+              className="flex-1"
               icon={<MapPinIcon />}
               iconClassName="bg-secondary-light text-secondary"
             >
@@ -226,6 +252,8 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
               <Typography>{locationPhrase}</Typography>
             </EventInfoCard>
           </ItemContainer>
+
+          {/* Location */}
           <ItemContainer>
             <div className="flex items-center space-x-4">
               <div className="bg-secondary-light text-secondary rounded-xl p-2">
@@ -278,43 +306,50 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
             </div>
           </ItemContainer>
 
-          <ItemContainer>
-            <div className="flex items-center space-x-4">
-              <div className="bg-primary-light text-primary rounded-xl p-2">
-                <CalendarDaysIcon className="h-6 w-6 md:h-7 md:w-7" />
+          {/* Schedule */}
+          {event.attributes.schedules.length > 0 ? (
+            <ItemContainer>
+              <div className="flex items-center space-x-4">
+                <div className="bg-primary-light text-primary rounded-xl p-2">
+                  <CalendarDaysIcon className="h-6 w-6 md:h-7 md:w-7" />
+                </div>
+                <Typography
+                  color="dark"
+                  weight="semibold"
+                  size="lg"
+                  className="md:text-xl lg:text-2xl"
+                >
+                  {t('event-detail-page.schedule')}
+                </Typography>
               </div>
-              <Typography
-                color="dark"
-                weight="semibold"
-                size="lg"
-                className="md:text-xl lg:text-2xl"
-              >
-                {t('event-detail-page.schedule')}
-              </Typography>
-            </div>
-            <div className="mt-6 flex w-full flex-col items-stretch space-y-4">
-              {event.attributes.schedules.map((_schedule) =>
-                _schedule.schedules.map((schedule) => {
-                  const startTime = convertTime(schedule.start_time);
-                  const endTime = convertTime(schedule.end_time);
-                  return (
-                    <div
-                      key={schedule._id}
-                      className="relative flex-1 rounded-xl border border-gray-200 px-4 py-4 text-gray-700"
-                    >
-                      <div className="border-primary-light shadow-primary-light absolute -top-4 left-6 rounded-lg border bg-white px-2 py-1 text-sm shadow">
-                        {translateTime(startTime, i18n.language)} -{' '}
-                        {translateTime(endTime, i18n.language)}
-                      </div>
-                      <div>
-                        {translateTextObject(schedule.activity, i18n.language)}
-                      </div>
-                    </div>
-                  );
-                })
-              )}
-            </div>
-          </ItemContainer>
+              <div className="mt-6 flex w-full flex-col items-stretch space-y-4">
+                {event.attributes.schedules.length > 0 &&
+                  event.attributes.schedules.map((_schedule) =>
+                    _schedule.schedules.map((schedule) => {
+                      const startTime = convertTime(schedule.start_time);
+                      const endTime = convertTime(schedule.end_time);
+                      return (
+                        <div
+                          key={schedule._id}
+                          className="relative flex-1 rounded-xl border border-gray-200 px-4 py-4 text-gray-700"
+                        >
+                          <div className="border-primary-light shadow-primary-light absolute -top-4 left-6 rounded-lg border bg-white px-2 py-1 text-sm shadow">
+                            {translateTime(startTime, i18n.language)} -{' '}
+                            {translateTime(endTime, i18n.language)}
+                          </div>
+                          <div>
+                            {getTranslatedText(
+                              schedule.activity,
+                              i18n.language
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })
+                  )}
+              </div>
+            </ItemContainer>
+          ) : null}
 
           <ItemContainer>
             <div className="flex items-center space-x-4">
@@ -330,89 +365,86 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
                 {t('event-detail-page.event-detail')}
               </Typography>
             </div>
-            <div className="mt-6 flex w-full flex-col items-stretch space-y-4">
-              <TextDisplay value={event.attributes.detail.en} />
-            </div>
+            <div
+              dangerouslySetInnerHTML={{
+                __html: getTranslatedText(
+                  event.attributes.detail,
+                  i18n.language
+                ),
+              }}
+              className="mt-6 flex w-full flex-col items-stretch space-y-4"
+            ></div>
           </ItemContainer>
 
           {/* Dynamic Contents */}
-          <ItemContainer>
-            <div className="flex items-center space-x-4">
-              <div className="gradient-text from-primary-light to-secondary-light rounded-xl bg-gradient-to-r bg-[length:200%] p-2">
-                <PhotoIcon className="text-primary h-7 w-7" />
+          {event.attributes.dynamic_contents.length > 0 ? (
+            <ItemContainer>
+              <div className="flex items-center space-x-4">
+                <div className="gradient-text from-primary-light to-secondary-light rounded-xl bg-gradient-to-r bg-[length:200%] p-2">
+                  <PhotoIcon className="text-primary h-7 w-7" />
+                </div>
+                <Typography
+                  color="dark"
+                  weight="semibold"
+                  size="lg"
+                  className="gradient-text from-primary to-secondary bg-gradient-to-r bg-[length:200%] bg-clip-text font-bold text-transparent md:text-xl lg:text-2xl"
+                >
+                  Dynamic Contents
+                </Typography>
               </div>
-              <Typography
-                color="dark"
-                weight="semibold"
-                size="lg"
-                className="gradient-text from-primary to-secondary bg-gradient-to-r bg-[length:200%] bg-clip-text font-bold text-transparent md:text-xl lg:text-2xl"
-              >
-                Dynamic Contents
-              </Typography>
-            </div>
-            {event.attributes.dynamic_contents.length > 0 &&
-              event.attributes.dynamic_contents.map((content, index) => (
-                <Disclosure key={index} defaultOpen={index === 0}>
-                  {({ open }) => (
-                    <div className="mt-4">
-                      <Disclosure.Button className="gradient-text from-primary to-secondary border-primary-light flex w-full justify-between rounded-2xl border bg-gradient-to-r bg-[length:200%] bg-clip-text px-4 py-2 text-xl font-bold text-transparent">
-                        <span>{content.name.en}</span>
-                      </Disclosure.Button>
-                      <Transition
-                        enter="transition duration-100 ease-out"
-                        enterFrom="transform scale-95 opacity-0"
-                        enterTo="transform scale-100 opacity-100"
-                        leave="transition duration-75 ease-out"
-                        leaveFrom="transform scale-100 opacity-100"
-                        leaveTo="transform scale-95 opacity-0"
-                      >
-                        <Disclosure.Panel className="flex justify-start gap-4 overflow-x-auto py-2 text-gray-700">
-                          {content.items.map((item, index) => (
-                            <div key={index}>
-                              {item.image_src ? (
-                                <div className="relative z-0 aspect-[2/1] h-32 w-full md:h-64">
-                                  <Image
-                                    src={item.image_src}
-                                    className="rounded-2xl object-cover"
-                                    fill
-                                    alt=""
-                                  />
+              {event.attributes.dynamic_contents.length > 0 &&
+                event.attributes.dynamic_contents.map((content, index) => (
+                  <Disclosure key={index} defaultOpen={index === 0}>
+                    {({ open }) => (
+                      <div className="mt-4">
+                        <Disclosure.Button className="gradient-text from-primary to-secondary border-primary-light flex w-full justify-between rounded-2xl border bg-gradient-to-r bg-[length:200%] bg-clip-text px-4 py-2 text-xl font-bold text-transparent">
+                          <span>{content.name.en}</span>
+                        </Disclosure.Button>
+                        <Transition
+                          enter="transition duration-100 ease-out"
+                          enterFrom="transform scale-95 opacity-0"
+                          enterTo="transform scale-100 opacity-100"
+                          leave="transition duration-75 ease-out"
+                          leaveFrom="transform scale-100 opacity-100"
+                          leaveTo="transform scale-95 opacity-0"
+                        >
+                          <Disclosure.Panel className="flex justify-start gap-4 overflow-x-auto py-2 text-gray-700">
+                            {content.items.map((item, index) => (
+                              <div key={index}>
+                                {item.image_src ? (
+                                  <div className="relative z-0 aspect-[2/1] h-32 w-full md:h-64">
+                                    <Image
+                                      src={item.image_src}
+                                      className="rounded-2xl object-cover"
+                                      fill
+                                      alt=""
+                                    />
+                                  </div>
+                                ) : null}
+                                <div
+                                  className={`relative space-y-2 rounded-2xl bg-white px-4 py-2 shadow ${
+                                    !!item.image_src ? '-mt-6' : ''
+                                  }`}
+                                >
+                                  <div className="text-lg font-medium">
+                                    {item.name.en}
+                                  </div>
+                                  <div>{item.detail.en}</div>
                                 </div>
-                              ) : null}
-                              <div className="relative -mt-6 space-y-2 rounded-2xl bg-white px-4 py-2 shadow">
-                                <div className="text-lg font-medium">
-                                  {item.name.en}
-                                </div>
-                                <div>{item.detail.en}</div>
                               </div>
-                            </div>
-                          ))}
-                        </Disclosure.Panel>
-                      </Transition>
-                    </div>
-                  )}
-                </Disclosure>
-              ))}
-          </ItemContainer>
+                            ))}
+                          </Disclosure.Panel>
+                        </Transition>
+                      </div>
+                    )}
+                  </Disclosure>
+                ))}
+            </ItemContainer>
+          ) : null}
         </div>
       </div>
     </>
   );
-};
-
-const translateTextObject = (
-  textObj: { en: string; km: string },
-  lang: 'en' | 'km'
-) => {
-  if (!textObj) {
-    return '';
-  }
-  const isEN = lang === 'en';
-  if (textObj?.[lang].trim() === '') {
-    return textObj?.[isEN ? 'km' : 'en'];
-  }
-
-  return textObj?.[lang];
 };
 
 const TimeIcon = () => {

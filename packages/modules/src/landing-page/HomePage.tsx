@@ -5,24 +5,31 @@ import { EventCard, EventCardSkeleton, SeoMeta } from 'ui';
 
 import { useTypeSafeTranslation } from 'shared-utils/hooks';
 import { useLocalInterestedEvent } from '../event';
-import { translateDate } from '../helpers';
+import { getTranslatedText, translateDate } from '../helpers';
 import { translateTime } from '../helpers/translateTime';
 
 import { APIResponseEvents } from 'custom-types';
 import useSWRInfinite from 'swr/infinite';
 import { fetcher } from '../helpers';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { format } from 'date-fns';
 
 interface HomePageProps {
   initialData?: APIResponseEvents[];
 }
 
-const PAGE_SIZE = 9;
+const PAGE_SIZE = 8;
 
 const getKey =
   (category: string) => (pageIndex: number, previousPageData: any) => {
+    // date format as 2023-12-31
+    const today = format(
+      new Date(new Date().setHours(0, 0, 0, 0)),
+      'yyyy-MM-dd'
+    );
+
     if (previousPageData && !previousPageData?.data.length) return null; // reached the end
-    return `/events?filter[category]=${category}&filter[start_date][gte]=2023-04-18&filter[end_date][gte]=2023-04-18&page[offset]=${pageIndex}&page[limit]=${PAGE_SIZE}`; // SWR key
+    return `/events?filter[category]=${category}&filter[start_date][gte]=${today}&filter[end_date][gte]=${today}&page[offset]=${pageIndex}&page[limit]=${PAGE_SIZE}`; // SWR key
   };
 
 export const HomePage: NextPage<HomePageProps> = ({ initialData }) => {
@@ -53,7 +60,7 @@ export const HomePage: NextPage<HomePageProps> = ({ initialData }) => {
             hasMore={!isReachingEnd}
             loader={
               <div className="mt-4 grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {Array.from({ length: 9 }).map((_, index) => (
+                {Array.from({ length: 8 }).map((_, index) => (
                   <EventCardSkeleton key={index} />
                 ))}
               </div>
@@ -84,7 +91,10 @@ export const HomePage: NextPage<HomePageProps> = ({ initialData }) => {
                         date={date}
                         time={time}
                         location={''}
-                        title={event.attributes.name.en}
+                        title={getTranslatedText(
+                          event.attributes.name,
+                          i18n.language
+                        )}
                         href={`/event/${event.id}`}
                         isActive={isActive}
                         onInterested={() => {
