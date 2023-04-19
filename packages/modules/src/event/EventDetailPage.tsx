@@ -386,7 +386,9 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
           </ItemContainer>
 
           {/* Dynamic Contents */}
-          {event.attributes.dynamic_contents.length > 0 ? (
+          {event.attributes.dynamic_contents.length > 0 &&
+          !!event.attributes.dynamic_contents[0].name.en &&
+          !!event.attributes.dynamic_contents[0].name.km ? (
             <ItemContainer>
               <div className="flex items-center space-x-4">
                 <div className="gradient-text from-primary-light to-secondary-light rounded-xl bg-gradient-to-r bg-[length:200%] p-2">
@@ -407,7 +409,9 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
                     {({ open }) => (
                       <div className="mt-4">
                         <Disclosure.Button className="gradient-text from-primary to-secondary border-primary-light flex w-full justify-between rounded-2xl border bg-gradient-to-r bg-[length:200%] bg-clip-text px-4 py-2 text-xl font-bold text-transparent">
-                          <span>{content.name.en}</span>
+                          <span>
+                            {getTranslatedText(content.name, i18n.language)}
+                          </span>
                         </Disclosure.Button>
                         <Transition
                           enter="transition duration-100 ease-out"
@@ -436,9 +440,17 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
                                   }`}
                                 >
                                   <div className="text-lg font-medium">
-                                    {item.name.en}
+                                    {getTranslatedText(
+                                      item.name,
+                                      i18n.language
+                                    )}
                                   </div>
-                                  <div>{item.detail.en}</div>
+                                  <div>
+                                    {getTranslatedText(
+                                      item.detail,
+                                      i18n.language
+                                    )}
+                                  </div>
                                 </div>
                               </div>
                             ))}

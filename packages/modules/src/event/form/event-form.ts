@@ -114,38 +114,66 @@ export const buildEventForm = (data: InitialValueType) => {
   data.dynamic_contents.forEach((content, contentIndex) => {
     formData.append(
       `dynamic_contents[${contentIndex}][name][en]`,
-      content.name.en
+      content.name.en.trimEnd()
     );
     formData.append(
       `dynamic_contents[${contentIndex}][name][km]`,
-      content.name.km
+      content.name.km.trimEnd()
     );
     content.items.forEach((item, itemIndex) => {
+      if (itemIndex === 0 && !item.name.en.trim() && !item.name.km.trim()) {
+        formData.append(
+          `dynamic_contents[${contentIndex}][items][${itemIndex}][image_src]`,
+          ''
+        );
+        formData.append(
+          `dynamic_contents[${contentIndex}][items][${itemIndex}][name][en]`,
+          ''
+        );
+        formData.append(
+          `dynamic_contents[${contentIndex}][items][${itemIndex}][name][km]`,
+          ''
+        );
+
+        formData.append(
+          `dynamic_contents[${contentIndex}][items][${itemIndex}][detail][en]`,
+          ''
+        );
+        formData.append(
+          `dynamic_contents[${contentIndex}][items][${itemIndex}][detail][km]`,
+          ''
+        );
+        return;
+      }
+
+      if (itemIndex !== 0 && !item.name.en.trim() && !item.name.km.trim())
+        return;
+
       if (item.image.file) {
         formData.append(`dynamic_content_images`, item.image.file as Blob);
       } else {
         formData.append(
           `dynamic_contents[${contentIndex}][items][${itemIndex}][image_src]`,
-          item.image.src
+          item.image.src.trimEnd()
         );
       }
 
       formData.append(
         `dynamic_contents[${contentIndex}][items][${itemIndex}][name][en]`,
-        item.name.en
+        item.name.en.trimEnd()
       );
       formData.append(
         `dynamic_contents[${contentIndex}][items][${itemIndex}][name][km]`,
-        item.name.km
+        item.name.km.trimEnd()
       );
 
       formData.append(
         `dynamic_contents[${contentIndex}][items][${itemIndex}][detail][en]`,
-        item.detail.en
+        item.detail.en.trimEnd()
       );
       formData.append(
         `dynamic_contents[${contentIndex}][items][${itemIndex}][detail][km]`,
-        item.detail.km
+        item.detail.km.trimEnd()
       );
     });
   });
