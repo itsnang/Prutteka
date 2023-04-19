@@ -40,7 +40,7 @@ const getKey =
     );
 
     if (previousPageData && !previousPageData?.data.length) return null; // reached the end
-    return `/events?filter[category]=${category}&filter[start_date][gte]=${today}&filter[end_date][gte]=${today}&page[offset]=${pageIndex}&page[limit]=${PAGE_SIZE}`; // SWR key
+    return `/events?filter[category]=${category}&filter[end_date][gte]=${today}&page[offset]=${pageIndex}&page[limit]=${PAGE_SIZE}`; // SWR key
   };
 
 export const Search = () => {
