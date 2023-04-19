@@ -3,7 +3,7 @@ import { UserEventCard } from './UserEventCard';
 import { useTypeSafeTranslation } from 'shared-utils/hooks';
 import useSWRInfinite from 'swr/infinite';
 import { APIResponseEvents } from 'custom-types';
-import { fetcher, translateDate } from '../helpers';
+import { convertTime, fetcher, translateDate } from '../helpers';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { translateTime } from '../helpers/translateTime';
 import axios from 'axios';
@@ -84,7 +84,7 @@ export const MyEventPage = () => {
                     i18n.language
                   );
                   const time = translateTime(
-                    event.attributes.times[0].start_time,
+                    convertTime(event.attributes.times[0].start_time),
                     i18n.language
                   );
 
@@ -97,7 +97,7 @@ export const MyEventPage = () => {
                       location={''}
                       date={date}
                       time={time}
-                      href=""
+                      href={`/event/${event.id}`}
                       onDelete={() => handleDeleteEvent(event.id)}
                     />
                   );

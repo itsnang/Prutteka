@@ -43,10 +43,7 @@ export const UserEventCard: React.FC<UserEventCardProps> = ({
   location,
   onDelete,
 }) => {
-  const router = useRouter();
   const [show, setShow] = useState(false);
-
-  const token = useTokenStore((state) => state.token);
 
   return (
     <>

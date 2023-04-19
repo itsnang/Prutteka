@@ -16,7 +16,12 @@ import { LOCATIONS } from '../constants';
 import { useTypeSafeTranslation } from 'shared-utils/hooks';
 import { useLocalInterestedEvent } from '../event';
 import { useRouter } from 'next/router';
-import { translateDate, fetcher, getTranslatedText } from '../helpers';
+import {
+  translateDate,
+  fetcher,
+  getTranslatedText,
+  convertTime,
+} from '../helpers';
 import { translateTime } from '../helpers/translateTime';
 
 import { APIResponseEvents } from 'custom-types';
@@ -150,7 +155,7 @@ export const Search = () => {
                       i18n.language
                     );
                     const time = translateTime(
-                      event.attributes.times[0].start_time,
+                      convertTime(event.attributes.times[0].start_time),
                       i18n.language
                     );
 

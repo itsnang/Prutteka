@@ -5,7 +5,7 @@ import { EventCard, EventCardSkeleton, SeoMeta } from 'ui';
 
 import { useTypeSafeTranslation } from 'shared-utils/hooks';
 import { useLocalInterestedEvent } from '../event';
-import { getTranslatedText, translateDate } from '../helpers';
+import { convertTime, getTranslatedText, translateDate } from '../helpers';
 import { translateTime } from '../helpers/translateTime';
 
 import { APIResponseEvents } from 'custom-types';
@@ -83,7 +83,7 @@ export const HomePage: NextPage<HomePageProps> = ({ initialData }) => {
                       i18n.language
                     );
                     const time = translateTime(
-                      event.attributes.times[0].start_time,
+                      convertTime(event.attributes.times[0].start_time),
                       i18n.language
                     );
 
