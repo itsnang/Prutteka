@@ -153,7 +153,7 @@ export const Header: React.FC = () => {
           </div>
 
           {isLoggedIn ? (
-            <div className="pl-2 md:pl-4">
+            <div className="hidden pl-2 sm:block md:pl-4">
               <ProfileMenu
                 onLogout={async () => {
                   await signOut(auth);
@@ -184,18 +184,21 @@ export const Header: React.FC = () => {
         </div>
         <div className="my-3 mx-2 w-full border-b-2 border-gray-100 md:hidden" />
         <div className="flex w-full gap-4 md:hidden">
-          {isLoggedIn !== null ? (
+          {isLoggedIn !== null && isLoggedIn ? (
             <>
               <Button
                 as="link"
                 href="/event/submit"
                 className="w-full px-6 sm:hidden"
                 hasShadow
+                onClick={() => console.log('here')}
               >
                 {t('common.submit-event')}
               </Button>
               <ProfileMenu
                 onLogout={async () => {
+                  console.log('here');
+
                   await signOut(auth);
                   resetUser();
                 }}
