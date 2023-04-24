@@ -3,6 +3,9 @@ import { ReactElement } from 'react';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 
+// vercel analytics
+import { Analytics } from '@vercel/analytics/react';
+
 import { appWithTranslation } from 'next-i18next';
 
 import 'shared-utils/axios';
@@ -42,6 +45,8 @@ const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       {getLayout(<Component {...pageProps} />)}
+      {/* vercel analytics */}
+      <Analytics />
     </>
   );
 };
