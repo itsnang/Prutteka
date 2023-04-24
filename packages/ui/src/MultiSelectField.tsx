@@ -30,7 +30,7 @@ export const MultiSelect: React.FC<SelectProps> = ({
             {field.value.map((option, index) => (
               <div
                 key={index}
-                className="border-primary-light flex items-center justify-center gap-2 rounded-full border px-4 py-2 capitalize"
+                className="border-primary-light flex items-center justify-center gap-2 rounded-full border bg-white px-4 py-2 capitalize"
               >
                 <span>{option}</span>
                 <XMarkIcon

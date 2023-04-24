@@ -347,7 +347,7 @@ export const EventDetailPage: NextPage<EventDetailPageProps> = ({
                           key={schedule._id}
                           className="relative flex-1 rounded-xl border border-gray-200 px-4 py-4 text-gray-700"
                         >
-                          <div className="border-primary-light shadow-primary-light absolute -top-4 left-6 rounded-lg border bg-white px-2 py-1 text-sm shadow">
+                          <div className="border-primary-light shadow-primary-light absolute -top-4 left-6 inline-block rounded-lg border bg-white px-2 py-1 text-sm shadow">
                             {translateTime(startTime, i18n.language)} -{' '}
                             {translateTime(endTime, i18n.language)}
                           </div>
