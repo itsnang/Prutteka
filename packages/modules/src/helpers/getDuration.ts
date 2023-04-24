@@ -4,7 +4,7 @@ import { translateNumber } from './translateNumber';
 export const getDuration = (
   startTime: string,
   endTime: string,
-  lang: 'en' | 'kh' = 'en'
+  lang: 'en' | 'km' = 'en'
 ) => {
   const startTimes = startTime.split(':');
   const endTimes = endTime.split(':');
@@ -22,7 +22,7 @@ export const getDuration = (
   let h = 'h';
   let mns = 'mns';
 
-  if (lang === 'kh') {
+  if (lang === 'km') {
     h = 'ម៉ោង';
     mns = 'នាទី';
   }

@@ -2,28 +2,31 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-import { SearchBar, Button, ProfileMenu } from 'ui';
+import { SearchBar, Button } from 'ui';
+import { ProfileMenu } from './ProfileMenu';
 import { StarIcon, Bars3Icon } from '@heroicons/react/24/solid';
 import { useTypeSafeTranslation } from 'shared-utils/hooks';
 import { Sidebar } from './Sidebar';
-import { useEffect } from 'react';
-import { useTokenStore } from '../auth';
+import {
+  useAuth,
+  useProvideAuth,
+  useTokenStore,
+  useVerifyLoggedIn,
+} from '../auth';
+
+import { auth } from 'firebase-config';
+import { signOut } from 'firebase/auth';
 
 export const Header: React.FC = () => {
   const router = useRouter();
   const { t } = useTypeSafeTranslation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const hasToken = useTokenStore((s) => !!(s.accessToken && s.refreshToken));
-  const setTokens = useTokenStore((state) => state.setTokens);
+  const resetUser = useAuth((state) => state.reset);
+  const { isLoggedIn } = useProvideAuth();
 
-  const [isHydrated, setIsHydrated] = useState(false);
-
-  useEffect(() => {
-    setIsHydrated(true);
-  }, []);
-
+  // handle sidebar close when route change
   useEffect(() => {
     const handleRouteChange = () => {
       setIsSidebarOpen(false);
@@ -51,7 +54,7 @@ export const Header: React.FC = () => {
     });
   };
 
-  const changeTo = router.locale === 'en' ? 'kh' : 'en';
+  const changeTo = router.locale === 'en' ? 'km' : 'en';
   const isSearchPage = router.pathname === '/search';
   const isInterestedPage = router.asPath === '/user/interested';
   const isEventSubmitPage = router.asPath === '/event/submit';
@@ -90,8 +93,8 @@ export const Header: React.FC = () => {
   );
 
   return (
-    <nav className=" fixed top-0 z-20 w-screen border-b border-gray-100 bg-white">
-      <div className="mx-auto flex max-w-5xl justify-between py-2 px-4">
+    <nav className="fixed top-0 z-20 w-screen border-b border-gray-100 bg-white">
+      <div className="max-w-laptop mx-auto flex justify-between py-2 px-4">
         <div className="flex items-center gap-4">
           <Link href="/">
             <Image
@@ -108,19 +111,18 @@ export const Header: React.FC = () => {
         </div>
         <div className="flex divide-gray-300 md:space-x-4 md:divide-x">
           <div className="flex gap-2">
-            {isHydrated &&
-              (hasToken && !isEventSubmitPage ? (
-                <div className="hidden sm:block">
-                  <Button
-                    as="link"
-                    href="/event/submit"
-                    className="px-6"
-                    hasShadow
-                  >
-                    {t('common.submit-event')}
-                  </Button>
-                </div>
-              ) : null)}
+            {isLoggedIn && !isEventSubmitPage ? (
+              <div className="hidden sm:block">
+                <Button
+                  as="link"
+                  href="/event/submit"
+                  className="px-6"
+                  hasShadow
+                >
+                  {t('common.submit-event')}
+                </Button>
+              </div>
+            ) : null}
 
             <div className="xs:block hidden">
               <Button
@@ -136,7 +138,7 @@ export const Header: React.FC = () => {
                 as="link"
                 href="/user/interested"
                 variant="secondary"
-                icon={StarIcon}
+                icon={<StarIcon />}
                 className="text-tertiary"
               />
             )}
@@ -150,24 +152,19 @@ export const Header: React.FC = () => {
             </Button>
           </div>
 
-          {isHydrated ? (
-            hasToken ? (
-              <div className="pl-2 md:pl-4">
-                <ProfileMenu
-                  onLogout={() => {
-                    setTokens({
-                      accessToken: '',
-                      refreshToken: '',
-                    });
-                    router.push('/login');
-                  }}
-                />
-              </div>
-            ) : (
-              <div className="hidden gap-2 pl-2 md:flex md:pl-4">
-                {authButton}
-              </div>
-            )
+          {isLoggedIn ? (
+            <div className="hidden pl-2 sm:block md:pl-4">
+              <ProfileMenu
+                onLogout={async () => {
+                  await signOut(auth);
+                  resetUser();
+                }}
+              />
+            </div>
+          ) : isLoggedIn === false ? (
+            <div className="hidden gap-2 pl-2 md:flex md:pl-4">
+              {authButton}
+            </div>
           ) : null}
         </div>
       </div>
@@ -186,19 +183,30 @@ export const Header: React.FC = () => {
           />
         </div>
         <div className="my-3 mx-2 w-full border-b-2 border-gray-100 md:hidden" />
-        <div className="flex w-full flex-col space-y-2 md:hidden">
-          {isHydrated && hasToken ? (
-            <Button
-              as="link"
-              href="/event/submit"
-              className="px-6 sm:hidden"
-              hasShadow
-            >
-              {t('common.submit-event')}
-            </Button>
-          ) : (
+        <div className="flex w-full gap-4 md:hidden">
+          {isLoggedIn !== null && isLoggedIn ? (
+            <>
+              <Button
+                as="link"
+                href="/event/submit"
+                className="w-full px-6 sm:hidden"
+                hasShadow
+                onClick={() => console.log('here')}
+              >
+                {t('common.submit-event')}
+              </Button>
+              <ProfileMenu
+                onLogout={async () => {
+                  console.log('here');
+
+                  await signOut(auth);
+                  resetUser();
+                }}
+              />
+            </>
+          ) : isLoggedIn === false ? (
             authButton
-          )}
+          ) : null}
         </div>
       </Sidebar>
     </nav>

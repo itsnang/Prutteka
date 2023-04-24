@@ -1,4 +1,3 @@
-import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { ButtonCategory, Modal, Typography } from 'ui';
 import { CATEGORIES } from '../constants';
@@ -7,14 +6,16 @@ import { useTypeSafeTranslation } from 'shared-utils/hooks';
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
 interface CategorySelectionProps {
   title: string;
+  onSelect: (item: string) => void;
 }
 
 export const CategorySelection: React.FC<CategorySelectionProps> = ({
   title,
+  onSelect,
 }) => {
   const { t } = useTypeSafeTranslation();
   const [isOpen, setIsOpen] = useState(false);
-  const { push, query } = useRouter();
+  const [category, setCategory] = useState<string>('all');
 
   return (
     <div className="space-y-2">
@@ -36,43 +37,47 @@ export const CategorySelection: React.FC<CategorySelectionProps> = ({
         onClose={() => setIsOpen(false)}
       >
         <div className="mt-6 grid grid-cols-2 gap-4 text-base md:grid-cols-3">
-          {CATEGORIES.map((category, idx) => {
-            const categoryValue = category.split('.')[1];
+          {CATEGORIES.map((_category, idx) => {
+            const categoryValue = _category.split('.')[1];
             const isActive =
-              query?.category === categoryValue ||
-              (!query?.category && categoryValue === 'all');
+              category === categoryValue ||
+              (!category && categoryValue === 'all');
 
             return (
               <ButtonCategory
                 key={idx}
                 onClick={() => {
                   setIsOpen(false);
-                  push({ query: { ...query, category: categoryValue } });
+                  onSelect(categoryValue);
+                  setCategory(categoryValue);
+                  // push({ query: { ...query, category: categoryValue } });
                 }}
                 isActive={isActive}
               >
-                {t(category)}
+                {t(_category)}
               </ButtonCategory>
             );
           })}
         </div>
       </Modal>
       <div className="custom-scrollbar flex space-x-4 overflow-x-auto">
-        {CATEGORIES.map((category, idx) => {
-          const categoryValue = category.split('.')[1];
+        {CATEGORIES.map((_category, idx) => {
+          const categoryValue = _category.split('.')[1];
           const isActive =
-            query?.category === categoryValue ||
-            (!query?.category && categoryValue === 'all');
+            category === categoryValue ||
+            (!category && categoryValue === 'all');
 
           return (
             <ButtonCategory
               key={idx}
               onClick={() => {
-                push({ query: { ...query, category: categoryValue } });
+                onSelect(categoryValue);
+                setCategory(categoryValue);
+                // push({ query: { ...query, category: categoryValue } });
               }}
               isActive={isActive}
             >
-              {t(category)}
+              {t(_category)}
             </ButtonCategory>
           );
         })}

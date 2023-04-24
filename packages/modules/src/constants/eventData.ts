@@ -5,13 +5,6 @@ export const EVENTDATA = [
     title: 'Cambodia Tech Expo 2022',
     location: 'phnom-penh',
     img: '/event_poster3.jpg',
-    datetime: {
-      hasCustomTime: false,
-      startDate: '2023-01-04',
-      endDate: '2023-01-04',
-      endTime: '13:22',
-      startTime: '13:22',
-    },
     id: 0,
   },
   {
@@ -21,14 +14,6 @@ export const EVENTDATA = [
     location: 'phnom-penh',
     img: '/event_poster1.jpg',
     id: 1,
-  },
-  {
-    date: 'Sat, Nov 26 2022',
-    time: '9:00',
-    title: 'Business Development',
-    location: 'phnom-penh',
-    img: '/event_poster1.jpg',
-    id: 10,
   },
   {
     date: 'Sat, Nov 26 2022',

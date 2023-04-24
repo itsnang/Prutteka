@@ -1,32 +1,29 @@
 import { EventDetailPage } from 'modules';
 
-import { EVENTDATA } from 'modules';
-
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { GetServerSideProps } from 'next';
+import axios from 'axios';
 
 export const getServerSideProps: GetServerSideProps = async ({
   locale,
   query,
   req,
 }) => {
-  const existingEvent = EVENTDATA.find(
-    (event) => event.id === Number(query.eventId)
-  );
+  try {
+    const response = await axios.get(`/events/${query.eventId}`);
 
-  if (!existingEvent) {
+    return {
+      props: {
+        data: response.data,
+        host: req.headers.host,
+        ...(await serverSideTranslations(locale ?? 'en')),
+      },
+    };
+  } catch (error) {
     return {
       notFound: true,
     };
   }
-
-  return {
-    props: {
-      event: existingEvent,
-      host: req.headers.host,
-      ...(await serverSideTranslations(locale ?? 'en')),
-    },
-  };
 };
 
 export default EventDetailPage;

@@ -1,0 +1,7 @@
+.ql-toolbar.ql-snow {
+  @apply rounded-t-2xl !border-gray-200 bg-white;
+}
+
+.ql-container.ql-snow {
+  @apply min-h-[150px] rounded-b-2xl !border-gray-200 bg-white !text-base;
+}

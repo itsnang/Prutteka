@@ -1,62 +1,45 @@
-import React, { forwardRef } from 'react';
+import { Field, useField } from 'formik';
+import React from 'react';
+import { Message } from './Message';
 
-import { useField } from 'formik';
-
-interface SelectFieldProps
-  extends Partial<React.HTMLAttributes<HTMLSelectElement>> {
-  name: string;
-  label: string;
-  className?: string;
-  containerClassName?: string;
-  options: string[];
-  values: string[];
+interface Option {
+  value: string;
+  text: string;
 }
 
-export const SelectField = forwardRef<HTMLSelectElement, SelectFieldProps>(
-  (
-    {
-      name,
-      label,
-      className = '',
-      containerClassName = '',
-      options,
-      placeholder,
-      values,
-      ...props
-    },
-    ref
-  ) => {
-    const [field, meta] = useField(name);
+interface SelectProps {
+  label?: string;
+  name: string;
+  options: Option[];
+}
 
-    return (
-      <div className={`space-y-2 ${containerClassName}`}>
-        <label className="flex flex-col">
+export const SelectField: React.FC<SelectProps> = ({
+  label,
+  name,
+  options,
+}) => {
+  const [field, meta] = useField({ name });
+
+  return (
+    <label className="flex w-full flex-col space-y-2">
+      {label ? <span className="text-base font-medium">{label}</span> : null}
+      <Field
+        {...field}
+        component="select"
+        className="form-select focus:ring-primary rounded-2xl border border-gray-200 p-4 focus:border-gray-200 focus:outline-none focus:ring"
+      >
+        <option value="" disabled>
           {label}
-          <select
-            // defaultValue={placeholder}
-            className={`form-select h-13 focus:ring-primary rounded-2xl border border-gray-200 px-4 text-gray-900 focus:border-gray-200 focus:outline-none focus:ring ${className} ${
-              label ? 'mt-2' : ''
-            }`}
-            ref={ref}
-            {...props}
-            {...field}
-          >
-            <option value="" disabled>
-              {placeholder}
-            </option>
-            {options.map((option, idx) => (
-              <option key={idx} value={values[idx]}>
-                {option}
-              </option>
-            ))}
-          </select>
-        </label>
-        {meta.error && meta.touched && (
-          <div className="text-red-600">{meta.error}</div>
-        )}
-      </div>
-    );
-  }
-);
-
-SelectField.displayName = 'select';
+        </option>
+        {options.map((option, i) => (
+          <option key={i} value={option.value}>
+            {option.text}
+          </option>
+        ))}
+      </Field>
+      {meta.error && meta.touched ? (
+        <Message variant="error">{meta.error}</Message>
+      ) : null}
+    </label>
+  );
+};

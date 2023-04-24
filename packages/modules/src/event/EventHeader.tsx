@@ -11,6 +11,7 @@ interface EventHeader {
   title: string;
   date: string;
   source?: LinkProps['href'];
+  organizer?: string;
 }
 
 export const EventHeader: React.FC<EventHeader> = ({
@@ -19,13 +20,14 @@ export const EventHeader: React.FC<EventHeader> = ({
   isHappening = false,
   date,
   source = '',
+  organizer = '',
 }) => {
   const { t, i18n } = useTypeSafeTranslation();
 
   return (
     <div className="space-y-4">
       <div className="flex justify-center overflow-hidden rounded-2xl bg-gray-100">
-        <div className="relative aspect-[2/1] w-full md:h-96 md:w-auto">
+        <div className="relative aspect-[2/1] w-full md:h-[28rem] md:w-auto">
           <Image
             src={img}
             className="rounded-2xl object-cover"
@@ -38,7 +40,7 @@ export const EventHeader: React.FC<EventHeader> = ({
         {isHappening ? (
           <Typography
             variant="span"
-            size="sm"
+            size="lg"
             color="white"
             weight="medium"
             className="bg-primary rounded-md py-1 px-2"
@@ -50,14 +52,14 @@ export const EventHeader: React.FC<EventHeader> = ({
           {title}
         </Typography>
         <Typography size="lg" color="primary" className="">
-          {translateDate(date, i18n.language)}
+          {date}
         </Typography>
         <Typography variant="span" size="base" color="dark" weight="medium">
-          From
+          {t('event-detail-page.from')}
         </Typography>
-        <Link href={source} className="text-secondary ml-2 underline">
-          Source
-        </Link>
+        <Typography className="text-secondary ml-2 inline-block">
+          {organizer}
+        </Typography>
       </div>
     </div>
   );

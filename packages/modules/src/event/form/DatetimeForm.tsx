@@ -1,143 +1,94 @@
-import { InputField, Typography } from 'ui';
-import { Field, FieldArray, useFormikContext } from 'formik';
-import { useEffect } from 'react';
-import { EventDetail } from '../../type/EventDetailType';
-import { getCurrentTime } from './helper';
-import { t } from './SubmitEventPage';
-import { translateDate } from '../../helpers';
+import React, { useEffect } from 'react';
+import { useFormikContext } from 'formik';
+import { format } from 'date-fns';
 
-interface DatetimeFormProps {
-  dateTimeState: EventDetail['datetime'];
-  isInvalidInput: boolean;
-  eventDays: Date[];
-  lang: 'en' | 'kh';
+import { InitialValueType } from './form.types';
+import { Field, CheckboxField, Message } from 'ui';
+import { ClockIcon } from '@heroicons/react/24/solid';
+
+interface DateTimeFormProps {
+  date: Date[];
 }
 
-export const DatetimeForm: React.FC<DatetimeFormProps> = ({
-  dateTimeState,
-  isInvalidInput,
-  eventDays,
-  lang,
-}) => {
-  const { hasCustomTime, customTimes, startDate, endDate } = dateTimeState;
-  const { setFieldValue } = useFormikContext();
+export const DateTimeForm: React.FC<DateTimeFormProps> = ({ date }) => {
+  const { setFieldValue, values, errors } =
+    useFormikContext<InitialValueType>();
 
   useEffect(() => {
-    if (isInvalidInput) return;
-    const newCustomTimes = eventDays.map((date) => ({
-      startTime: getCurrentTime(),
-      endTime: getCurrentTime(),
-      date: date,
-    }));
+    if (date.length <= 0) return;
 
-    setFieldValue('datetime', {
-      ...dateTimeState,
-      customTimes: newCustomTimes,
+    const newTimes = date.map((_date) => {
+      const time = values.times.find(
+        (time) => new Date(time.date).toISOString() === _date.toISOString()
+      );
+
+      if (time) {
+        return {
+          date: time.date,
+          start_time: time.start_time,
+          end_time: time.end_time,
+        };
+      }
+
+      return {
+        date: _date.toISOString(),
+        start_time: '07:00',
+        end_time: '17:00',
+      };
     });
+
+    setFieldValue('times', newTimes);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isInvalidInput, eventDays]);
-
-  const timeForm = hasCustomTime ? (
-    <FieldArray name="datetime.customTimes">
-      {() => (
-        <div className="flex flex-col gap-4">
-          {customTimes?.map(({ date }, idx) => (
-            <div key={idx}>
-              <Typography size="xl" weight="bold">
-                {translateDate(date as Date, lang)}
-              </Typography>
-              <div className="flex flex-col gap-2 rounded-2xl md:flex-row md:gap-4">
-                <InputField
-                  name={`datetime.customTimes.${idx}.startTime`}
-                  label={t.startTime[lang]}
-                  placeholder={t.startTime[lang]}
-                  containerClassName="flex-1"
-                  type="time"
-                />
-
-                <InputField
-                  name={`datetime.customTimes.${idx}.endTime`}
-                  label={t.endTime[lang]}
-                  placeholder={t.endTime[lang]}
-                  containerClassName="flex-1"
-                  type="time"
-                />
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-    </FieldArray>
-  ) : (
-    <div className="flex flex-col gap-2 rounded-2xl md:flex-row md:gap-4">
-      <InputField
-        name="datetime.startTime"
-        label={t.startTime[lang]}
-        placeholder={t.startTime[lang]}
-        containerClassName="flex-1"
-        className="w-full"
-        type="time"
-      />
-      <InputField
-        name="datetime.endTime"
-        label={t.endTime[lang]}
-        placeholder={t.endTime[lang]}
-        containerClassName="flex-1"
-        className="w-full"
-        type="time"
-      />
-    </div>
-  );
+  }, [setFieldValue, date]);
 
   return (
-    <div className="flex flex-col gap-4">
-      {/* flex flex-col gap-2 rounded-2xl border border-gray-100 bg-white p-2 md:flex-row md:gap-4 md:border-0 md:bg-gray-50 md:p-0 */}
+    <div className="space-y-4 py-6">
+      <h2 className="flex items-center space-x-4 text-3xl font-semibold">
+        <span className="bg-tertiary-light rounded-full p-3">
+          <ClockIcon className="text-tertiary h-8 w-8" />
+        </span>
+        <span>Date and time</span>
+      </h2>
 
-      <div className="flex flex-col gap-2 rounded-2xl md:flex-row md:gap-4 md:border-0">
-        <InputField
-          name="datetime.startDate"
-          label={t.startDate[lang]}
-          placeholder={t.startDate[lang]}
-          containerClassName="flex-1"
-          className="w-full"
-          type="date"
-        />
-        <InputField
-          name="datetime.endDate"
-          label={t.endDate[lang]}
-          placeholder={t.endDate[lang]}
-          containerClassName="flex-1"
-          className="w-full"
-          type="date"
-        />
+      {/* Start & End Date */}
+      <div className="flex flex-col gap-4 sm:flex-row">
+        <Field label="Start date" type="date" name="date.start_date" />
+        <Field label="End date" type="date" name="date.end_date" />
       </div>
+      {errors.date ? (
+        <Message variant="error">{errors.date as string}</Message>
+      ) : null}
 
-      {timeForm}
+      {/* Start & End Time */}
+      {values.custom_date ? (
+        values.times.map((time, index) => (
+          <div key={index} className="space-y-2">
+            <span className="text-xl font-semibold text-gray-900">
+              {format(new Date(time.date), 'PPPP')}
+            </span>
+            <div className="flex flex-col gap-4 sm:flex-row">
+              <Field
+                label="Start time"
+                type="time"
+                name={`times.${index}.start_time`}
+              />
+              <Field
+                label="End time"
+                type="time"
+                name={`times.${index}.end_time`}
+              />
+            </div>
+          </div>
+        ))
+      ) : (
+        <div className="flex flex-col gap-4 sm:flex-row">
+          <Field label="Start time" type="time" name="times.0.start_time" />
+          <Field label="End time" type="time" name="times.0.end_time" />
+        </div>
+      )}
 
-      <label
-        className={`group relative flex items-center gap-2 ${
-          isInvalidInput ? 'cursor-not-allowed' : 'cursor-pointer'
-        }`}
-      >
-        <Field
-          disabled={isInvalidInput}
-          type="checkbox"
-          name="datetime.hasCustomTime"
-          className={`form-checkbox text-primary h-6 w-6 cursor-pointer overflow-hidden rounded-md border border-gray-300 outline-none focus:ring-0 ${
-            isInvalidInput ? 'cursor-not-allowed' : ''
-          }`}
-        />
-        <Typography color="base">{t.customDateAndTime[lang]}</Typography>
-        {isInvalidInput ? (
-          <Typography
-            size="sm"
-            style={{ whiteSpace: 'nowrap' }}
-            className="pointer-events-none absolute -top-8 rounded-md bg-red-600 py-1 px-2 text-center text-white opacity-0 transition-all group-hover:opacity-100"
-          >
-            {t.invalidDateTime[lang]}
-          </Typography>
-        ) : null}
-      </label>
+      {/* Checkbox Custom Date */}
+      <CheckboxField label="Custom times" name="custom_date" />
     </div>
   );
 };

@@ -17,7 +17,7 @@ type Paths<T> = {
 export type TranslationKeys = Paths<typeof translations>;
 
 interface CustomI18nType extends I18n {
-  language: 'en' | 'kh';
+  language: 'en' | 'km';
 }
 
 export const useTypeSafeTranslation = () => {

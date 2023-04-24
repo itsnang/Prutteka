@@ -26,6 +26,7 @@ module.exports = {
       black: '#000',
       gray: colors.zinc,
       red: colors.red,
+      transparent: colors.transparent,
     },
     fontSize: {
       sm: '0.875rem', // 14px
@@ -41,7 +42,7 @@ module.exports = {
       boxShadow: {
         inner: '0px 4px 0px #cc0058',
         complete:
-          '0 2px 14px 0 rgb(161, 161, 171, 25%), inset 0 -4px 0 0 rgb(161, 161, 171, 10%)',
+          '0 0px 0px 0 rgb(161, 161, 171, 15%), inset 0 -6px 0 0 rgb(161, 161, 171, 10%)',
       },
       screens: {
         xs: '375px',
@@ -61,6 +62,9 @@ module.exports = {
           '50%': { transform: 'scale(1.01)' },
           '70%': { transform: 'scale(1)' },
         },
+      },
+      maxWidth: {
+        laptop: '90rem',
       },
     },
   },

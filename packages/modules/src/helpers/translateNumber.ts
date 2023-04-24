@@ -2,7 +2,7 @@ const numberMapping = ['០', '១', '២', '៣', '៤', '៥', '៦', '៧', '
 
 export const translateNumber = (
   number: number | string,
-  lang: 'en' | 'kh' = 'en'
+  lang: 'en' | 'km' = 'en'
 ) => {
   if (lang === 'en') {
     return number;

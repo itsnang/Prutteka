@@ -2,14 +2,15 @@ import React, { useEffect, useState } from 'react';
 
 import { Typography, EventCard, SeoMeta } from 'ui';
 import { useTypeSafeTranslation } from 'shared-utils/hooks';
-import { EventType, useLocalInterestedEvent } from '../event';
+import { useLocalInterestedEvent } from '../event';
 import { translateDate, translateNumber } from '../helpers';
 import { useTranslation } from 'next-i18next';
 import { translateTime } from '../helpers/translateTime';
+import { APIResponseEvent } from 'custom-types';
 
 interface interestedEventType {
-  date: EventType['date'];
-  events: EventType[];
+  date: string;
+  events: APIResponseEvent['data'][];
 }
 
 export const InterestedEventPage: React.FC = () => {
@@ -26,10 +27,15 @@ export const InterestedEventPage: React.FC = () => {
     // loop through local events
     for (const event of localInterestedEvents) {
       // find existing date
-      let i = newEvents.findIndex((x) => x.date === event.date);
+      let i = newEvents.findIndex(
+        (x) => x.date === event.attributes.date.start_date
+      );
       if (i <= -1) {
         // add new date with event
-        newEvents.push({ date: event.date, events: [event] });
+        newEvents.push({
+          date: event.attributes.date.start_date,
+          events: [event],
+        });
       } else {
         // add event to existing date
         newEvents[i] = {
@@ -46,7 +52,7 @@ export const InterestedEventPage: React.FC = () => {
 
   return (
     <>
-      <SeoMeta title="Interested - Prutteka" description="" />
+      <SeoMeta title="Interested | ព្រឹត្តិការណ៍ - Prutteka" description="" />
 
       <div className="space-y-3">
         <Typography
@@ -76,21 +82,26 @@ export const InterestedEventPage: React.FC = () => {
                 {translateDate(event.date, i18n.language)}
               </Typography>
             </div>
-            <div className="mt-4 grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-4 grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {event.events.map((_event) => {
-                const date = translateDate(_event.date, i18n.language);
-                const time = translateTime(_event.time, i18n.language);
-                const location = t(('locations.' + _event.location) as any);
+                const date = translateDate(
+                  _event.attributes.date.start_date,
+                  i18n.language
+                );
+                const time = translateTime(
+                  _event.attributes.date.start_date,
+                  i18n.language
+                );
 
                 return (
                   <EventCard
                     key={_event.id}
                     time={time}
                     date={date}
-                    img={_event.img}
+                    img={_event.attributes.image_src}
                     href={`/event/${_event.id}`}
-                    location={location}
-                    title={_event.title}
+                    location={''}
+                    title={_event.attributes.name.en}
                     isActive
                     onInterested={() => {
                       setLocalInterestedEvents(_event);

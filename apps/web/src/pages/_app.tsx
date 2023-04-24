@@ -1,11 +1,17 @@
 import type { AppProps } from 'next/app';
-import type { ReactElement } from 'react';
+import { ReactElement } from 'react';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 
+// vercel analytics
+import { Analytics } from '@vercel/analytics/react';
+
 import { appWithTranslation } from 'next-i18next';
 
+import 'shared-utils/axios';
+
 import '../styles/globals.css';
+import '../styles/custom-react-quill.css';
 
 import 'swiper/swiper-bundle.min.css';
 import { DesktopLayout } from 'modules';
@@ -39,6 +45,8 @@ const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       {getLayout(<Component {...pageProps} />)}
+      {/* vercel analytics */}
+      <Analytics />
     </>
   );
 };
