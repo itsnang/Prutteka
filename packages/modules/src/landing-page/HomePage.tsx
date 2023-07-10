@@ -56,9 +56,10 @@ export const HomePage: NextPage<HomePageProps> = ({ initialData }) => {
   const isEmpty = data?.[0]?.data.length === 0;
   const isReachingEnd =
     isEmpty || (data && data[data.length - 1]?.data.length < PAGE_SIZE);
-  const isPrevEmpty = data?.[0]?.data.length === 0;
+  const isPrevEmpty = prevData?.[0]?.data.length === 0;
   const isPrevReachingEnd =
-    isPrevEmpty || (data && data[data.length - 1]?.data.length < PAGE_SIZE);
+    isPrevEmpty ||
+    (prevData && prevData[prevData.length - 1]?.data.length < PAGE_SIZE);
 
   return (
     <>
