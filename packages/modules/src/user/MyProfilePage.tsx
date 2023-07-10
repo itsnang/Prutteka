@@ -1,5 +1,5 @@
 import { SeoMeta, Typography, Modal } from 'ui';
-import React from 'react';
+import React, { useEffect } from 'react';
 import Image, { StaticImageData } from 'next/image';
 import { Button, EventCard } from 'ui';
 import { useImageCrop, useTypeSafeTranslation } from 'shared-utils/hooks';
@@ -12,7 +12,7 @@ import { EditProfileModal } from '../shared';
 import { useState } from 'react';
 import ReactCrop, { centerCrop, Crop, makeAspectCrop } from 'react-image-crop';
 import { objToFormData } from 'shared-utils/form';
-import { useAuth } from '../auth';
+import { useAuth, useProvideAuth } from '../auth';
 import { useRouter } from 'next/router';
 
 interface MyProfilePageProps {
@@ -58,12 +58,21 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({ events }) => {
   const user = useAuth((state) => state);
   const [profile, setProfile] = useState(user?.image_src);
 
+  // check if user is loggedIn
+  // if not redirect user to homepage
+  const { push } = useRouter();
+  const { isLoggedIn } = useProvideAuth();
+  useEffect(() => {
+    if (!isLoggedIn) {
+      push('/login');
+    }
+  }, [push, isLoggedIn]);
+
   // const { ImageCropModal, openCropModal, imageFile, imageUrl } = useImageCrop({
   //   aspect: 1,
   //   onSubmit: () => setPreviewModalOpen(true),
   // });
   const [interestedEvents, setInterestedEvents] = useLocalInterestedEvent();
-  const { push } = useRouter();
 
   return (
     <>

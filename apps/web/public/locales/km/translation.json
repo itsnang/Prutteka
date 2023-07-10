@@ -84,7 +84,9 @@
   },
   "home-page": {
     "spotlight-events": "ព្រឹត្តិការណ៍កំពុងពេញនិយម",
-    "explore": "ស្វែងរក"
+    "explore": "ស្វែងរក",
+    "previously-on-prutteka": "បានកើតឡើងលើព្រឹត្តិការណ៍",
+    "no-events": "មិនមានព្រឹត្តិការណ៍កើតឡើងទេ"
   },
   "search-page": {
     "search-results": "លទ្ធផលនៃការស្វែករក"

@@ -85,7 +85,9 @@
   },
   "home-page": {
     "spotlight-events": "SPOTLIGHT EVENTS",
-    "explore": "EXPLORE"
+    "explore": "EXPLORE",
+    "previously-on-prutteka": "PREVIOUSLY ON PRUTTEKA",
+    "no-events": "No Events Happening Now!"
   },
   "search-page": {
     "search-results": "SEARCH RESULTS"
